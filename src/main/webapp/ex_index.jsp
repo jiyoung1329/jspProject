@@ -11,12 +11,12 @@
 
 	<!-- CSS -->
     <title>취향대로 머물다 여기어때</title>
-    <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
     <link rel="canonical" href="https://www.goodchoice.kr/">
-    <link rel="stylesheet" href="css/swiper.css">
-	<link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/jspProject/css/swiper.css">
+	<link rel="stylesheet" href="/jspProjectcss/main.css">
+	<link rel="stylesheet" href="/jspProjectcss/common.css">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script><script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
     
 	<script>
 	var _BASE_URL = 'https://www.goodchoice.kr/';
@@ -44,7 +44,73 @@
 <div class="wrap main_wrap show">
     <%@ include file="ex_header.jsp" %>
 
-    
+    <!-- mobile menu -->
+	<div class="gnb_opacity" style="display: block;"><button class="btn_close">닫기</button></div>
+	<div class="menu_wrap" style="display: block;">
+
+        <div class="menu" style="left: 0px; right: 56px;">
+            <div class="top">
+                                    <!-- 회원 -->
+                    <div class="member">
+                        <div class="mem">
+                            <span class="pic" style="background:url('https://image.goodchoice.kr/profile/ico/ico_21.png') 50% 50% no-repeat;"></span>
+                            <p class="info">GC1501958406</p>
+                        </div>
+                        <div class="bot">
+                            <a href="https://www.goodchoice.kr/my/point"><p>0P<br><span>포인트</span></p></a>
+                            <a href="https://www.goodchoice.kr/my/coupon"><p>0장<br><span>쿠폰함</span></p></a>
+                        </div>
+                    </div>
+                            </div>
+            <!-- Iscroll -->
+            <div class="scroll_nav" style="touch-action: none;">
+                <div class="scroller" style="transform: translate(0px, 0px) translateZ(0px);">
+                    <ul>
+                        <li><a href="https://www.goodchoice.kr/">홈</a></li>
+                        <li class="depth_2">
+                            <button type="button" class="has_ul"><span>숙소유형</span></button>
+                            <ul>
+                                <li><a href="https://www.goodchoice.kr/product/home/1">모텔</a></li>
+                                <li><a href="https://www.goodchoice.kr/product/search/2">호텔·리조트</a></li>
+                                <li><a href="https://www.goodchoice.kr/product/search/3">펜션</a></li>
+                                <li><a href="https://www.goodchoice.kr/product/search/6">게스트하우스</a></li>
+                                <li><a href="https://www.goodchoice.kr/product/search/5">캠핑·글램핑</a></li>
+                                <li><a href="https://www.goodchoice.kr/product/search/7">한옥 </a></li>
+                            </ul>
+                        </li>
+                        <li><a href="https://www.goodchoice.kr/product/srp">내주변</a></li>
+                    </ul>
+                                            <ul>
+                            <li><a href="https://www.goodchoice.kr/my/reserveList">예약 내역</a></li>
+                                                        <li><a href="https://www.goodchoice.kr/my/mypage">내 정보 관리</a></li>
+                        </ul>
+                                        <ul>
+                        <li class="depth_2"><button type="button" class="has_ul"><span>더보기</span></button>
+                            <ul>
+                                <li><a href="https://www.goodchoice.kr/more/notice">공지사항</a></li>
+                                <li><a href="https://www.goodchoice.kr/more/event">이벤트</a></li>
+                                <!-- <li><a href="https://www.goodchoice.kr/more/project">혁신 프로젝트</a></li> -->
+                                <li><a href="https://www.goodchoice.kr/more/faq">고객문의</a></li>
+                                <li><a href="https://www.goodchoice.kr/my/notiSetting">알림설정</a></li>
+                                <li>
+                                    <a href="https://q.egiftcard.kr/couponstatus/" target="_blank">
+                                        여기어때 상품권 잔액 조회
+                                    </a>
+                                </li>
+                                <li><a href="https://www.goodchoice.kr/more/terms">약관 및 정책</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="center">
+                        <p>여기어때 고객행복센터</p>
+                        <p><a href="tel:1670-6250">1670-6250</a></p>
+                        <p>오전 9시 - 새벽 3시</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<!-- //mobile menu -->
 	
 </div>
 

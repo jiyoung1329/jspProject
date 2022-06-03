@@ -3,35 +3,34 @@
 
 <!-- Script -->
 <!-- Library -->
-<script type="text/javascript" src="js/library/jquery.cookie.js"></script>
-<script type="text/javascript" src="js/library/jquery.lazyload.js"></script>
-<script type="text/javascript" src="js/library/iscroll.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/jquery.cookie.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/jquery.lazyload.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/iscroll.js"></script>
 
 <!-- Service -->
-<script type="text/javascript" src="js/service/common.js"></script>
-<script type="text/javascript" src="js/service/geolocation.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/common.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/geolocation.js"></script>
 
 <!-- Module -->
 <!-- 
 <script type="text/javascript" src="js/modules/dialogPopup.js"></script>
  -->
 <!-- Page Script -->
-<script type="text/javascript" src="js/library/owl.carousel.min.js"></script>
-<!-- 
-<script type="text/javascript" src="js/library/swiper.min.js"></script>
- -->
+<script type="text/javascript" src="/jspProject/js/library/owl.carousel.min.js"></script> 
+<script type="text/javascript" src="/jspProject/js/library/swiper.min.js"></script>
+
  
-<script type="text/javascript" src="js/library/iscroll.js"></script>
-<script type="text/javascript" src="https://www.goodchoice.kr/js/service/main.js?rand=1653988749"></script>
-<script type="text/javascript" src="https://www.goodchoice.kr/js/service/reservation.js?rand=1653988749"></script>
+<script type="text/javascript" src="/jspProject/js/library/iscroll.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/main.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/reservation.js"></script>
 
 <!-- Body Spinner -->
-<!--
+
 <div class="spinner show" style="display: none;"><span></span></div>
 
 <div style="display:none;">
 	<!-- 네이버 프리미엄 로그 분석(https://yeogirnd.atlassian.net/browse/SD-320)-->
-	<!-- 
+	
 	<script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
 
 	<script>
@@ -226,7 +225,7 @@
     <script type="text/javascript" src="//adimg.daumcdn.net/rt/roosevelt.js" async></script -->
 
     <!-- Google Code for &#50668;&#44592;&#50612;&#46412;_&#50937; Conversion Page -->
-    <!-- 
+    
     <script type="text/javascript">
         /* <![CDATA[ */
         var google_conversion_id = 964418007;
@@ -254,7 +253,7 @@
 	</script>
 
 	<!-- Global site tag (gtag.js) - Google AdWords: 802163829 -->
-	<!-- 
+	
 	<script async="" src="https://www.googletagmanager.com/gtag/js?id=AW-802163829"></script>
 	<script>
         window.dataLayer = window.dataLayer || [];
@@ -275,7 +274,7 @@
 	</script>
 
     <!-- 채널제출 -->
-    <!-- 
+    
     <span itemscope="" itemtype="http://schema.org/Organization">
         <link itemprop="url" href="https://www.goodchoice.kr">
         <a itemprop="sameAs" href="https://www.facebook.com/goodchoiceofficial"></a>
@@ -285,4 +284,3 @@
         <a itemprop="sameAs" href="https://www.youtube.com/channel/UCLI1HOVJdhWdVl9pT__g2Zw"></a>
     </span>
 </div>
--->
