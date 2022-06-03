@@ -16,14 +16,21 @@
 <script type="text/javascript" src="js/modules/dialogPopup.js"></script>
  -->
 <!-- Page Script -->
-<script type="text/javascript" src="/jspProject/js/library/owl.carousel.min.js"></script> 
+<script type="text/javascript" src="/jspProject/js/library/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/jquery.comiseo.daterangepicker.min.js"></script>
 <script type="text/javascript" src="/jspProject/js/library/swiper.min.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/owl.carousel.min.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/moment.js"></script> 
+<script type="text/javascript" src="/jspProject/js/library/vue.min.js"></script>
 
- 
-<script type="text/javascript" src="/jspProject/js/library/iscroll.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/datepick.js"></script>
+<script type="text/javascript" src="/jspProject/js/service/product.detail2.js"></script>
+<!-- 
+ -->
+<script type="text/javascript" src="/jspProject/js/service/product.async.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/main.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/reservation.js"></script>
-
 <!-- Body Spinner -->
 
 <div class="spinner show" style="display: none;"><span></span></div>

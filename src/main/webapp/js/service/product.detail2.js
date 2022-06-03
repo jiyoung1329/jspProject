@@ -71,6 +71,7 @@ function gallery_height_align(){
 }
 
 /* jQuery */
+
 $(function(){
     if ($('.comment div').length > 0) {
         if ($('.comment div').height() > 52) {
@@ -82,6 +83,7 @@ $(function(){
     }
 
 	/* IE 버그 픽스 */
+	
 	if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)){
 		//객실상세 갤러리 높이 수정
         $('.theme').addClass('ie_fix');        
@@ -374,7 +376,7 @@ $(function(){
         }
     });
 
-    get_review_list();
+    // get_review_list();
     build_theme_list($('#ano').val());
 		room_detail_async.init();
 
@@ -526,7 +528,7 @@ let room_detail_async = (function () {
 		init: init
 	}
 })();
-
+/*
 function get_review_list() {
     // if (!$('#content').hasClass('motel_room')) {
     //     $('#review').remove();
@@ -536,7 +538,7 @@ function get_review_list() {
 
     var hash = window.location.hash;
     var cur_page = xReturnNumber(hash.replace('#', ''));
-
+	
     var review = new Vue({
         el: '#review',
         created: function () {
@@ -568,7 +570,7 @@ function get_review_list() {
 
             searchTerm: function (settings) {
                 var _self = this;
-
+				
                 $.xResponse('/product/get_review_non', settings).done(function (data) {
                     _self.ratehouse = data.result.ratehouse;
                     _self.rateprice = data.result.rateprice;
@@ -617,7 +619,7 @@ function get_review_list() {
 		}
     });
 }
-
+*/
 function build_theme_list(ano) {
     $('section.theme ul').empty();
 
@@ -654,7 +656,7 @@ function build_theme_list(ano) {
     }
 
     var items = [];
-
+	/*
     $.xResponse('/product/get_theme_list_non', {ano: ano}).done(function (result) {
         if (result.msg == 'OK') {
 
@@ -680,12 +682,12 @@ function build_theme_list(ano) {
             $('section.theme ul').append(items.join(''));
         }
     });
-
+	
     if (items.length == 0) {
         $('section.theme').remove();
         $('a.theme_category').remove();
     }
-
+*/
 	// 테마 카테고리 갤러리 노출
 	$('.theme_category').click(function(){
 		$('.swiper-type-2').each(function(){
@@ -735,3 +737,4 @@ function build_theme_list(ano) {
     lazyload(); // 레이지로드
 
 }
+

@@ -64,6 +64,6 @@
 				<button>5</button>
 				<button class="next">다음</button>
 			</div>
-		</div>
+				</div>
 </article>
 <!-- //리뷰 -->
