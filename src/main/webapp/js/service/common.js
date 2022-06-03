@@ -844,7 +844,7 @@ $(function(){
 		});
 	});
 	/* 리사이즈 시 */
-	/*
+	
 	
 	$(window).resize(function(){
 		var win_w = $(window).width()
@@ -856,7 +856,7 @@ $(function(){
 			layer_w_close(); // 레이어 숨기기(_w)
 		}
 	});
-	*/
+	
 	/* 모바일 메뉴 닫기 (배경 클릭) */
 	$('.gnb_opacity').bind('touchstart click',function(){
 		$('.menu_wrap').hide();
