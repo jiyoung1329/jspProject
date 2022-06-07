@@ -43,12 +43,9 @@
 		<!-- Nav -->
 		<nav>
 			<ul>
-				<li><a class="" href="/my/point">포인트</a></li>
-				<li><a class="" href="/my/coupon">쿠폰함</a></li>
-				<li><a class="" href="/my/reserveList">예약 내역</a></li>
-				<li><a class="active" href="/my/mypage">내 정보 관리</a></li>
-				<li><a class="" href="/my/notiSetting">알림</a></li>
-				<li><a href="https://q.egiftcard.kr/couponstatus/" target="_blank">여기어때 상품권 잔액 조회</a></li>
+				<li><a class="" href="myPoint.jsp">포인트</a></li>
+				<li><a class="" href="myReservation.jsp">예약 내역</a></li>
+				<li><a class="active" href="myPage.jsp">내 정보 관리</a></li>
 			</ul>
 		</nav>
     

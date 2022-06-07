@@ -40,8 +40,8 @@
 		<!-- Nav -->
 		<nav>
 		    <ul>
-		        <li><a href="notification.jsp" class="active">공지사항</a></li>
-		        <li><a href="event.jsp">이벤트</a></li>
+		        <li><a href="notification.jsp">공지사항</a></li>
+		        <li><a href="event.jsp" class="active">이벤트</a></li>
 		        <!-- <li><a href="faq.jsp">자주 묻는 질문</a></li> -->
 		        <li><a href="inquiry.jsp">1:1 문의</a></li>
 		    </ul>
@@ -50,49 +50,15 @@
 		
 		<!-- notification -->
 		<div class="align_rt">
-			<div class="notice">
-				<div class="mobile_top">공지사항</div>
-				<!-- Tab -->
-				<div class="tab">
-					<span class="tab_btn active">서비스 공지사항 <i class="ico_new">NEW</i></span>
-					<!-- <span class="tab_btn">여기어때 언론보도 <i class="ico_new">NEW</i></span> -->
-				</div>
-				<!-- //Tab -->
-
-				<!-- 공지사항  -->
-				<div class="tab_each">
-					<ul id="notices" class="show_list open_list">
-						<li>
-							<a href="notification.jsp#notive_tab" id="notive_tab" class="list_que">
-								<p>[발표] 6월 1차 여기어때 응원하기 이벤트</p><span>2022.06.07<i class="ico_new">NEW</i></span>
-							</a>
-						
-							<div>
-                         		<p><span style="font-family: arial; font-size: 10pt;">공지사항1</span></p>
-                       			<div>
-									<font face="arial">
-									<span style="font-size: 10pt; font-family: arial;">
-									6월 1차 '여기어때 응원하기' 이벤트 당첨자를 발표합니다.<br><br>
-	                      			</span>
-                          			</font>	
-                         		</div>
-                         	</div>
-						</li>
-					</ul>
-					<!-- //공지사항  -->
-					<!-- pagination -->
-                    <div id="notice_pagination">
-	                    <div class="paging">
-	                    <button class="on">1</button>
-	                    <button>2</button>
-	                    <button>3</button>
-	                    <button>4</button>
-	                    <button>5</button>
-	                    <button class="next">다음</button>
-	                    </div>
-                    </div>
-					<!-- //pagination -->
-				</div>
+			<div class="event">
+				<div class="mobile_top">이벤트</div>	
+				<ul id="event" class="event_list">
+					<li>
+						<b>6월 우리 즉시할인 - 신용카드</b>
+						<span>기간: 2022.06.01 ~ 2022.06.30</span>
+						<a href="/more/eventView/2347?page=0"><img src="//image.goodchoice.kr" alt=""></a>
+					</li>
+				</ul>	
 			</div>
 		</div>
 		<!-- //notification -->

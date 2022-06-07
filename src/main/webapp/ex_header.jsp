@@ -44,7 +44,10 @@
             <button class="btn_cancel" onclick="srch_close()">취소</button>
         </div>
         <!-- //Search -->
-		<!-- Bg Dimm -->
+
+    </section>
+</header>
+	<!-- Bg Dimm -->
     <div class="bg_dimm" onclick="close_layer();">&nbsp;</div>
     <div class="bg_dimm_prevent">&nbsp;</div>
 
@@ -131,5 +134,3 @@
         </div>
     </div>
     <!-- //Mobile Menu -->
-    </section>
-</header>
