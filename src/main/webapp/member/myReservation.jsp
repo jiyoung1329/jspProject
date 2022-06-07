@@ -39,12 +39,13 @@
 		<!-- //Sub Top -->
 		
 		<div id="content" class="sub_wrap my_wrap" >
+			<!-- nav bar -->
 			<p class="sub_title" >예약 내역</p>
 			<nav>
 				<ul>
-					<li><a href="https://www.goodchoice.kr/my/point">포인트</a></li>
-					<li><a href="/reservations" aria-current="page" class="nuxt-link-exact-active nuxt-link-active active">예약 내역</a></li>
-					<li><a href="https://www.goodchoice.kr/my/mypage">내 정보 관리</a></li>
+					<li><a class="" href="myPoint.jsp">포인트</a></li>
+					<li><a href="myPoint.jsp" aria-current="page" class="nuxt-link-exact-active nuxt-link-active active">예약 내역</a></li>
+					<li><a class="" href="myPage.jsp">내 정보 관리</a></li>
 				</ul>
 			</nav>
 			<div class="align_rt" >

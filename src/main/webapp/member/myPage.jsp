@@ -43,9 +43,9 @@
 		<!-- Nav -->
 		<nav>
 			<ul>
-				<li><a class="" href="/my/point">포인트</a></li>
-				<li><a class="" href="/my/reserveList">예약 내역</a></li>
-				<li><a class="active" href="/my/mypage">내 정보 관리</a></li>
+				<li><a class="" href="myPoint.jsp">포인트</a></li>
+				<li><a class="" href="myReservation.jsp">예약 내역</a></li>
+				<li><a class="active" href="myPage.jsp">내 정보 관리</a></li>
 			</ul>
 		</nav>
     
