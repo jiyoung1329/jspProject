@@ -33,7 +33,7 @@
 <!-- Wrap -->
 <div class="wrap show">
 
-    <%@ include file="../ex_header.jsp" %>
+    <%@ include file="../header.jsp" %>
 <!-- 
 <script type="application/ld+json">
 {
@@ -376,7 +376,7 @@
 
 
 
-<%@ include file="../ex_footer.jsp" %>
+<%@ include file="../footer.jsp" %>
 
 </div>
 

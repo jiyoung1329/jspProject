@@ -28,7 +28,7 @@
 <body class="mobile">
 	<script>var deviceWidth=window.innerWidth;document.body.className=deviceWidth>1023?"pc":"mobile"</script>
 	<div class="wrap show" >
-	    <%@ include file="../ex_header.jsp" %>
+	    <%@ include file="../header.jsp" %>
 	    
 		<!-- Sub Top -->
 		<div class="sub_top_wrap"  >
