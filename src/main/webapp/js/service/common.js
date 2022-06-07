@@ -179,7 +179,7 @@ $.extend({
 			dataType: 'json',
 			loading: false,
 			async: false,
-			message: '정상적인 접근이 아닙니다.'
+			message: ''
 		};
 
 		options = $.extend({}, defaults, options);
