@@ -113,7 +113,7 @@
 	<div class="wrap show">
 
 		<!-- Header -->
-		<%@include file="ex_header.jsp"%>
+		<%@include file="../header.jsp"%>
 
 		<%
 		//현재 날짜 불러옴
@@ -580,7 +580,7 @@
 	</div>
 
 	<!-- Footer -->
-	<%@include file="ex_footer.jsp" %>
+	<%@include file="../footer.jsp" %>
 
 	<!-- 상단으로 -->
 	<button class="btn_go_top" onclick="moveTop();" style="display: none;">상단으로</button>

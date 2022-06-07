@@ -25,7 +25,7 @@
 
 <!-- Wrap -->
 <div class="wrap show">
-<%@ include file="../ex_header.jsp" %>
+<%@ include file="../header.jsp" %>
 
 	<!-- Sub Top -->
 	<div class="sub_top_wrap">
@@ -98,7 +98,7 @@
 		<!-- //notification -->
 	</div>
 	<!-- //Content  -->
-<%@ include file="../ex_footer.jsp" %>
+<%@ include file="../footer.jsp" %>
 
 </div>
 
