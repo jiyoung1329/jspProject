@@ -1,3 +1,7 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -111,13 +115,35 @@
 		<!-- Header -->
 		<%@include file="ex_header.jsp"%>
 
+		<%
+		//현재 날짜 불러옴
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String today = sdf.format(date);
+			
+			String sel_date = today;
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, 1);
+			
+			String sel_date2 = sdf.format(cal.getTime());
+
+			String tmp_sel_date = request.getParameter("sel_date");
+			String tmp_sel_date2 = request.getParameter("sel_date2");
+
+			//매개변수로 전달된 날짜가 있다면
+			if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
+				sel_date = tmp_sel_date;
+				sel_date2 = tmp_sel_date2;
+			}
+		%>
 		<form id="product_filter_form" method="get"
 			action="https://www.goodchoice.kr/product/search/1/7052"
-			data-sel_date="2022-06-07" data-sel_date2="2022-06-08">
+			data-sel_date="<%=sel_date %>" data-sel_date2="<%=sel_date2 %>">
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
-			<input type="hidden" name="sel_date" id="sel_date" value="2022-06-07">
-			<input type="hidden" name="sel_date2" id="sel_date2"
-				value="2022-06-08">
+			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date %>">
+			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2 %>">
 			<div class="listpage">
 
 				<!-- Result Top -->
