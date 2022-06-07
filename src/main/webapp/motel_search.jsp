@@ -143,8 +143,7 @@
 			data-sel_date="<%=sel_date %>" data-sel_date2="<%=sel_date2 %>">
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date %>">
-			<input type="hidden" name="sel_date2" id="sel_date2"
-				value="2022-06-08">
+			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2 %>">
 			<div class="listpage">
 
 				<!-- Result Top -->
