@@ -1,5 +1,12 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -66,17 +73,21 @@
 
 <!-- CSS -->
 <title>모텔 &gt; 서울 &gt; 강남/역삼/삼성/논현 | 여기어때</title>
-<link rel="stylesheet"
-	href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
+<link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
+<link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css"> 
+<link rel="stylesheet" href="https://www.goodchoice.kr/common.css?rand=1653988749"> 
 <link rel="canonical" href="https://www.goodchoice.kr/product/home/7052">
-<link rel="stylesheet" href="/css/owl.carousel.css">
-<link rel="stylesheet" href="/css/jquery-ui.css?rand=1653988749">
-<link rel="stylesheet" href="/css/product.css?rand=1653988749">
+<link rel="stylesheet" href="https://www.goodchoice.kr/owl.carousel.css">
+<link rel="stylesheet" href="https://www.goodchoice.kr/css/jquery-ui.css?rand=1653988749">
+<link rel="stylesheet" href="https://www.goodchoice.kr/css/product.css?rand=1653988749">
 
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-<script type="text/javascript" src="/js/library/jquery-1.12.4.min.js"></script>
+<!-- <script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery-1.12.4.min.js"></script> -->
+
+<!-- 수정 -->
+<script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
 <script>
 	var _BASE_URL = 'https://www.goodchoice.kr/';
 	var _MOBILE = 'W';
@@ -92,22 +103,8 @@
 	content="A9wkrvp9y21k30U9lU7MJMjBj4USjLrGwV+Z8zO3J3ZBH139DOnCv3XLK2Ii40S94HG1SZ/Zeg2GSHOD3wlWngYAAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1RoaXJkUGFydHkiOnRydWV9">
 <script
 	src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/802163829/?random=1654487871646&amp;cv=9&amp;fst=1654487871646&amp;num=1&amp;bg=ffffff&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;u_h=864&amp;u_w=1536&amp;u_ah=824&amp;u_aw=1536&amp;u_cd=24&amp;u_his=4&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;gtm=2oa610&amp;sendb=1&amp;ig=1&amp;data=event%3Dgtag.config&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fsearch%2F1%2F7052&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fhome%2F1&amp;tiba=%EB%AA%A8%ED%85%94%20%3E%20%EC%84%9C%EC%9A%B8%20%3E%20%EA%B0%95%EB%82%A8%2F%EC%97%AD%EC%82%BC%2F%EC%82%BC%EC%84%B1%2F%EB%85%BC%ED%98%84%20%7C%20%EC%97%AC%EA%B8%B0%EC%96%B4%EB%95%8C&amp;hn=www.googleadservices.com&amp;async=1&amp;rfmt=3&amp;fmt=4"></script>
-<script>
-	function area_open(){
-		var area_wrap = document.getElementById("area_wrap");
-		area_wrap.style = "display: block";
-	}
-	
-	function area_close(){
-		var area_wrap = document.getElementById("area_wrap");
-		area_wrap.style = "display: none";
-	}
-</script>
 <style>
-	aside { border: 1px solid black; width: 20%; float: left;}
-	.list_wrap { border: 1px solid black; padding: 10px; width: 80%; float: right; }
-	.list_wrap img { margin-left: 100px; width: 300px; height: 250px; }
-	hr { margin: 20 0; align: center; color: #EAEAEA; }
+	#layout_middle { position: relative; top: -400px; left: 250px; }
 </style>
 </head>
 <body class="mobile">
@@ -118,13 +115,35 @@
 		<!-- Header -->
 		<%@include file="ex_header.jsp"%>
 
+		<%
+		//현재 날짜 불러옴
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String today = sdf.format(date);
+			
+			String sel_date = today;
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.DATE, 1);
+			
+			String sel_date2 = sdf.format(cal.getTime());
+
+			String tmp_sel_date = request.getParameter("sel_date");
+			String tmp_sel_date2 = request.getParameter("sel_date2");
+
+			//매개변수로 전달된 날짜가 있다면
+			if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
+				sel_date = tmp_sel_date;
+				sel_date2 = tmp_sel_date2;
+			}
+		%>
 		<form id="product_filter_form" method="get"
 			action="https://www.goodchoice.kr/product/search/1/7052"
-			data-sel_date="2022-06-06" data-sel_date2="2022-06-07">
+			data-sel_date="<%=sel_date %>" data-sel_date2="<%=sel_date2 %>">
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
-			<input type="hidden" name="sel_date" id="sel_date" value="2022-06-06">
-			<input type="hidden" name="sel_date2" id="sel_date2"
-				value="2022-06-07">
+			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date %>">
+			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2 %>">
 			<div class="listpage">
 
 				<!-- Result Top -->
@@ -138,478 +157,115 @@
 				</div>
 				<!-- //Result Top -->
 
-				<!-- Sub Top -->
-				<div class="sub_top_wrap">
-					<!-- 페이백일때 클래스 추가 early_top -->
-					<div class="sub_top bg_kong_1">
-						<h2>모텔</h2>
-						<div class="area">
-							<div class="btn_area" onmouseenter="area_open()">
-								<span>서울</span>강남/역삼/삼성/논현
-							</div>
-							<div class="btn_date">
-								<span class="date_view"><b>6.6 ~ 6.7</b><em>&nbsp;·&nbsp;1박</em></span>
-							</div>
-						</div>
-						<span class="keyword"></span>
+			<!-- Sub Top -->
+			<div class="sub_top_wrap"> <!-- 페이백일때 클래스 추가 early_top -->
+				<div class="sub_top bg_kong_1">
+					<h2>모텔</h2>
+					<div class="area">
+						<div class="btn_area"><span>서울</span>강남/역삼/삼성/논현</div>
+						<div class="btn_date"><span class="date_view"><b>6.7 ~ 6.8</b><em>&nbsp;·&nbsp;1박</em></span></div>
 					</div>
+					<span class="keyword"></span>
 				</div>
-				<!-- //Sub Top -->
+			</div>
+			<!-- //Sub Top -->
 
-				<!-- Datepicker -->
-				<input type="text" class="product_date" style="display: none;">
-				<button type="button"
-					class="comiseo-daterangepicker-triggerbutton ui-button ui-corner-all ui-widget comiseo-daterangepicker-bottom comiseo-daterangepicker-vfit"
-					id="drp_autogen0">
-					06.06 - 06.07<span class="ui-button-icon-space"> </span><span
-						class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span>
-				</button>
+			<!-- Datepicker -->
+			<input type="text" class="product_date" style="display: none;"><button type="button" class="comiseo-daterangepicker-triggerbutton ui-button ui-corner-all ui-widget comiseo-daterangepicker-bottom comiseo-daterangepicker-vfit" id="drp_autogen0">06.07 - 06.08<span class="ui-button-icon-space"> </span><span class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span></button>
 
-				<!-- Content  -->
-				<div id="content" class="sub_wrap">
-					<!-- Area -->
-					<div class="area_pop">
-						<div class="fix_title">
-							지역 선택
-							<button type="button" onclick="area_close();">닫기</button>
-						</div>
+			<!-- Content  -->
+			<div id="content" class="sub_wrap">
+				<!-- Area -->
+                <div class="area_pop">
+                    <div class="fix_title">
+                        지역 선택<button type="button" onclick="area_close();">닫기</button>
+                    </div>
 
-						<!-- 지역필터 (리조트/캠핑/한옥 클래스추가 area_etc)-->
-						<div class="area_wrap" id="area_wrap" style="display: none" onmousemove="area_open()" onmouseout="area_close()">
-							<div class="iscroll_01 depth_01">
-								<div class="scroller">
-									<ul class="city">
-										<!-- 지역 고정 클래스 fix / 오버시 on -->
-										<li><a href="https://www.goodchoice.kr/product/home/1"
-											class="fix on"> 서울 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/2">
-												경기 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/3">
-												인천 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/4">
-												강원 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/51">
-												제주 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/12">
-												부산 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/10">
-												경남 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/9">
-												대구 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/8">
-												경북 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/11">
-												울산 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/7">
-												대전 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/6">
-												충남 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/5">
-												충북 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/47">
-												광주 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/48">
-												전남 </a></li>
-										<li><a href="https://www.goodchoice.kr/product/home/49">
-												전북 </a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="iscroll_02">
-								<div class="scroller">
-									<ul class="city_child" style="display: block;">
-										<li><a href="https://www.goodchoice.kr/product/home/1">서울
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7052"
-											class="on">강남/역삼/삼성/논현</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7053">서초/신사/방배</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7040">잠실/방이</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7041">잠실새내/신천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/122">영등포/여의도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/20">구로/금천/오류/신도림</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/45">강서/화곡/까치산역/목동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/17">천호/길동/둔촌</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/19">서울대/신림/사당/동작</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/14">종로/대학로</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/120">용산/중구/명동/이태원</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7026">성신여대/성북/월곡</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7027">노원/도봉/창동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/95">강북/수유/미아</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/96">왕십리/성수/금호</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/135">건대/광진/구의</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/97">동대문/장안/청량리/답십리</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/125">중랑/상봉/면목/태릉</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/123">신촌/홍대/서대문/마포</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/46">은평/연신내/불광</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/2">경기
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/89">수원/인계</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/160">수원시청/권선/영통</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/88">수원역/세류/팔달문/구운/장안</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/161">대부도/제부도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/100">안성/평택/송탄</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/99">오산/화성/동탄</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7042">파주/금촌/헤이리/통일동산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7043">김포/장기/구래/대명항</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/21">고양/일산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/22">의정부</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/53">부천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/128">안양/평촌/인덕원/과천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/28">군포/금정/산본/의왕</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/31">안산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7034">광명/철산/시흥신천역</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7035">시흥/월곶/정왕/오이도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/27">용인</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/127">이천/광주/여주</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/25">성남/분당</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7036">구리/하남</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7037">남양주</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/136">가평/양평</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/162">양주/동두천/연천/장흥</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/23">포천</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/3">인천
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/90">부평</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/93">주안</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/172">구월/소래포구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/94">동암/간석</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7028">을왕리/인천공항</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7029">월미도/차이나타운/신포/동인천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/171">작전/경인교대</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/170">용현/숭의/도화/송림</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/91">송도/연수</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/119">서구/검단</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/173">강화/옹진/백령도</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/4">강원
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/150">강릉역/교동택지/옥계</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/36">경포대/사천/주문진</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/180">양양/낙산/하조대/인제</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/33">속초/설악/동명항/고성</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/32">춘천/홍천/철원/화천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/34">원주/횡성</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/37">정동진/동해/삼척</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/35">평창/영월/정선/태백</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/51">제주
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7030">제주시</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7031">애월/협재</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/87">서귀포/마라도</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/12">부산
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/101">해운대/재송</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/102">송정/기장/정관</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/103">서면/초읍/양정</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/43">남포동/부산역/송도/영도/범일동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7044">광안리/수영/민락</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7045">경성대/대연/용호/문현</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/41">동래/온천장/부산대/구서/사직</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/104">연산/토곡</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/44">사상</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/82">강서/하단/사하/명지/신호</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/133">덕천/만덕/구포/화명/북구</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/10">경남
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/105">김해/장유/율하</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/106">양산/밀양</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/107">거제/통영/고성군</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/108">진주</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/132">사천/남해/하동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7013">창원
-												상남/용호/중앙</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7014">창원
-												명서/팔용/봉곡/북면</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/109">마산/진해</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/79">거창/함안/창녕/합천/의령</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/9">대구
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7017">동성로/시청/서문시장</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7018">대구역/경북대/엑스코/칠곡3지구/태전동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7054">동대구역/신암/신천/동촌유원지/대구공항/혁신도시</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7055">수성구/들안길/수성못/남구/대명/봉덕</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7056">두류공원/두류/본리/죽전/감삼</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7022">평리/내당/비산/원대</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7025">성서공단/계명대/달성군</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/8">경북
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/70">경주/보문단지/황리단길/불국사/안강/감포/양남</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/71">구미</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7015">포항남구/시청/시외버스터미널/구룡포/문덕/오천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7016">포항북구/영일대/죽도시장/여객터미널</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/129">울진/울릉도/청송/영덕</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/73">경산/하양/영천/청도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/190">문경/상주/영주/예천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/72">안동</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/191">김천/성주/칠곡/의성/군위</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/11">울산
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/117">동구/북구/울주군/일산/정자/진하/영남알프스</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/116">남구/중구/삼산/성남/무거/신정</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/7">대전
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/67">유성
-												봉명/도안/장대</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/68">중구
-												은행/대흥/선화/유천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/66">동구
-												용전/복합터미널</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/250">대덕구
-												신탄진/중리</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/69">서구
-												둔산/용문/월평</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/6">충남
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/65">천안
-												서북구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7012">천안
-												동남구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7057">계룡/금산/논산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7058">공주/동학사</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/63">아산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7059">태안/안면도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7061">서산</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7060">당진</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/200">서천/부여</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/64">대천/보령</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/138">예산/청양/홍성</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/50">세종</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/5">충북
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/58">청주
-												흥덕구/서원구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7011">청주
-												상당구/청원구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7050">진천/음성</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7051">제천/단양</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/59">충주/수안보</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/60">증평/괴산/영동/보은/옥천</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/47">광주
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/111">북구/챔피언스필드/광주역/전남대학교</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/112">서구/유스퀘어터미널/상무지구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/220">동구/남구/국립아시아문화전당/충장로</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7046">광산구
-												하남/송정역</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7047">광산구
-												첨단지구</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/48">전남
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/113">여수</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7048">순천</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/7049">광양</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/114">목포/무안/영암</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/240">나주/담양/곡성/구례/영광/장성/함평</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/115">화순/보성/해남/완도/강진/고흥/진도</a></li>
-									</ul>
-									<ul class="city_child">
-										<li><a href="https://www.goodchoice.kr/product/home/49">전북
-												인기숙소<span>HOT</span>
-										</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/85">전주
-												덕진구</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/140">전주
-												완산구/완주</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/83">군산/비응도</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/230">남원/임실/순창/무주/진안/장수</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/134">익산/익산터미널/익산역</a></li>
-										<li><a
-											href="https://www.goodchoice.kr/product/search/1/84">김제/부안/고창/정읍</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
+                    <!-- 지역필터 (리조트/캠핑/한옥 클래스추가 area_etc)-->
+                    <div class="area_wrap ">
+                        <div class="iscroll_01 depth_01">
+                            <div class="scroller">
+                                            <ul class="city"><!-- 지역 고정 클래스 fix / 오버시 on -->
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/1" class="fix on">
+                            서울                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/2">
+                            경기                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/3">
+                            인천                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/4">
+                            강원                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/51">
+                            제주                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/12">
+                            부산                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/10">
+                            경남                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/9">
+                            대구                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/8">
+                            경북                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/11">
+                            울산                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/7">
+                            대전                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/6">
+                            충남                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/5">
+                            충북                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/47">
+                            광주                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/48">
+                            전남                        </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.goodchoice.kr/product/home/49">
+                            전북                        </a>
+                    </li>
+                            </ul>
+                                        </div>
+                        </div>
+                        <div class="iscroll_02">
+                            <div class="scroller">
+                                <ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/1">서울 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/7052" class="on">강남/역삼/삼성/논현</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7053">서초/신사/방배</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7040">잠실/방이</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7041">잠실새내/신천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/122">영등포/여의도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/20">구로/금천/오류/신도림</a></li><li><a href="https://www.goodchoice.kr/product/search/1/45">강서/화곡/까치산역/목동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/17">천호/길동/둔촌</a></li><li><a href="https://www.goodchoice.kr/product/search/1/19">서울대/신림/사당/동작</a></li><li><a href="https://www.goodchoice.kr/product/search/1/14">종로/대학로</a></li><li><a href="https://www.goodchoice.kr/product/search/1/120">용산/중구/명동/이태원</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7026">성신여대/성북/월곡</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7027">노원/도봉/창동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/95">강북/수유/미아</a></li><li><a href="https://www.goodchoice.kr/product/search/1/96">왕십리/성수/금호</a></li><li><a href="https://www.goodchoice.kr/product/search/1/135">건대/광진/구의</a></li><li><a href="https://www.goodchoice.kr/product/search/1/97">동대문/장안/청량리/답십리</a></li><li><a href="https://www.goodchoice.kr/product/search/1/125">중랑/상봉/면목/태릉</a></li><li><a href="https://www.goodchoice.kr/product/search/1/123">신촌/홍대/서대문/마포</a></li><li><a href="https://www.goodchoice.kr/product/search/1/46">은평/연신내/불광</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/2">경기 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/89">수원/인계</a></li><li><a href="https://www.goodchoice.kr/product/search/1/160">수원시청/권선/영통</a></li><li><a href="https://www.goodchoice.kr/product/search/1/88">수원역/세류/팔달문/구운/장안</a></li><li><a href="https://www.goodchoice.kr/product/search/1/161">대부도/제부도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/100">안성/평택/송탄</a></li><li><a href="https://www.goodchoice.kr/product/search/1/99">오산/화성/동탄</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7042">파주/금촌/헤이리/통일동산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7043">김포/장기/구래/대명항</a></li><li><a href="https://www.goodchoice.kr/product/search/1/21">고양/일산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/22">의정부</a></li><li><a href="https://www.goodchoice.kr/product/search/1/53">부천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/128">안양/평촌/인덕원/과천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/28">군포/금정/산본/의왕</a></li><li><a href="https://www.goodchoice.kr/product/search/1/31">안산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7034">광명/철산/시흥신천역</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7035">시흥/월곶/정왕/오이도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/27">용인</a></li><li><a href="https://www.goodchoice.kr/product/search/1/127">이천/광주/여주</a></li><li><a href="https://www.goodchoice.kr/product/search/1/25">성남/분당</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7036">구리/하남</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7037">남양주</a></li><li><a href="https://www.goodchoice.kr/product/search/1/136">가평/양평</a></li><li><a href="https://www.goodchoice.kr/product/search/1/162">양주/동두천/연천/장흥</a></li><li><a href="https://www.goodchoice.kr/product/search/1/23">포천</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/3">인천 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/90">부평</a></li><li><a href="https://www.goodchoice.kr/product/search/1/93">주안</a></li><li><a href="https://www.goodchoice.kr/product/search/1/172">구월/소래포구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/94">동암/간석</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7028">을왕리/인천공항</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7029">월미도/차이나타운/신포/동인천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/171">작전/경인교대</a></li><li><a href="https://www.goodchoice.kr/product/search/1/170">용현/숭의/도화/송림</a></li><li><a href="https://www.goodchoice.kr/product/search/1/91">송도/연수</a></li><li><a href="https://www.goodchoice.kr/product/search/1/119">서구/검단</a></li><li><a href="https://www.goodchoice.kr/product/search/1/173">강화/옹진/백령도</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/4">강원 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/150">강릉역/교동택지/옥계</a></li><li><a href="https://www.goodchoice.kr/product/search/1/36">경포대/사천/주문진</a></li><li><a href="https://www.goodchoice.kr/product/search/1/180">양양/낙산/하조대/인제</a></li><li><a href="https://www.goodchoice.kr/product/search/1/33">속초/설악/동명항/고성</a></li><li><a href="https://www.goodchoice.kr/product/search/1/32">춘천/홍천/철원/화천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/34">원주/횡성</a></li><li><a href="https://www.goodchoice.kr/product/search/1/37">정동진/동해/삼척</a></li><li><a href="https://www.goodchoice.kr/product/search/1/35">평창/영월/정선/태백</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/51">제주 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/7030">제주시</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7031">애월/협재</a></li><li><a href="https://www.goodchoice.kr/product/search/1/87">서귀포/마라도</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/12">부산 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/101">해운대/재송</a></li><li><a href="https://www.goodchoice.kr/product/search/1/102">송정/기장/정관</a></li><li><a href="https://www.goodchoice.kr/product/search/1/103">서면/초읍/양정</a></li><li><a href="https://www.goodchoice.kr/product/search/1/43">남포동/부산역/송도/영도/범일동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7044">광안리/수영/민락</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7045">경성대/대연/용호/문현</a></li><li><a href="https://www.goodchoice.kr/product/search/1/41">동래/온천장/부산대/구서/사직</a></li><li><a href="https://www.goodchoice.kr/product/search/1/104">연산/토곡</a></li><li><a href="https://www.goodchoice.kr/product/search/1/44">사상</a></li><li><a href="https://www.goodchoice.kr/product/search/1/82">강서/하단/사하/명지/신호</a></li><li><a href="https://www.goodchoice.kr/product/search/1/133">덕천/만덕/구포/화명/북구</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/10">경남 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/105">김해/장유/율하</a></li><li><a href="https://www.goodchoice.kr/product/search/1/106">양산/밀양</a></li><li><a href="https://www.goodchoice.kr/product/search/1/107">거제/통영/고성군</a></li><li><a href="https://www.goodchoice.kr/product/search/1/108">진주</a></li><li><a href="https://www.goodchoice.kr/product/search/1/132">사천/남해/하동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7013">창원 상남/용호/중앙</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7014">창원 명서/팔용/봉곡/북면</a></li><li><a href="https://www.goodchoice.kr/product/search/1/109">마산/진해</a></li><li><a href="https://www.goodchoice.kr/product/search/1/79">거창/함안/창녕/합천/의령</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/9">대구 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/7017">동성로/시청/서문시장</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7018">대구역/경북대/엑스코/칠곡3지구/태전동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7054">동대구역/신암/신천/동촌유원지/대구공항/혁신도시</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7055">수성구/들안길/수성못/남구/대명/봉덕</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7056">두류공원/두류/본리/죽전/감삼</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7022">평리/내당/비산/원대</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7025">성서공단/계명대/달성군</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/8">경북 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/70">경주/보문단지/황리단길/불국사/안강/감포/양남</a></li><li><a href="https://www.goodchoice.kr/product/search/1/71">구미</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7015">포항남구/시청/시외버스터미널/구룡포/문덕/오천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7016">포항북구/영일대/죽도시장/여객터미널</a></li><li><a href="https://www.goodchoice.kr/product/search/1/129">울진/울릉도/청송/영덕</a></li><li><a href="https://www.goodchoice.kr/product/search/1/73">경산/하양/영천/청도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/190">문경/상주/영주/예천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/72">안동</a></li><li><a href="https://www.goodchoice.kr/product/search/1/191">김천/성주/칠곡/의성/군위</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/11">울산 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/117">동구/북구/울주군/일산/정자/진하/영남알프스</a></li><li><a href="https://www.goodchoice.kr/product/search/1/116">남구/중구/삼산/성남/무거/신정</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/7">대전 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/67">유성 봉명/도안/장대</a></li><li><a href="https://www.goodchoice.kr/product/search/1/68">중구 은행/대흥/선화/유천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/66">동구 용전/복합터미널</a></li><li><a href="https://www.goodchoice.kr/product/search/1/250">대덕구 신탄진/중리</a></li><li><a href="https://www.goodchoice.kr/product/search/1/69">서구 둔산/용문/월평</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/6">충남 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/65">천안 서북구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7012">천안 동남구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7057">계룡/금산/논산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7058">공주/동학사</a></li><li><a href="https://www.goodchoice.kr/product/search/1/63">아산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7059">태안/안면도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7061">서산</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7060">당진</a></li><li><a href="https://www.goodchoice.kr/product/search/1/200">서천/부여</a></li><li><a href="https://www.goodchoice.kr/product/search/1/64">대천/보령</a></li><li><a href="https://www.goodchoice.kr/product/search/1/138">예산/청양/홍성</a></li><li><a href="https://www.goodchoice.kr/product/search/1/50">세종</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/5">충북 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/58">청주 흥덕구/서원구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7011">청주 상당구/청원구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7050">진천/음성</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7051">제천/단양</a></li><li><a href="https://www.goodchoice.kr/product/search/1/59">충주/수안보</a></li><li><a href="https://www.goodchoice.kr/product/search/1/60">증평/괴산/영동/보은/옥천</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/47">광주 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/111">북구/챔피언스필드/광주역/전남대학교</a></li><li><a href="https://www.goodchoice.kr/product/search/1/112">서구/유스퀘어터미널/상무지구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/220">동구/남구/국립아시아문화전당/충장로</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7046">광산구 하남/송정역</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7047">광산구 첨단지구</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/48">전남 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/113">여수</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7048">순천</a></li><li><a href="https://www.goodchoice.kr/product/search/1/7049">광양</a></li><li><a href="https://www.goodchoice.kr/product/search/1/114">목포/무안/영암</a></li><li><a href="https://www.goodchoice.kr/product/search/1/240">나주/담양/곡성/구례/영광/장성/함평</a></li><li><a href="https://www.goodchoice.kr/product/search/1/115">화순/보성/해남/완도/강진/고흥/진도</a></li></ul><ul class="city_child"><li><a href="https://www.goodchoice.kr/product/home/49">전북 인기숙소<span>HOT</span></a></li><li><a href="https://www.goodchoice.kr/product/search/1/85">전주 덕진구</a></li><li><a href="https://www.goodchoice.kr/product/search/1/140">전주 완산구/완주</a></li><li><a href="https://www.goodchoice.kr/product/search/1/83">군산/비응도</a></li><li><a href="https://www.goodchoice.kr/product/search/1/230">남원/임실/순창/무주/진안/장수</a></li><li><a href="https://www.goodchoice.kr/product/search/1/134">익산/익산터미널/익산역</a></li><li><a href="https://www.goodchoice.kr/product/search/1/84">김제/부안/고창/정읍</a></li></ul>                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
 					</div>
 					<!-- //Area -->
 
+				<section id="layout_middle">
 					<!-- Filter -->
-					<aside>
 						<div class="filter_wrap">
 							<div class="fix_title">
 								상세조건
@@ -780,7 +436,6 @@
 								</div>
 							</section>
 						</div>
-					</aside>
 					<!-- //Filter -->
 
 					<!-- List -->
@@ -821,7 +476,7 @@
 										<img class="lazy"
 											data-original="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
 											src="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
-											alt="논현 왈츠">
+											alt="논현 왈츠" style="margin-left: -90px;">
 									</p>
 									<div class="stage">
 										<div class="name">
@@ -859,19 +514,15 @@
 										</div>
 									</div>
 							</a></li>
-							<%
-								if(i != 4){%>
-								<hr>
-							<%} 
-							}
-							%>
+							<%} %>
 					</div>
 					<!-- //List -->
 
 				</div>
-
+				</section>
 			</div>
 			<!-- //Content  -->
+			</div>
 		</form>
 
 		<!-- #1 내 위치 재설정-->
@@ -938,33 +589,33 @@
 
 	<!-- Script -->
 	<!-- Library -->
-	<script type="text/javascript" src="/js/library/jquery.cookie.js"></script>
+	<script type="text/javascript" src="${root }/js/library/jquery.cookie.js"></script>
 	<script type="text/javascript"
-		src="/js/library/jquery.lazyload.js?rand=1653988749"></script>
-	<script type="text/javascript" src="/js/library/iscroll.js"></script>
+		src="${root }/js/library/jquery.lazyload.js?rand=1653988749"></script>
+	<script type="text/javascript" src="${root }/js/library/iscroll.js"></script>
 
 	<!-- Service -->
 	<script type="text/javascript"
-		src="/js/service/common.js?rand=1653988749"></script>
+		src="${root }/js/service/common.js?rand=1653988749"></script>
 	<script type="text/javascript"
-		src="/js/service/geolocation.js?rand=1653988749"></script>
+		src="${root }/js/service/geolocation.js?rand=1653988749"></script>
 
 	<!-- Module -->
 	<script type="text/javascript"
-		src="/js/modules/dialogPopup.js?rand=1653988749"></script>
+		src="${root }/js/modules/dialogPopup.js?rand=1653988749"></script>
 
 	<!-- Page Script -->
-	<script type="text/javascript" src="/js/library/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="${root }/js/library/jquery-ui.min.js"></script>
 	<script type="text/javascript"
-		src="/js/library/jquery.ui.touch-punch.min.js"></script>
+		src="${root }/js/library/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript"
-		src="/js/library/jquery.comiseo.daterangepicker.min.js"></script>
-	<script type="text/javascript" src="/js/library/swiper.min.js"></script>
-	<script type="text/javascript" src="/js/library/owl.carousel.min.js"></script>
-	<script type="text/javascript" src="/js/library/moment.js"></script>
+		src="${root }/js/library/jquery.comiseo.daterangepicker.min.js"></script>
+	<script type="text/javascript" src="${root }/js/library/swiper.min.js"></script>
+	<script type="text/javascript" src="${root }/js/library/owl.carousel.min.js"></script>
+	<script type="text/javascript" src="${root }/js/library/moment.js"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/datepick.js?rand=1653988749"></script>
-	<script type="text/javascript" src="/js/library/vue.min.js"></script>
+	<script type="text/javascript" src="${root }/js/library/vue.min.js"></script>
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f6ffb505bb11d7cc3584d443ce35f704"></script>
 	<script charset="UTF-8"
