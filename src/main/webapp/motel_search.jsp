@@ -1,3 +1,7 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.time.LocalDate"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -108,7 +112,7 @@
 	<!-- Wrap -->
 	<div class="wrap show">
 
-		<!-- Header 추가 -->
+		<!-- Header -->
 		<%@include file="ex_header.jsp"%>
 
 		<%
@@ -136,9 +140,9 @@
 		%>
 		<form id="product_filter_form" method="get"
 			action="https://www.goodchoice.kr/product/search/1/7052"
-			data-sel_date="2022-06-07" data-sel_date2="2022-06-08">
+			data-sel_date="<%=sel_date %>" data-sel_date2="<%=sel_date2 %>">
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
-			<input type="hidden" name="sel_date" id="sel_date" value="2022-06-07">
+			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date %>">
 			<input type="hidden" name="sel_date2" id="sel_date2"
 				value="2022-06-08">
 			<div class="listpage">
