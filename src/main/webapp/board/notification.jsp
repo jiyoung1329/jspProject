@@ -42,7 +42,7 @@
 		    <ul>
 		        <li><a href="notification.jsp" class="active">공지사항</a></li>
 		        <li><a href="event.jsp">이벤트</a></li>
-		        <li><a href="faq.jsp">자주 묻는 질문</a></li>
+		        <!-- <li><a href="faq.jsp">자주 묻는 질문</a></li> -->
 		        <li><a href="inquiry.jsp">1:1 문의</a></li>
 		    </ul>
 		</nav>
