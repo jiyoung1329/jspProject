@@ -1,43 +1,54 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
-<!-- Script -->
-<!-- Library -->
-<script type="text/javascript" src="/jspProject/js/library/jquery.cookie.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/jquery.lazyload.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery.cookie.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery.lazyload.js"></script>
 <script type="text/javascript" src="/jspProject/js/library/iscroll.js"></script>
 
 <!-- Service -->
 <script type="text/javascript" src="/jspProject/js/service/common.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/geolocation.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/service/geolocation.js"></script>
 
 <!-- Module -->
 <!-- 
 <script type="text/javascript" src="js/modules/dialogPopup.js"></script>
  -->
 <!-- Page Script -->
-<script type="text/javascript" src="/jspProject/js/library/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/jquery.ui.touch-punch.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/jquery.comiseo.daterangepicker.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/swiper.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/owl.carousel.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/moment.js"></script> 
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery.comiseo.daterangepicker.min.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/swiper.min.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/owl.carousel.min.js"></script>
+<script type="text/javascript" src="/jspProject/js/library/moment.js"></script>
 <script type="text/javascript" src="/jspProject/js/library/vue.min.js"></script>
 
 <script type="text/javascript" src="/jspProject/js/service/datepick.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/product.detail2.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/service/product.detail2.js"></script>
 <!-- 
  -->
-<script type="text/javascript" src="/jspProject/js/service/product.async.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/service/product.async.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/main.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/reservation.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/service/reservation.js"></script>
 <!-- Body Spinner -->
 
-<div class="spinner show" style="display: none;"><span></span></div>
+<div class="spinner show" style="display: none;">
+	<span></span>
+</div>
 
-<div style="display:none;">
+<div style="display: none;">
 	<!-- 네이버 프리미엄 로그 분석(https://yeogirnd.atlassian.net/browse/SD-320)-->
-	
+
 	<script type="text/javascript" src="https://wcs.naver.net/wcslog.js"></script>
 
 	<script>
@@ -212,7 +223,7 @@
 			setCookie('marketing_type', '', -1);
 		}
 	</script>
-    <script>
+	<script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -222,7 +233,7 @@
         ga('send', 'pageview');
     </script>
 
-    <!-- Daum  중요 용도가 아니라면 주석처리 여부 결정 문제 없을시 삭제
+	<!-- Daum  중요 용도가 아니라면 주석처리 여부 결정 문제 없을시 삭제
     <script type="text/javascript">
         var roosevelt_params = {
             retargeting_id:'iaYgM3OBV.Uv.QOMJv.bqg00',
@@ -231,9 +242,9 @@
     </script>
     <script type="text/javascript" src="//adimg.daumcdn.net/rt/roosevelt.js" async></script -->
 
-    <!-- Google Code for &#50668;&#44592;&#50612;&#46412;_&#50937; Conversion Page -->
-    
-    <script type="text/javascript">
+	<!-- Google Code for &#50668;&#44592;&#50612;&#46412;_&#50937; Conversion Page -->
+
+	<script type="text/javascript">
         /* <![CDATA[ */
         var google_conversion_id = 964418007;
         var google_conversion_language = "en";
@@ -243,13 +254,15 @@
         var google_remarketing_only = false;
         /* ]]> */
     </script>
-    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+	<script type="text/javascript"
+		src="//www.googleadservices.com/pagead/conversion.js"></script>
 
-    <noscript>
-        <div style="display:inline;">
-            <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/964418007/?label=6YMHCM_i81wQ17PvywM&amp;guid=ON&amp;script=0"/>
-        </div>
-    </noscript>
+	<noscript>
+		<div style="display: inline;">
+			<img height="1" width="1" style="border-style: none;" alt=""
+				src="//www.googleadservices.com/pagead/conversion/964418007/?label=6YMHCM_i81wQ17PvywM&amp;guid=ON&amp;script=0" />
+		</div>
+	</noscript>
 
 	<script type="text/javascript">
 		if (!wcs_add) var wcs_add={};
@@ -260,8 +273,9 @@
 	</script>
 
 	<!-- Global site tag (gtag.js) - Google AdWords: 802163829 -->
-	
-	<script async="" src="https://www.googletagmanager.com/gtag/js?id=AW-802163829"></script>
+
+	<script async=""
+		src="https://www.googletagmanager.com/gtag/js?id=AW-802163829"></script>
 	<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -280,14 +294,17 @@
         });
 	</script>
 
-    <!-- 채널제출 -->
-    
-    <span itemscope="" itemtype="http://schema.org/Organization">
-        <link itemprop="url" href="https://www.goodchoice.kr">
-        <a itemprop="sameAs" href="https://www.facebook.com/goodchoiceofficial"></a>
-        <a itemprop="sameAs" href="https://play.google.com/store/apps/details?id=kr.goodchoice.abouthere"></a>
-        <a itemprop="sameAs" href="https://itunes.apple.com/kr/app/id884043462"></a>
-        <a itemprop="sameAs" href="https://post.naver.com/withinnovation"></a>
-        <a itemprop="sameAs" href="https://www.youtube.com/channel/UCLI1HOVJdhWdVl9pT__g2Zw"></a>
-    </span>
+	<!-- 채널제출 -->
+
+	<span itemscope="" itemtype="http://schema.org/Organization">
+		<link itemprop="url" href="https://www.goodchoice.kr"> <a
+		itemprop="sameAs" href="https://www.facebook.com/goodchoiceofficial"></a>
+		<a itemprop="sameAs"
+		href="https://play.google.com/store/apps/details?id=kr.goodchoice.abouthere"></a>
+		<a itemprop="sameAs"
+		href="https://itunes.apple.com/kr/app/id884043462"></a> <a
+		itemprop="sameAs" href="https://post.naver.com/withinnovation"></a> <a
+		itemprop="sameAs"
+		href="https://www.youtube.com/channel/UCLI1HOVJdhWdVl9pT__g2Zw"></a>
+	</span>
 </div>

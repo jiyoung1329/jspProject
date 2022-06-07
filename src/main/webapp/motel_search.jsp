@@ -108,7 +108,7 @@
 	<!-- Wrap -->
 	<div class="wrap show">
 
-		<!-- Header -->
+		<!-- Header 추가 -->
 		<%@include file="ex_header.jsp"%>
 
 		<form id="product_filter_form" method="get"
