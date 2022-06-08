@@ -1,3 +1,4 @@
+<%@page import="java.util.Arrays"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
@@ -114,7 +115,7 @@
 		<%@include file="../header.jsp"%>
 
 		<%
-		//현재 날짜 불러옴
+		//현재 날짜
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(date);
@@ -126,23 +127,34 @@
 		cal.add(Calendar.DATE, 1);
 
 		String sel_date2 = sdf.format(cal.getTime());
-
+		
 		String tmp_sel_date = request.getParameter("sel_date");
 		String tmp_sel_date2 = request.getParameter("sel_date2");
+		
+		//대실, 숙박
+		String[] reserve = request.getParameterValues("reserve[]");
+		
+		//놀이시설
+		String[] tmino = request.getParameterValues("tmino[]");
+		
+		//최저, 최고 가격
+		String min_price = request.getParameter("min_price"); 
+		String max_price = request.getParameter("max_price"); 
+		
+		//모텔 정렬 기준
+		String sort = request.getParameter("sort");
+		pageContext.setAttribute("sort", sort);
 
-		//매개변수로 전달된 날짜가 있다면
+		//전달된 날짜가 있다면
 		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
 			sel_date = tmp_sel_date;
 			sel_date2 = tmp_sel_date2;
 		}
 		%>
-		<form id="product_filter_form" method="get"
-			action="https://www.goodchoice.kr/product/search/1/7052"
-			data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
+		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
-			<input type="hidden" name="sel_date" id="sel_date"
-				value="<%=sel_date%>"> <input type="hidden"
-				name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
+			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
+			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
 
 			<div class="listpage">
 				<!-- Result Top -->
@@ -647,16 +659,16 @@
 					<h3>상세조건</h3>
 					<div class="btn_wrap">
 						<button type="button"
-							onclick="window.location.href='https://www.goodchoice.kr/product/search/1/7052?sel_date=2022-06-06&amp;sel_date2=2022-06-07'">초기화</button>
+							onclick="window.location.href='motel_search.jsp?sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>'">초기화</button>
 						<button type="submit">적용</button>
 					</div>
 					<section>
 						<ul>
 							<li><input type="checkbox" id="reserve_0" name="reserve[]"
-								class="inp_chk" value="1"><label for="reserve_0"
+								class="inp_chk" value="t"><label for="reserve_0"
 								class="label_chk">대실 예약</label></li>
 							<li><input type="checkbox" id="reserve_1" name="reserve[]"
-								class="inp_chk" value="2"><label for="reserve_1"
+								class="inp_chk" value="s"><label for="reserve_1"
 								class="label_chk">숙박 예약</label></li>
 							<li><input type="checkbox" id="earlybird_2"
 								name="earlybird[]" class="inp_chk" value="2"><label
@@ -734,31 +746,31 @@
 						</strong>
 						<ul class="hide_type half">
 							<li><input type="checkbox" id="tmino_17" name="tmino[]"
-								class="inp_chk" value="11"><label for="tmino_17"
+								class="inp_chk" value="swimPool"><label for="tmino_17"
 								class="label_chk">수영장</label></li>
 							<li><input type="checkbox" id="tmino_18" name="tmino[]"
-								class="inp_chk" value="4"><label for="tmino_18"
+								class="inp_chk" value="karaoke"><label for="tmino_18"
 								class="label_chk">노래방</label></li>
 							<li><input type="checkbox" id="tmino_19" name="tmino[]"
-								class="inp_chk" value="6"><label for="tmino_19"
+								class="inp_chk" value="poolTable"><label for="tmino_19"
 								class="label_chk">당구대</label></li>
 							<li><input type="checkbox" id="tmino_20" name="tmino[]"
-								class="inp_chk" value="3"><label for="tmino_20"
+								class="inp_chk" value="gameMachine"><label for="tmino_20"
 								class="label_chk">게임기</label></li>
 							<li><input type="checkbox" id="tmino_21" name="tmino[]"
-								class="inp_chk" value="30"><label for="tmino_21"
+								class="inp_chk" value="massageChair"><label for="tmino_21"
 								class="label_chk">안마의자</label></li>
 							<li><input type="checkbox" id="tmino_22" name="tmino[]"
-								class="inp_chk" value="12"><label for="tmino_22"
+								class="inp_chk" value="couplePC"><label for="tmino_22"
 								class="label_chk">커플 PC</label></li>
 							<li><input type="checkbox" id="tmino_23" name="tmino[]"
-								class="inp_chk" value="18"><label for="tmino_23"
+								class="inp_chk" value="miniBar"><label for="tmino_23"
 								class="label_chk">미니바</label></li>
 							<li><input type="checkbox" id="tmino_24" name="tmino[]"
-								class="inp_chk" value="23"><label for="tmino_24"
+								class="inp_chk" value="3dTV"><label for="tmino_24"
 								class="label_chk">3D TV</label></li>
 							<li><input type="checkbox" id="tmino_25" name="tmino[]"
-								class="inp_chk" value="25"><label for="tmino_25"
+								class="inp_chk" value="bimProjecter"><label for="tmino_25"
 								class="label_chk">빔프로젝터</label></li>
 						</ul>
 					</section>
@@ -781,10 +793,11 @@
 						</button>
 					</section>
 					<section>
-						<strong>가격<span><label for="amount"></label><input
-								type="text" id="amount" class="price_val" readonly=""><input
-								type="hidden" id="min_price" name="min_price" value=""><input
-								type="hidden" id="max_price" name="max_price" value=""></span></strong>
+						<strong>가격<span><label for="amount"></label>
+						<input type="text" id="amount" class="price_val" readonly="">
+						<input type="hidden" id="min_price" name="min_price" value="">
+						<input type="hidden" id="max_price" name="max_price" value="">
+						</span></strong>
 						<div class="slider_wrap">
 							<div id="slider"
 								class="slider_align ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
@@ -810,22 +823,48 @@
 						<!-- PC-->
 						<div class="pc">
 							<div class="btn_wrap width_3">
-								<button type="button" data-sort="DISTANCE" class="on">
-									<span>거리 순</span>
-								</button>
-								<button type="button" data-sort="LOWPRICE" class="">
-									<span>낮은 가격 순</span>
-								</button>
-								<button type="button" data-sort="HIGHPRICE" class="">
-									<span>높은 가격 순</span>
-								</button>
+							<c:choose>
+								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null }">
+									<button type="button" data-sort="DISTANCE" class="on">
+										<span>거리 순</span>
+									</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" data-sort="DISTANCE" class="">
+										<span>거리 순</span>
+									</button>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${pageScope.sort == 'LOWPRICE' }">
+									<button type="button" data-sort="LOWPRICE" class="on">
+										<span>낮은 가격 순</span>
+									</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" data-sort="LOWPRICE" class="">
+										<span>낮은 가격 순</span>
+									</button>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${pageScope.sort == 'HIGHPRICE' }">
+									<button type="button" data-sort="HIGHPRICE" class="on">
+										<span>높은 가격 순</span>
+									</button>
+								</c:when>
+								<c:otherwise>
+									<button type="button" data-sort="HIGHPRICE" class="">
+										<span>높은 가격 순</span>
+									</button>
+								</c:otherwise>
+							</c:choose>
 							</div>
 							<button type="button" class="btn_map" onclick="pop_map_pc();">지도</button>
 						</div>
 					</div>
 
-					<!-- id: change 'poduct' into 'product' -->
-					<div id="product_list_area">
+					<div id="poduct_list_area">
 						<!-- 프리미엄 -->
 						<div class="title">
 							<h3>프리미엄&nbsp;</h3>
