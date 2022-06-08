@@ -88,37 +88,37 @@
 			
 				<!-- 문의 작성 -->
 				<div class="tab_each">
-					<form name="inq-form" method="post" action="/more/inquiry_submit">
+					<form name="inq-form" method="post" action="inquiryService.jsp">
 						<div class="alert_top">
 							<p>여기어때 이용 중 불편하신 점을 문의주시면 <em>최대한 빠른 시일내에 답변 드리겠습니다.</em></p>
 						</div>
 	
 						<section class="info_wrap">
 							<b>카테고리유형</b>
-							<select name="room_type" id="" class="select_type_2">
+							<select name="room_type" id="room_type" class="select_type_2">
 								<option value="">카테고리유형을 선택하세요</option>
-								<option value="1">모텔</option>
-								<option value="2">호텔·리조트</option>
-								<option value="3">펜션</option>
-								<option value="6">게스트하우스</option>
-								<option value="5">캠핑/글램핑</option>
-								<option value="7">한옥</option>
-								<option value="10">액티비티</option>
-								<option value="11">현금성(유상)포인트</option>
+								<option value="모텔">모텔</option>
+								<option value="호텔·리조트">호텔·리조트</option>
+								<option value="펜션">펜션</option>
+								<option value="게스트하우스">게스트하우스</option>
+								<option value="캠핑/글램핑">캠핑/글램핑</option>
+								<option value="한옥">한옥</option>
+								<option value="액티비티">액티비티</option>
+								<option value="현금성(유상)포인트">현금성(유상)포인트</option>
 							</select>
 	
 							<b>문의유형</b>
 							<select name="inq_type" id="inq_type" class="select_type_2">
 								<option value="">문의유형을 선택하세요</option>
-								<option value="8">이벤트</option>
-								<option value="7">예약/결제</option>
-								<option value="9">취소/환불</option>
-								<option value="2">혜택받기</option>
-								<option value="1">이용문의</option>
-								<option value="4">회원정보</option>
-								<option value="3">리뷰</option>
-								<option value="10">환불신청</option>
-								<option value="99">기타</option>
+								<option value="이벤트">이벤트</option>
+								<option value="예약/결제">예약/결제</option>
+								<option value="취소/환불">취소/환불</option>
+								<option value="혜택받기">혜택받기</option>
+								<option value="이용문의">이용문의</option>
+								<option value="회원정보">회원정보</option>
+								<option value="리뷰">리뷰</option>
+								<option value="환불신청">환불신청</option>
+								<option value="기타">기타</option>
 							</select>
 	
 							<div class="phone-block">
@@ -150,7 +150,7 @@
 							</div>
 						</section>
 						<section class="btn_wrap ">
-							<button class="btn_red_fill" type="button" onclick="$.inqSubmit();">작성 완료</button>
+							<button class="btn_red_fill" type="button" onclick="validation()">작성 완료</button>
 						</section>
 					</form>
 				</div>
@@ -173,6 +173,53 @@
 <script type="text/javascript" src="/jspProject/js/library/validation/jquery.validate.js"></script>
 <script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/more.js"></script>
+
+<script>
+function validation(){
+	var phoneRegExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?([0-9]{3,4})-?([0-9]{4})$/;
+	var emailRegExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+	// 카테고리 검증
+	if (!$('#room_type option:selected').val()){
+		alert('카테고리를 선택해주세요.');
+		return;
+	}
+	// type 검증
+	if (!$('#inq_type option:selected').val()){
+		alert('문의 유형을 선택해주세요.');
+		return;
+	}
+	// 휴대폰
+	var phone = $('.js-phone-number').val()
+	if (phone){
+		if (!phoneRegExp.test(phone)){
+			alert('핸드폰 번호를 정확히 입력해주세요.')
+		}
+	}
+	
+	// 이메일
+	var email = $('.js-email-string').val()
+	if (email){
+		if (!emailRegExp.test(email)){
+			alert('이메일을 정확히 입력해주세요.')
+		}
+	}
+	
+	// content 
+	if (!$('#questionTextarea').val()){
+		alert('문의 내용을 작성해주세요');
+		return;
+	} else if ($('#questionTextarea').val().length < 10){
+		alert('문의 내용을 10자 이상 입력해주세요');
+		return;
+	}
+	
+	var form = document.forms['inq-form'];
+	form.submit();
+	
+
+}
+</script>
 
 </body>
 </html>
