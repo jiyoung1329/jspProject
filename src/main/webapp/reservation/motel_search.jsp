@@ -115,7 +115,7 @@
 		<%@include file="../header.jsp"%>
 
 		<%
-		//현재 날짜
+		//현재 날짜 불러옴
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(date);
@@ -145,7 +145,7 @@
 		String sort = request.getParameter("sort");
 		pageContext.setAttribute("sort", sort);
 
-		//전달된 날짜가 있다면
+		//매개변수로 전달된 날짜가 있다면
 		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
 			sel_date = tmp_sel_date;
 			sel_date2 = tmp_sel_date2;
@@ -652,7 +652,7 @@
 					<section class="date_wrap">
 						<h3>날짜</h3>
 						<div class="btn_date">
-							<span class="date_view"><b>6.6 ~ 6.7</b><em>&nbsp;·&nbsp;1박</em></span>
+							<span class="date_view"><b><%=sel_date %> ~ <%=sel_date2 %></b><em>&nbsp;·&nbsp;1박</em></span>
 						</div>
 					</section>
 
@@ -871,7 +871,8 @@
 							<span>광고</span>
 						</div>
 						<%
-						for (int i = 0; i < 10; i++) {
+						for (int i = 0; i < 100; i++) {
+							//화면에 출력한 숙소는 자동으로 지도에 마크됨
 						%>
 						<li class="list_4 adcno1"><a
 							href="https://www.goodchoice.kr/product/detail?ano=46430&amp;adcno=1&amp;sel_date=2022-06-06&amp;sel_date2=2022-06-07"
@@ -957,8 +958,11 @@
 				<span>위치설정</span>
 				<button type="button" onclick="close_layer()">닫기</button>
 			</div>
-			<div class="address">서울특별시 중구 세종대로</div>
-			<div class="inner_map">지도</div>
+			<div class="address">${'장소' }</div>
+			<div class="inner_map" id="map">
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8&libraries=services,clusterer,drawing"></script>
+				<script src="${root }/js/service/search_motel.js"></script>
+			</div>
 			<div class="btn_set">
 				<button class="gra_left_right_red">설정 완료</button>
 			</div>
