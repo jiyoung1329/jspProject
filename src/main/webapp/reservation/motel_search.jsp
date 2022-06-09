@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="test.ComparatorAccommo"%>
+<%@page import="test.SortMotelService"%>
 <%@page import="test.AccommoService"%>
 <%@page import="test.AccommoDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -126,7 +129,6 @@
 		String[] area = { "강남", "역삼", "삼성", "논현" };
 		
 		String[] tmp_area = request.getParameterValues("area");
-		/* System.out.println("area로 전달됨: " + tmp_area + ", 변환 후: " +  Arrays.toString(tmp_area));  */
 		String[] param_area = request.getParameterValues("area[]");
 		
 		//매개변수로 전달된 지역이 있다면
@@ -179,9 +181,17 @@
 		pageContext.setAttribute("sort", sort);
 		
 		AccommoService service = new AccommoService();
-		ArrayList<AccommoDTO> list = null;
-		list = service.selectAll(area, sort);
-
+		SortMotelService sortService = new SortMotelService();
+		
+		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
+		
+		//모텔 정렬
+		if(sort == null || sort.equals("LOWPRICE")){
+			list = sortService.sortMotelAsc(list);
+		}else{
+			list = sortService.sortMotelDesc(list);
+		}
+		
 		//매개변수로 전달된 날짜가 있다면
 		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
 			sel_date = tmp_sel_date;
@@ -866,15 +876,6 @@
 					<div class="top_sort">
 
 						<!-- PC-->
-						<%
-							/* String url = "motel_search.jsp?";
-						
-							for(int i = 0; i < area.length; i++){
-								url += "area=" + area[i] + "&";
-							}
-							System.out.println(url); */
-						%>
-						
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
