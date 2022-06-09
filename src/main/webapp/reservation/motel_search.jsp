@@ -1,3 +1,7 @@
+<%@page import="test.AccommoService"%>
+<%@page import="test.AccommoDTO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="test.AccommoDAO"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -103,7 +107,8 @@
 	src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/802163829/?random=1654487871646&amp;cv=9&amp;fst=1654487871646&amp;num=1&amp;bg=ffffff&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;u_h=864&amp;u_w=1536&amp;u_ah=824&amp;u_aw=1536&amp;u_cd=24&amp;u_his=4&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;gtm=2oa610&amp;sendb=1&amp;ig=1&amp;data=event%3Dgtag.config&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fsearch%2F1%2F7052&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fhome%2F1&amp;tiba=%EB%AA%A8%ED%85%94%20%3E%20%EC%84%9C%EC%9A%B8%20%3E%20%EA%B0%95%EB%82%A8%2F%EC%97%AD%EC%82%BC%2F%EC%82%BC%EC%84%B1%2F%EB%85%BC%ED%98%84%20%7C%20%EC%97%AC%EA%B8%B0%EC%96%B4%EB%95%8C&amp;hn=www.googleadservices.com&amp;async=1&amp;rfmt=3&amp;fmt=4"></script>
 <style>
 	#layout_middle { margin-top: -400px; margin-left: 250px; }
-	#product_list_area { padding-bottom: 200px; }
+	#poduct_list_area { min-height: 1400px; } 
+	.result_empty { height: 1400px; }
 </style>
 </head>
 <body class="mobile">
@@ -115,6 +120,34 @@
 		<%@include file="../header.jsp"%>
 
 		<%
+		request.setCharacterEncoding("utf-8");
+
+		//지역 기본값
+		String[] area = { "강남", "역삼", "삼성", "논현" };
+		
+		String[] tmp_area = request.getParameterValues("area");
+		/* System.out.println("area로 전달됨: " + tmp_area + ", 변환 후: " +  Arrays.toString(tmp_area));  */
+		String[] param_area = request.getParameterValues("area[]");
+		
+		//매개변수로 전달된 지역이 있다면
+		if (tmp_area != null && tmp_area.length > 0) {
+			area = tmp_area;
+		} 
+		
+		//낮은 가격 순, 높은 가격 순 버튼 클릭시 이전 지역 전달받기
+		if(param_area != null){
+			String result_arr = null;
+			for(String s: param_area){
+				result_arr = s;
+			}
+			result_arr = result_arr.replace("[", "").replace("]", "");
+			String[] new_arr = result_arr.split(", ");
+			area = new_arr;
+		}
+		
+		//area 저장
+		pageContext.setAttribute("area", area);
+		
 		//현재 날짜 불러옴
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -127,23 +160,27 @@
 		cal.add(Calendar.DATE, 1);
 
 		String sel_date2 = sdf.format(cal.getTime());
-		
+
 		String tmp_sel_date = request.getParameter("sel_date");
 		String tmp_sel_date2 = request.getParameter("sel_date2");
-		
+
 		//대실, 숙박
 		String[] reserve = request.getParameterValues("reserve[]");
-		
+
 		//놀이시설
 		String[] tmino = request.getParameterValues("tmino[]");
-		
+
 		//최저, 최고 가격
-		String min_price = request.getParameter("min_price"); 
-		String max_price = request.getParameter("max_price"); 
-		
+		String min_price = request.getParameter("min_price");
+		String max_price = request.getParameter("max_price");
+
 		//모텔 정렬 기준
 		String sort = request.getParameter("sort");
 		pageContext.setAttribute("sort", sort);
+		
+		AccommoService service = new AccommoService();
+		ArrayList<AccommoDTO> list = null;
+		list = service.selectAll(area, sort);
 
 		//매개변수로 전달된 날짜가 있다면
 		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
@@ -152,10 +189,12 @@
 		}
 		%>
 		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
+			<% pageContext.setAttribute("area", area); %>
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
-
+			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])pageContext.getAttribute("area")) %>">
+	
 			<div class="listpage">
 				<!-- Result Top -->
 				<div class="fix_srch">
@@ -176,7 +215,13 @@
 					<h2>모텔</h2>
 					<div class="area">
 						<div class="btn_area">
-							<span>서울</span>강남/역삼/삼성/논현
+							<span>서울</span>
+							<%for(int i = 0; i < area.length; i++){ %>
+								<%=area[i] %>
+								<%if(i != area.length - 1){%>
+									/
+								<%}
+							}%>
 						</div>
 						<div class="btn_date">
 							<span class="date_view"><b><%=sel_date%> ~ <%=sel_date2%></b><em>&nbsp;·&nbsp;1박</em></span>
@@ -192,7 +237,7 @@
 			<button type="button"
 				class="comiseo-daterangepicker-triggerbutton ui-button ui-corner-all ui-widget comiseo-daterangepicker-bottom comiseo-daterangepicker-vfit"
 				id="drp_autogen0">
-				06.07 - 06.08<span class="ui-button-icon-space"> </span><span
+				<%=sel_date %> - <%=sel_date2 %><span class="ui-button-icon-space"> </span><span
 					class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span>
 			</button>
 
@@ -253,46 +298,46 @@
 											인기숙소<span>HOT</span>
 									</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7052"
+										href="motel_search.jsp?area=강남&area=역삼&area=삼성&area=논현"
 										class="on">강남/역삼/삼성/논현</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7053">서초/신사/방배</a></li>
+										href="motel_search.jsp?area=서초&area=신사&area=방배">서초/신사/방배</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7040">잠실/방이</a></li>
+										href="motel_search.jsp?area=잠실&area=방이">잠실/방이</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7041">잠실새내/신천</a></li>
+										href="motel_search.jsp?area=잠실새내&area=신천">잠실새내/신천</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/122">영등포/여의도</a></li>
+										href="motel_search.jsp?area=영등포&area=여의도">영등포/여의도</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/20">구로/금천/오류/신도림</a></li>
+										href="motel_search.jsp?area=구로&area=금천&area=오류&area=신도림">구로/금천/오류/신도림</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/45">강서/화곡/까치산역/목동</a></li>
+										href="motel_search.jsp?area=강서&area=화곡&area=까치산역&area=목동">강서/화곡/까치산역/목동</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/17">천호/길동/둔촌</a></li>
+										href="motel_search.jsp?area=천호&area=길동&area=둔촌">천호/길동/둔촌</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/19">서울대/신림/사당/동작</a></li>
+										href="motel_search.jsp?area=서울대&area=신림&area=사당&area=동작">서울대/신림/사당/동작</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/14">종로/대학로</a></li>
+										href="motel_search.jsp?area=종로&area=대학로">종로/대학로</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/120">용산/중구/명동/이태원</a></li>
+										href="motel_search.jsp?area=용산&area=중구&area=명동&area=이태원">용산/중구/명동/이태원</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7026">성신여대/성북/월곡</a></li>
+										href="motel_search.jsp?area=성신여대&area=성북&area=월곡">성신여대/성북/월곡</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/7027">노원/도봉/창동</a></li>
+										href="motel_search.jsp?area=노원&area=도봉&area=창동">노원/도봉/창동</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/95">강북/수유/미아</a></li>
+										href="motel_search.jsp?area=강북&area=수유&area=미아">강북/수유/미아</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/96">왕십리/성수/금호</a></li>
+										href="motel_search.jsp?area=왕십리&area=성수&area=금호">왕십리/성수/금호</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/135">건대/광진/구의</a></li>
+										href="motel_search.jsp?area=건대&area=광진&area=구의">건대/광진/구의</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/97">동대문/장안/청량리/답십리</a></li>
+										href="motel_search.jsp?area=동대문&area=장안&area=청량리&area=답십리">동대문/장안/청량리/답십리</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/125">중랑/상봉/면목/태릉</a></li>
+										href="motel_search.jsp?area=중량&area=상봉&area=면목&area=태릉">중랑/상봉/면목/태릉</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/123">신촌/홍대/서대문/마포</a></li>
+										href="motel_search.jsp?area=신촌&area=홍대&area=서대문&area=마포">신촌/홍대/서대문/마포</a></li>
 									<li><a
-										href="https://www.goodchoice.kr/product/search/1/46">은평/연신내/불광</a></li>
+										href="motel_search.jsp?area=은평&area=연신내&area=불광">은평/연신내/불광</a></li>
 								</ul>
 								<ul class="city_child">
 									<li><a href="https://www.goodchoice.kr/product/home/2">경기
@@ -665,7 +710,7 @@
 					<section>
 						<ul>
 							<li><input type="checkbox" id="reserve_0" name="reserve[]"
-								class="inp_chk" value="t"><label for="reserve_0"
+								class="inp_chk" value="d"><label for="reserve_0"
 								class="label_chk">대실 예약</label></li>
 							<li><input type="checkbox" id="reserve_1" name="reserve[]"
 								class="inp_chk" value="s"><label for="reserve_1"
@@ -821,6 +866,15 @@
 					<div class="top_sort">
 
 						<!-- PC-->
+						<%
+							/* String url = "motel_search.jsp?";
+						
+							for(int i = 0; i < area.length; i++){
+								url += "area=" + area[i] + "&";
+							}
+							System.out.println(url); */
+						%>
+						
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
@@ -830,31 +884,31 @@
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="DISTANCE" class="">
+									<button type="button" data-sort="DISTANCE" class="" <%-- onclick="<%=url %>sort=DISTANCE" --%>>
 										<span>거리 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${pageScope.sort == 'LOWPRICE' }">
-									<button type="button" data-sort="LOWPRICE" class="on">
+									<button type="button" data-sort="LOWPRICE" class="on" <%-- onclick="<%=url %>sort=LOWPRICE" --%>>
 										<span>낮은 가격 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="LOWPRICE" class="">
+									<button type="button" data-sort="LOWPRICE" class="" <%-- onclick="<%=url %>sort=LOWPRICE" --%>>
 										<span>낮은 가격 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${pageScope.sort == 'HIGHPRICE' }">
-									<button type="button" data-sort="HIGHPRICE" class="on">
+									<button type="button" data-sort="HIGHPRICE" class="on" <%-- onclick="<%=url %>sort=HIGHPRICE" --%>>
 										<span>높은 가격 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="HIGHPRICE" class="">
+									<button type="button" data-sort="HIGHPRICE" class="" <%-- onclick="<%=url %>sort=HIGHPRICE" --%>>
 										<span>높은 가격 순</span>
 									</button>
 								</c:otherwise>
@@ -871,28 +925,77 @@
 							<span>광고</span>
 						</div>
 						<%
-						for (int i = 0; i < 100; i++) {
+						if(!list.isEmpty()){
+						for(AccommoDTO dto : list) {
 							//화면에 출력한 숙소는 자동으로 지도에 마크됨
 						%>
 						<li class="list_4 adcno1"><a
+							href="https://www.goodchoice.kr/product/detail?ano=63624&amp;adcno=1&amp;sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>"
+							data-ano="63624" data-adcno="1" data-alat="37.49722015035"
+							data-alng="127.02931626635" data-distance="7.635"
+							data-affiliate="1">
+								<p class="pic">
+									<img class="lazy"
+										data-original="<%=dto.getThumnail() %>"
+										src="//image.goodchoice.kr/resize_1000X500x0/adimg_new/63624/281556/1be6d279cb0dc33457eaa3fac97a788d.jpg"
+										alt="<%=dto.getName() %>" style="margin-left: -172px; display: block;">
+								</p>
+								<div class="stage">
+									<div class="name">
+
+										<strong><%=dto.getName() %></strong>
+										<p class="score">
+											<span><em>9.6</em>&nbsp;최고에요</span>&nbsp;(1519)
+										</p>
+										<p><%=dto.getAddress() %></p>
+										<p class="txt_opt">예약취소가능</p>
+										<div class="txt_evt">
+											<span><%=dto.getName() %> 이벤트룸 OPEN ~</span>
+										</div>
+									</div>
+									<div class="price">
+										<div class="map_html">
+											<p>
+												대실&nbsp;<span class="build_badge"
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
+											</p>
+											<p>
+												숙박&nbsp;<span class="build_badge"
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getsPrice() %>원</b>
+											</p>
+										</div>
+										<p>
+											대실&nbsp;<span class="build_badge"
+												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
+												style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+										</p>
+										<p>
+											숙박&nbsp;<span class="build_badge"
+												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
+												style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice() %>원</b>
+										</p>
+									</div>
+								</div>
+						</a></li>
+						<%-- <li class="list_4 adcno1"><a
 							href="https://www.goodchoice.kr/product/detail?ano=46430&amp;adcno=1&amp;sel_date=2022-06-06&amp;sel_date2=2022-06-07"
 							data-ano="46430" data-adcno="1" data-alat="37.5055137703"
 							data-alng="127.026066813" data-distance="7.297"
 							data-affiliate="1">
 								<p class="pic">
 									<img class="lazy"
-										data-original="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
+										data-original=<%=dto.getThumnail() %>
 										src="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
-										alt="논현 왈츠" style="margin-left: -90px;">
+										alt="<%=dto.getName() %>" style="margin-left: -90px;">
 								</p>
 								<div class="stage">
 									<div class="name">
 
-										<strong> 논현 왈츠 </strong>
+										<strong><%=dto.getName() %></strong>
 										<p class="score">
 											<span><em>9.2</em>&nbsp;추천해요</span>&nbsp;(2014)
 										</p>
-										<p>강남구 논현동</p>
+										<p><%=dto.getAddress() %></p>
 										<div class="txt_evt">
 											<span>베이커리 및 커피 제공</span>
 										</div>
@@ -901,27 +1004,34 @@
 										<div class="map_html">
 											<p>
 												대실&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b>35,000원</b>
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
 											</p>
 											<p>
 												숙박&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b>70,000원</b>
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
 											</p>
 										</div>
 										<p>
 											<em>50,000</em>대실&nbsp;<span class="build_badge"
 												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);">35,000원</b>
+												style="color: rgba(255, 92, 92, 1);"><%=dto.getdPrice() %>원</b>
 										</p>
 										<p>
 											<em>80,000</em>숙박&nbsp;<span class="build_badge"
 												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);">70,000원</b>
+												style="color: rgba(255, 92, 92, 1);"><%=dto.getsPrice() %>원</b>
 										</p>
 									</div>
 								</div>
-						</a></li>
-						<%} %>
+						</a></li> --%>
+						<%
+							}
+						}else{%>
+							<div class="result_empty">
+								<b>현재 조건에 맞는 숙소가 없습니다.</b> 지역을 변경하거나<br>일정, 상세조건을 재설정해 보세요.
+							</div>
+						<%}
+						%>
 					</div>
 					<!-- //List -->
 
