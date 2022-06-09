@@ -78,37 +78,53 @@ function rendered() {
 	bindEvents();
 }
 
+
 function recommendNicknames() {
-    $.post('/verification/recommendNicknames', function (result) {
-        if (result.code != 200) {
-            toastPop(result.message);
+    nicknames = ['유형적인코커스패니얼',
+		'험악한불테리어',
+		'멕시코시티백수',
+		'선한아프간하운드',
+		'등적색핵탄두',
+		'천안수색대',
+		'곰살궂은보급',
+		'땅끝모노레일검은수염',
+		'도봉산변덕',
+		'일흔하나나무뿌리',
+		'희갈색디스크',
+		'광장시장고무',
+		'107세장어',
+		'경산척후병',
+		'종국적인쵸파',
+		'쓰린재규어',
+		'정동진불교',
+		'예외적인행복',
+		'한국과학기술원좁쌀',
+		'섬강유원지찌꺼기',
+		'악마적인힘',
+		'꺼뭇한지리'
+		]
+
+    nicknames = shuffle(nicknames);
+	var $unickElement = $('input[data-input="unick"]'),
+    	label = $unickElement.parent().addClass( "inp_error" ).find('label');
+
+    if (label.length > 0) {
+        label.addClass('default_label_txt icon-ic_downwards_arrow').html('추천 닉네임이에요!')
+    } else {
+		$unickElement.after('<label id="unick-error" ' +
+            'class="error help-block default_label_txt" ' +
+            'for="unick">추천 닉네임이에요!</label>')
+    }
+
+	$unickElement.val(nicknames[0]);
+    spin_dimm_off();
+
+	$unickElement.on('input',function(){
+        if($(this).val() == ''){
             return false;
+        }else{
+            $('#unick-error').hide().removeClass('default_label_txt icon-ic_downwards_arrow');
         }
-
-        nicknames = result.data.nicknames;
-
-        nicknames = shuffle(nicknames);
-		var $unickElement = $('input[data-input="unick"]'),
-        	label = $unickElement.parent().addClass( "inp_error" ).find('label');
-
-        if (label.length > 0) {
-            label.addClass('default_label_txt icon-ic_downwards_arrow').html('추천 닉네임이에요!')
-        } else {
-			$unickElement.after('<label id="unick-error" ' +
-                'class="error help-block default_label_txt icon-ic_downwards_arrow" ' +
-                'for="unick">추천 닉네임이에요!</label>')
-        }
-
-		$unickElement.val(nicknames[0]);
-        spin_dimm_off();
-
-		$unickElement.on('input',function(){
-            if($(this).val() == ''){
-                return false;
-            }else{
-                $('#unick-error').hide().removeClass('default_label_txt icon-ic_downwards_arrow');
-            }
-        });
     });
 }
 

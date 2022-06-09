@@ -52,7 +52,7 @@
 		<div class="align_rt">
 			<div class="mypage">
 				<!-- 닉네임 수정 FORM -->
-				<form name="form1" action="https://www.goodchoice.kr/my/mypageInfoUpdate" autocomplete="off" method="post" novalidate="novalidate" data-form="unick">
+				<form name="form1" action="nicknameModify.jsp" autocomplete="off" method="post" novalidate="novalidate" data-form="unick">
 					<!-- 폼전송시 전달되는 data target element -->
 					<div class="mypageForm__form-inputs-wrap" aria-hidden="true">
 						<input type="text" name="unick" id="test1" aria-hidden="true" value="GC1501958406">
@@ -164,7 +164,7 @@
 <script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/validate.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/my.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/mypage.js"></script>
+<script src="/jspProject/js/service/mypage.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/phone-verification.js"></script>
 
 </body>
