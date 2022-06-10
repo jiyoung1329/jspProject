@@ -10,13 +10,12 @@
 	String nickname = request.getParameter("unick");
 	String name = request.getParameter("uname");
 	String phone = request.getParameter("uphone");
-	
 	System.out.println("nickname: " + nickname + ", name: " + name + ", phone : " + phone);
-
 	
 	MemberDAO memberDao = new MemberDAO();
 	MemberDTO member = memberDao.selectEmail(email);
-	member.setNickname(nickname);
-	memberDao.nicknameUpdate(member);
+	member.setPhone(phone);
+	memberDao.phoneUpdate(member);
+	
 %>
 <script>window.location.href = "myPage.jsp"</script>

@@ -1,3 +1,5 @@
+<%@page import="member.MemberDTO"%>
+<%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,7 +17,7 @@
     <title>취향대로 머물다 여기어때</title>
     <link rel="stylesheet" href="/jspProject/css/common.css">
     <link rel="stylesheet" href="/jspProject/css/font.css">
-    <link rel="stylesheet" href="/jspProject/css/my.css">
+    <link rel="stylesheet" href="/jspProject/css/my2.css">
     <link rel="canonical" href="https://www.goodchoice.kr/">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
@@ -23,7 +25,16 @@
     
 </head>
 <body class="pc">
-
+<% 
+// 	String email = (String) session.getAttribute("email");
+// 	if (email.isEmpty()){
+// 		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+// 	}
+	String email = "test@naver.com";
+	MemberDAO memberDao = new MemberDAO();
+	MemberDTO member = memberDao.selectEmail(email);
+	
+%>
 <!-- Wrap -->
 <div class="wrap show">
 <%@ include file="../header.jsp" %>
@@ -55,9 +66,9 @@
 				<form name="form1" action="nicknameModify.jsp" autocomplete="off" method="post" novalidate="novalidate" data-form="unick">
 					<!-- 폼전송시 전달되는 data target element -->
 					<div class="mypageForm__form-inputs-wrap" aria-hidden="true">
-						<input type="text" name="unick" id="test1" aria-hidden="true" value="GC1501958406">
-						<input type="text" name="uname" aria-hidden="true" value="김*영">
-						<input type="tel" name="uphone" aria-hidden="true" value="010****6984">
+						<input type="text" name="unick" aria-hidden="true" value="<%= member.getNickname() %>">
+						<input type="text" name="uname" aria-hidden="true" value="<%=member.getName() %>">
+						<input type="tel" name="uphone" aria-hidden="true" value="<%=member.getPhone() %>">
 					</div>
 
 					<input type="hidden" name="yeogi_token" value="afb28bb80cc527105c307aaf90a429ed">
@@ -75,14 +86,14 @@
 							<!-- 닉네임 -->
 							<div class="pw_input__title">
 								<b>닉네임</b>
-								<span class="title__uinfo">GC1501958406</span>
+								<span class="title__uinfo"><%=member.getNickname() %></span>
 							</div>
 							<!-- //닉네임 -->
 							
 							<!-- 닉네임 수정 -->
 							<section class="modifying-section" style="display: none;">
 								<p class="inp_wrap remove form-errors">
-									<input type="text" value="GC1501958406" placeholder="체크인시 필요한 정보입니다." data-input="unick" data-msg-required="닉네임을 입력하세요." data-rule-minlength="2" data-rule-spacechar="true" data-rule-specialchar="true">
+									<input type="text" value="<%=member.getNickname() %>" placeholder="체크인시 필요한 정보입니다." data-input="unick" data-msg-required="닉네임을 입력하세요." data-rule-minlength="2" data-rule-spacechar="true" data-rule-specialchar="true">
 								</p>
 								<button type="button" class="btn_etc btn_confirm active" onclick="changeNickname();">딴거할래요</button> <!-- 활성화 클래스 'active' -->
 							</section>
@@ -99,12 +110,12 @@
 				<!-- //닉네임 수정 FORM -->
 				
 				<!-- 예약자 수정 FORM -->
-				<form name="form2" action="https://www.goodchoice.kr/my/mypageInfoUpdate" autocomplete="off" method="post" novalidate="novalidate" data-form="uname">
+				<form name="form2" action="nameModify.jsp" autocomplete="off" method="post" novalidate="novalidate" data-form="uname">
 					<!-- 폼전송시 전달되는 data target element -->
 					<div class="mypageForm__form-inputs-wrap" aria-hidden="true">
-						<input type="text" name="unick" aria-hidden="true" value="GC1501958406">
-						<input type="text" name="uname" aria-hidden="true" value="김*영">
-						<input type="tel" name="uphone" aria-hidden="true" value="010****6984">
+						<input type="text" name="unick" aria-hidden="true" value="<%= member.getNickname() %>">
+						<input type="text" name="uname" aria-hidden="true" value="<%=member.getName() %>">
+						<input type="tel" name="uphone" aria-hidden="true" value="<%=member.getPhone() %>">
 					</div>
 					<input type="hidden" name="yeogi_token" value="afb28bb80cc527105c307aaf90a429ed">
 					<input type="hidden" name="utype" value="3">
@@ -113,11 +124,11 @@
 						<div class="pw_input">
 							<div class="pw_input__title">
 								<b>예약자 이름</b>
-								<span class="title__uinfo">김*영</span>
+								<span class="title__uinfo"><%=member.getName() %></span>
 							</div>
 							<section class="modifying-section" style="display: none;">
 								<p class="inp_wrap remove form-errors">
-									<input type="text" id="uname" value="" placeholder="체크인시 필요한 정보입니다." data-input="uname" data-rule-spacechar="true" data-rule-specialchar="true">
+									<input type="text" id="uname" value="<%=member.getName() %>" placeholder="체크인시 필요한 정보입니다." data-input="uname" data-rule-spacechar="true" data-rule-specialchar="true">
 								</p>
 							</section>
 							<div class="pw_input__btns-wrap">
@@ -129,23 +140,49 @@
 					</section>
 				</form>
 				<!-- //예약자 수정 FORM -->
-				<!--  수정 FORM -->
-				<form name="form3">
-					<section>
-						<div class="pw_input phone_confirm">
-							<div class="pw_input__title">
-								<b>휴대폰 번호</b>
-								<span class="title__uinfo">010****6984</span>
+				<!-- 휴대폰 수정 FORM -->
+				<form name="form3" action="phoneModify.jsp" autocomplete="off" method="post" novalidate="novalidate" data-form="uphone">
+				<section>
+					<!-- 폼전송시 전달되는 data target element -->
+					<div class="mypageForm__form-inputs-wrap" aria-hidden="true">
+						<input type="text" name="unick" aria-hidden="true" value="<%= member.getNickname() %>">
+						<input type="text" name="uname" aria-hidden="true" value="<%=member.getName() %>">
+						<input type="tel" name="uphone" aria-hidden="true" value="<%=member.getPhone() %>">
+					</div>
+					<input type="hidden" name="yeogi_token" value="887dfdfbfe14dd9a8979e9bb7fcc0368">
+					<input type="hidden" name="utype" value="3">
+					<div class="pw_input phone_confirm">
+						<div class="pw_input__title">
+							<b>휴대폰 번호</b>
+							<span class="title__uinfo"><%=member.getPhone() %></span>
+							<div class="safety_txt">개인 정보 보호를 위해 내 정보는 모두 안전하게 암호화됩니다.</div>
+						</div>
+						<div class="modifying-section" style="display: block;">
+							<div id="sendCode">
+								<section>
+									<div class="inp_wrap remove form-errors inp_error">
+										<input type="tel" id="phone_number" value="" placeholder="체크인시 필요한 정보입니다." maxlength="13" data-input="uphone" 
+										data-rule-phonenumber="true" required="true" class="required" aria-invalid="true">
+										<button type="button" class="btn_checked" style="display: none;">확인</button>
+									</div>
+								</section>
 							</div>
 						</div>
-					</section>
-				</form>
+						<div class="pw_input__btns-wrap">
+							<button class="btns-wrap__edit-btn " type="button">수정</button>
+							<button class="btns-wrap__submit-btn" type="submit">수정완료</button>
+							<button class="btns-wrap__cancel-btn" type="button">수정취소</button>
+						</div>
+					</div>
+				</section>
+			</form>
+				<!-- //휴대폰 수정 FORM -->
 			</div>
 
 		<div class="bot_btn">
 			<p>여기어때를 이용하고 싶지 않으신가요?</p>
 			<button type="button" onclick="pop_twobtn('ell','로그아웃 하시겠습니까?','취소','로그아웃','close_layer()','logoutPro()');">로그아웃</button>
-			<button type="button"><a href="https://www.goodchoice.kr/my/withdraw">회원탈퇴</a></button>
+			<button type="button"><a href="#">회원탈퇴</a></button>
 		</div>
 	</div>
 </div>
