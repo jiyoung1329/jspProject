@@ -1,7 +1,8 @@
+<%@page import="java.util.HashSet"%>
+<%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
 <%@page import="test.ComparatorAccommo"%>
 <%@page import="test.SortMotelService"%>
-<%@page import="test.AccommoService"%>
 <%@page import="test.AccommoDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="test.AccommoDAO"%>
@@ -127,29 +128,34 @@
 
 		//지역 기본값
 		String[] area = { "강남", "역삼", "삼성", "논현" };
-		
+
 		String[] tmp_area = request.getParameterValues("area");
 		String[] param_area = request.getParameterValues("area[]");
-		
+
 		//매개변수로 전달된 지역이 있다면
 		if (tmp_area != null && tmp_area.length > 0) {
 			area = tmp_area;
-		} 
-		
-		//낮은 가격 순, 높은 가격 순 버튼 클릭시 이전 지역 전달받기
-		if(param_area != null){
+		}
+
+		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기
+		if (param_area != null) {
 			String result_arr = null;
-			for(String s: param_area){
+			for (String s : param_area) {
 				result_arr = s;
 			}
 			result_arr = result_arr.replace("[", "").replace("]", "");
 			String[] new_arr = result_arr.split(", ");
 			area = new_arr;
 		}
-		
-		//area 저장
 		pageContext.setAttribute("area", area);
-		
+
+		String url = "motel_search.jsp?";
+		for (int i = 0; i < area.length; i++) {
+			url += "area=" + area[i];
+			if (i != area.length - 1)
+				url += "&";
+		}
+
 		//현재 날짜 불러옴
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -166,40 +172,70 @@
 		String tmp_sel_date = request.getParameter("sel_date");
 		String tmp_sel_date2 = request.getParameter("sel_date2");
 
-		//대실, 숙박
-		String[] reserve = request.getParameterValues("reserve[]");
-
-		//놀이시설
-		String[] tmino = request.getParameterValues("tmino[]");
-
-		//최저, 최고 가격
-		String min_price = request.getParameter("min_price");
-		String max_price = request.getParameter("max_price");
-
-		//모텔 정렬 기준
-		String sort = request.getParameter("sort");
-		pageContext.setAttribute("sort", sort);
-		
-		AccommoService service = new AccommoService();
-		SortMotelService sortService = new SortMotelService();
-		
-		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
-		
-		//모텔 정렬
-		if(sort == null || sort.equals("LOWPRICE")){
-			list = sortService.sortMotelAsc(list);
-		}else{
-			list = sortService.sortMotelDesc(list);
-		}
-		
 		//매개변수로 전달된 날짜가 있다면
 		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
 			sel_date = tmp_sel_date;
 			sel_date2 = tmp_sel_date2;
 		}
+
+		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
+		String sort = request.getParameter("sort");
+		pageContext.setAttribute("sort", sort);
+		
+		//대실, 숙박
+		String[] reserve = request.getParameterValues("reserve[]");
+		String d = null, s = null;
+		if (reserve != null) {
+			for (String r : reserve) {
+				if (r.equals("d"))
+					d = "d";
+				if (r.equals("s"))
+					s = "s";
+			}
+		}
+
+		AccommoService service = new AccommoService();
+
+		//지역에 속한 모텔 불러오기
+		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
+
+		//필터링
+		if (!list.isEmpty()) {
+			//최저, 최고 가격
+			String min_price = request.getParameter("min_price");
+			String max_price = request.getParameter("max_price");
+			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
+				int minPrice = 0, maxPrice = 0;
+				try {
+					minPrice = Integer.parseInt(min_price);
+					maxPrice = Integer.parseInt(max_price);
+				} catch (Exception e) {
+					out.print("<script>location.href='" + url + "';</script>");
+				}
+				list = service.filterByPrice(minPrice, maxPrice, list);
+			}
+
+			//놀이시설
+			String[] tmp_tmino = request.getParameterValues("tmino[]");
+			if (tmp_tmino != null) {
+				//중복 제거
+				ArrayList<String> tmino = new ArrayList<>();
+				for (String t : tmp_tmino) {
+					if (!tmino.contains(t) && !t.equals("on"))
+						tmino.add(t);
+				}
+				list = service.filterByCondi(tmino, list);
+			}
+
+			//모텔 정렬
+			if (sort == null || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+				list = service.sortMotelAsc(list);
+			} else {
+				list = service.sortMotelDesc(list);
+			}
+		}
 		%>
 		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
-			<% pageContext.setAttribute("area", area); %>
 			<input type="hidden" name="sort" id="sort" value="DISTANCE">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
@@ -726,7 +762,7 @@
 								class="inp_chk" value="s"><label for="reserve_1"
 								class="label_chk">숙박 예약</label></li>
 							<li><input type="checkbox" id="earlybird_2"
-								name="earlybird[]" class="inp_chk" value="2"><label
+								name="earlybird[]" class="inp_chk"><label
 								for="earlybird_2" class="label_chk">50%할인</label></li>
 						</ul>
 					</section>
@@ -736,34 +772,34 @@
 						</strong>
 						<ul class="hide_type half">
 							<li><input type="checkbox" id="tmino_0" name="tmino[]"
-								class="inp_chk" value="8"><label for="tmino_0"
+								class="inp_chk"><label for="tmino_0"
 								class="label_chk">무인텔</label></li>
 							<li><input type="checkbox" id="tmino_1" name="tmino[]"
-								class="inp_chk" value="14"><label for="tmino_1"
+								class="inp_chk"><label for="tmino_1"
 								class="label_chk">파티룸</label></li>
 							<li><input type="checkbox" id="tmino_2" name="tmino[]"
-								class="inp_chk" value="1"><label for="tmino_2"
+								class="inp_chk"><label for="tmino_2"
 								class="label_chk">거울룸</label></li>
 							<li><input type="checkbox" id="tmino_3" name="tmino[]"
-								class="inp_chk" value="9"><label for="tmino_3"
+								class="inp_chk"><label for="tmino_3"
 								class="label_chk">복층룸</label></li>
 							<li><input type="checkbox" id="tmino_4" name="tmino[]"
-								class="inp_chk" value="2"><label for="tmino_4"
+								class="inp_chk"><label for="tmino_4"
 								class="label_chk">공주룸</label></li>
 							<li><input type="checkbox" id="tmino_5" name="tmino[]"
-								class="inp_chk" value="13"><label for="tmino_5"
+								class="inp_chk"><label for="tmino_5"
 								class="label_chk">트윈베드</label></li>
 							<li><input type="checkbox" id="tmino_6" name="tmino[]"
-								class="inp_chk" value="26"><label for="tmino_6"
+								class="inp_chk"><label for="tmino_6"
 								class="label_chk">야외테라스</label></li>
 							<li><input type="checkbox" id="tmino_7" name="tmino[]"
-								class="inp_chk" value="31"><label for="tmino_7"
+								class="inp_chk"><label for="tmino_7"
 								class="label_chk">바다뷰</label></li>
 							<li><input type="checkbox" id="tmino_8" name="tmino[]"
-								class="inp_chk" value="39"><label for="tmino_8"
+								class="inp_chk"><label for="tmino_8"
 								class="label_chk">호수뷰</label></li>
 							<li><input type="checkbox" id="tmino_9" name="tmino[]"
-								class="inp_chk" value="40"><label for="tmino_9"
+								class="inp_chk"><label for="tmino_9"
 								class="label_chk">하늘뷰</label></li>
 						</ul>
 					</section>
@@ -773,25 +809,25 @@
 						</strong>
 						<ul class="hide_type half">
 							<li><input type="checkbox" id="tmino_10" name="tmino[]"
-								class="inp_chk" value="19"><label for="tmino_10"
+								class="inp_chk" value="1"><label for="tmino_10"
 								class="label_chk">스파/월풀</label></li>
 							<li><input type="checkbox" id="tmino_11" name="tmino[]"
-								class="inp_chk" value="17"><label for="tmino_11"
+								class="inp_chk" value="1"><label for="tmino_11"
 								class="label_chk">사우나/찜질방</label></li>
 							<li><input type="checkbox" id="tmino_12" name="tmino[]"
-								class="inp_chk" value="7"><label for="tmino_12"
+								class="inp_chk" value="1"><label for="tmino_12"
 								class="label_chk">맛사지 베드</label></li>
 							<li><input type="checkbox" id="tmino_13" name="tmino[]"
-								class="inp_chk" value="15"><label for="tmino_13"
+								class="inp_chk" value="1"><label for="tmino_13"
 								class="label_chk">히노끼탕</label></li>
 							<li><input type="checkbox" id="tmino_14" name="tmino[]"
-								class="inp_chk" value="5"><label for="tmino_14"
+								class="inp_chk" value="1"><label for="tmino_14"
 								class="label_chk">노천탕</label></li>
 							<li><input type="checkbox" id="tmino_15" name="tmino[]"
-								class="inp_chk" value="34"><label for="tmino_15"
+								class="inp_chk" value="1"><label for="tmino_15"
 								class="label_chk">반신욕</label></li>
 							<li><input type="checkbox" id="tmino_16" name="tmino[]"
-								class="inp_chk" value="10"><label for="tmino_16"
+								class="inp_chk" value="1"><label for="tmino_16"
 								class="label_chk">욕실 TV</label></li>
 						</ul>
 					</section>
@@ -801,31 +837,31 @@
 						</strong>
 						<ul class="hide_type half">
 							<li><input type="checkbox" id="tmino_17" name="tmino[]"
-								class="inp_chk" value="swimPool"><label for="tmino_17"
+								class="inp_chk" value="2"><label for="tmino_17"
 								class="label_chk">수영장</label></li>
 							<li><input type="checkbox" id="tmino_18" name="tmino[]"
-								class="inp_chk" value="karaoke"><label for="tmino_18"
+								class="inp_chk" value="3"><label for="tmino_18"
 								class="label_chk">노래방</label></li>
 							<li><input type="checkbox" id="tmino_19" name="tmino[]"
-								class="inp_chk" value="poolTable"><label for="tmino_19"
+								class="inp_chk" value="4"><label for="tmino_19"
 								class="label_chk">당구대</label></li>
 							<li><input type="checkbox" id="tmino_20" name="tmino[]"
-								class="inp_chk" value="gameMachine"><label for="tmino_20"
+								class="inp_chk" value="5"><label for="tmino_20"
 								class="label_chk">게임기</label></li>
 							<li><input type="checkbox" id="tmino_21" name="tmino[]"
-								class="inp_chk" value="massageChair"><label for="tmino_21"
+								class="inp_chk" value="6"><label for="tmino_21"
 								class="label_chk">안마의자</label></li>
 							<li><input type="checkbox" id="tmino_22" name="tmino[]"
-								class="inp_chk" value="couplePC"><label for="tmino_22"
+								class="inp_chk" value="7"><label for="tmino_22"
 								class="label_chk">커플 PC</label></li>
 							<li><input type="checkbox" id="tmino_23" name="tmino[]"
-								class="inp_chk" value="miniBar"><label for="tmino_23"
+								class="inp_chk" value="8"><label for="tmino_23"
 								class="label_chk">미니바</label></li>
 							<li><input type="checkbox" id="tmino_24" name="tmino[]"
-								class="inp_chk" value="3dTV"><label for="tmino_24"
+								class="inp_chk" value="9"><label for="tmino_24"
 								class="label_chk">3D TV</label></li>
 							<li><input type="checkbox" id="tmino_25" name="tmino[]"
-								class="inp_chk" value="bimProjecter"><label for="tmino_25"
+								class="inp_chk" value="10"><label for="tmino_25"
 								class="label_chk">빔프로젝터</label></li>
 						</ul>
 					</section>
@@ -956,25 +992,52 @@
 									</div>
 									<div class="price">
 										<div class="map_html">
+										<%if(reserve == null || (d != null && d == "d")){ %>
 											<p>
-												대실&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
+												<%if(dto.getdPrice() != 0){ %>
+													대실&nbsp;
+													<span class="build_badge" style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
+												<%} else {%>
+													대실 <b>숙소에 문의</b>
+												<%} %>
 											</p>
+										<%} %>
+										
+										<%if(reserve == null || s != null && s == "s"){ %>
 											<p>
-												숙박&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getsPrice() %>원</b>
+											<%if(dto.getsPrice() != 0){ %>
+													숙박&nbsp;<span class="build_badge"
+														style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getsPrice() %>원</b>
+											<%} else {%>
+												숙박 <b>숙소에 문의</b>
+											<%} %>
 											</p>
+										<%} %>
 										</div>
-										<p>
-											대실&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
-												style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
-										</p>
-										<p>
-											숙박&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
-												style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice() %>원</b>
-										</p>
+										
+										<%if(reserve == null || d != null && d == "d"){ %>
+											<p>
+											<%if(dto.getdPrice() != 0){ %>
+												대실&nbsp;<span class="build_badge"
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
+													style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+											<%} else {%>
+												대실 <b>숙소에 문의</b>
+											<%} %>
+											</p>
+										<%} %>
+										
+										<%if(reserve == null || s != null && s == "s"){ %>
+											<p>
+											<%if(dto.getsPrice() != 0){ %>
+												숙박&nbsp;<span class="build_badge"
+													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
+													style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice() %>원</b>
+											<%} else {%>
+												숙박 <b>숙소에 문의</b>
+											<%} %>
+											</p>
+										<%} %>
 									</div>
 								</div>
 						</a></li>
