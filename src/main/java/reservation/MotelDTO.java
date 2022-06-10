@@ -1,4 +1,4 @@
-package test;
+package reservation;
 
 public class MotelDTO {
 	private int accommoNum;

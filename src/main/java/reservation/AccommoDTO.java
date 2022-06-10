@@ -1,4 +1,4 @@
-package test;
+package reservation;
 
 public class AccommoDTO {
 	private int num;

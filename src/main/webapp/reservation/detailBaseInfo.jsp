@@ -84,7 +84,9 @@
 			<li><br></li>
 			<li>#코로나로인하여 펜트하우스A,펜트하우스B,펜트하우스648 객실은 인원이 변동될수 있습니다</li>
 		</ul>
-		<div class="map" id="google_maps"></div>
+		<div class="map" id="google_maps">
+		
+		</div>
 	</section>
 
         

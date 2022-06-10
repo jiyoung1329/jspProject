@@ -1,16 +1,15 @@
+<%@page import="reservation.AccommoService"%>
+<%@page import="reservation.AccommoDTO"%>
+<%@page import="reservation.AccommoDAO"%>
 <%@page import="java.util.HashSet"%>
-<%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
-<%@page import="test.ComparatorAccommo"%>
-<%@page import="test.SortMotelService"%>
-<%@page import="test.AccommoDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="test.AccommoDAO"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.time.LocalDate"%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -977,7 +976,7 @@
 						for(AccommoDTO dto : list) {
 						%>
 						<li class="list_4 adcno1"><a
-							href="https://www.goodchoice.kr/product/detail?ano=63624&amp;adcno=1&amp;sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>"
+							href="detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
 							data-ano="63624" data-adcno="1" data-alat="37.49722015035"
 							data-alng="127.02931626635" data-distance="7.635"
 							data-affiliate="1">
