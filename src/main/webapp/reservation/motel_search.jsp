@@ -992,7 +992,7 @@
 
 										<strong><%=dto.getName() %></strong>
 										<p class="score">
-											<span><em>9.6</em>&nbsp;최고에요</span>&nbsp;(1519)
+											<span><em><%=dto.getScore() %></em></span>&nbsp;(<%=dto.getReviewCnt() %>)
 										</p>
 										<p><%=dto.getAddress() %></p>
 										<p class="txt_opt">예약취소가능</p>
@@ -1033,55 +1033,8 @@
 									</div>
 								</div>
 						</a></li>
-						<%-- <li class="list_4 adcno1"><a
-							href="https://www.goodchoice.kr/product/detail?ano=46430&amp;adcno=1&amp;sel_date=2022-06-06&amp;sel_date2=2022-06-07"
-							data-ano="46430" data-adcno="1" data-alat="37.5055137703"
-							data-alng="127.026066813" data-distance="7.297"
-							data-affiliate="1">
-								<p class="pic">
-									<img class="lazy"
-										data-original=<%=dto.getThumnail() %>
-										src="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
-										alt="<%=dto.getName() %>" style="margin-left: -90px;">
-								</p>
-								<div class="stage">
-									<div class="name">
-
-										<strong><%=dto.getName() %></strong>
-										<p class="score">
-											<span><em>9.2</em>&nbsp;추천해요</span>&nbsp;(2014)
-										</p>
-										<p><%=dto.getAddress() %></p>
-										<div class="txt_evt">
-											<span>베이커리 및 커피 제공</span>
-										</div>
-									</div>
-									<div class="price">
-										<div class="map_html">
-											<p>
-												대실&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
-											</p>
-											<p>
-												숙박&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
-											</p>
-										</div>
-										<p>
-											<em>50,000</em>대실&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);"><%=dto.getdPrice() %>원</b>
-										</p>
-										<p>
-											<em>80,000</em>숙박&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);"><%=dto.getsPrice() %>원</b>
-										</p>
-									</div>
-								</div>
-						</a></li> --%>
 						<%
-							}
+						}
 						}else{%>
 							<div class="result_empty">
 								<b>현재 조건에 맞는 숙소가 없습니다.</b> 지역을 변경하거나<br>일정, 상세조건을 재설정해 보세요.
@@ -1126,8 +1079,7 @@
 			</div>
 			<div class="address">${'장소' }</div>
 			<div class="inner_map" id="map">
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8&libraries=services,clusterer,drawing"></script>
-				<script src="${root }/js/service/search_motel.js"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8"></script>
 			</div>
 			<div class="btn_set">
 				<button class="gra_left_right_red">설정 완료</button>
@@ -1191,8 +1143,8 @@
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/datepick.js?rand=1653988749"></script>
 	<script type="text/javascript" src="${root }/js/library/vue.min.js"></script>
-	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f6ffb505bb11d7cc3584d443ce35f704"></script>
+	<!-- 내 코드 -->
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8"></script>
 	<script charset="UTF-8"
 		src="https://t1.daumcdn.net/mapjsapi/js/main/4.4.3/kakao.js"></script>
 	<script type="text/javascript"
@@ -1201,6 +1153,8 @@
 		src="https://www.goodchoice.kr/js/service/product.search.js?rand=1653988749"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/product.list.js?rand=1653988749"></script>
+	<script type="text/javascript"
+		src="${root }/js/service/kakao.map.api.js"></script>
 
 	<!-- Body Spinner -->
 	<div class="spinner show" style="display: none;">

@@ -25,6 +25,36 @@ public class AccommoDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public ArrayList<AccommoDTO> getAccommScore(ArrayList<AccommoDTO> accommoList) {
+		String query = "SELECT avg(score) score, count(*) cnt FROM review WHERE accomm_num = ?";
+		
+		try {
+			for (AccommoDTO accommo : accommoList) {
+				ps = conn.prepareStatement(query);
+				ps.setInt(1, accommo.getNum());
+				rs = ps.executeQuery();
+
+				if(rs.next()) {
+					accommo.setScore(rs.getInt("score"));
+					accommo.setReviewCnt(rs.getInt("cnt"));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return accommoList;
+	}
+	
 
 	public ArrayList<AccommoDTO> selectAll(ArrayList<MotelDTO> motelList) {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
@@ -101,6 +131,7 @@ public class AccommoDAO {
 					+ "FROM (" + innerQuery + ")A "
 					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
 		}
+		System.out.println(query);
 		
 		try {
 			ps = conn.prepareStatement(query);

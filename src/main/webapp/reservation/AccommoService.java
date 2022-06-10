@@ -20,6 +20,7 @@ public class AccommoService {
 
 		ArrayList<MotelDTO> motelList = dao.filterByArea(area, sort, innerQuery);
 		list = dao.selectAll(motelList);
+		list = dao.getAccommScore(list);
 		return list;
 	}
 
