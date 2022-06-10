@@ -1,3 +1,6 @@
+<%@page import="board.EventDAO"%>
+<%@page import="board.EventDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -22,7 +25,10 @@
     
 </head>
 <body class="pc">
-
+<%
+	EventDAO eventDao = new EventDAO();
+	ArrayList<EventDTO> events = eventDao.selectAll();
+%>
 <!-- Wrap -->
 <div class="wrap show">
 <%@ include file="../ex_header.jsp" %>
@@ -53,11 +59,13 @@
 			<div class="event">
 				<div class="mobile_top">이벤트</div>	
 				<ul id="event" class="event_list">
+					<% for(EventDTO event: events){ %>
 					<li>
-						<b>6월 우리 즉시할인 - 신용카드</b>
-						<span>기간: 2022.06.01 ~ 2022.06.30</span>
+						<b><%=event.getTitle() %></b>
+						<span>기간: <%=event.getStartDate() %> ~ <%=event.getEndDate() %></span>
 						<a href="/more/eventView/2347?page=0"><img src="//image.goodchoice.kr" alt=""></a>
 					</li>
+					<%} %>
 				</ul>	
 			</div>
 		</div>
