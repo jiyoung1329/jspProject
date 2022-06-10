@@ -40,7 +40,7 @@
 	href="//image.goodchoice.kr/images/web_v3/icon_152.png">
 
 <meta name="apple-mobile-web-app-title"
-	content="모텔 > 서울 > 강남/역삼/삼성/논현 | 여기어때">
+	content="모텔 > 서울 | 여기어때">
 <meta name="apple-touch-fullscreen" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
@@ -81,7 +81,7 @@
 	type="image/x-icon">
 
 <!-- CSS -->
-<title>모텔 &gt; 서울 &gt; 강남/역삼/삼성/논현 | 여기어때</title>
+<title>여기어때</title>
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css"> 
 <link rel="stylesheet" href="https://www.goodchoice.kr/common.css?rand=1653988749"> 
@@ -1005,32 +1005,30 @@
 											<p>
 												<%if(dto.getdPrice() != 0){ %>
 													대실&nbsp;
-													<span class="build_badge" style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
+													<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
 												<%} else {%>
 													대실 <b>숙소에 문의</b>
 												<%} %>
 											</p>
-										
+
 											<p>
-													숙박&nbsp;<span class="build_badge"
-														style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getsPrice() %>원</b>
+												숙박&nbsp; 
+												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
 											</p>
 										</div>
 										
 											<p>
 											<%if(dto.getdPrice() != 0){ %>
-												대실&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
-													style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+												대실&nbsp;
+												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
 											<%} else {%>
 												대실 <b>숙소에 문의</b>
 											<%} %>
 											</p>
 										
 											<p>
-												숙박&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
-													style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice() %>원</b>
+												숙박&nbsp; 
+												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
 											</p>
 									</div>
 								</div>
