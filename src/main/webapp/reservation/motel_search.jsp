@@ -185,14 +185,6 @@
 		//대실, 숙박
 		String[] reserve = request.getParameterValues("reserve[]");
 		String d = null, s = null;
-		if (reserve != null) {
-			for (String r : reserve) {
-				if (r.equals("d"))
-					d = "d";
-				if (r.equals("s"))
-					s = "s";
-			}
-		}
 
 		AccommoService service = new AccommoService();
 
@@ -201,9 +193,18 @@
 
 		//필터링
 		if (!list.isEmpty()) {
-			//최저, 최고 가격
+			if (reserve != null) {
+				for (String r : reserve) {
+					if (r.equals("d"))
+						d = "d";
+					if (r.equals("s"))
+						s = "s";
+				}
+			}
+			
 			String min_price = request.getParameter("min_price");
 			String max_price = request.getParameter("max_price");
+			
 			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
 				int minPrice = 0, maxPrice = 0;
 				try {
@@ -212,9 +213,19 @@
 				} catch (Exception e) {
 					out.print("<script>location.href='" + url + "';</script>");
 				}
+				
+				list = service.filterSPriceZero(list);
+				if(d != null && s == null){
+					list = service.filterDPriceZero(list);
+				}
 				list = service.filterByPrice(minPrice, maxPrice, list);
+			}else{
+				list = service.filterSPriceZero(list);
+				if(d != null && s == null){
+					list = service.filterDPriceZero(list);
+				}
 			}
-
+			
 			//놀이시설
 			String[] tmp_tmino = request.getParameterValues("tmino[]");
 			if (tmp_tmino != null) {
@@ -236,7 +247,7 @@
 		}
 		%>
 		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
-			<input type="hidden" name="sort" id="sort" value="DISTANCE">
+			<input type="hidden" name="sort" id="sort" value="<%=sort %>">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
 			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])pageContext.getAttribute("area")) %>">
@@ -921,31 +932,31 @@
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="DISTANCE" class="" <%-- onclick="<%=url %>sort=DISTANCE" --%>>
+									<button type="button" data-sort="DISTANCE" class="">
 										<span>거리 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${pageScope.sort == 'LOWPRICE' }">
-									<button type="button" data-sort="LOWPRICE" class="on" <%-- onclick="<%=url %>sort=LOWPRICE" --%>>
+									<button type="button" data-sort="LOWPRICE" class="on">
 										<span>낮은 가격 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="LOWPRICE" class="" <%-- onclick="<%=url %>sort=LOWPRICE" --%>>
+									<button type="button" data-sort="LOWPRICE" class="">
 										<span>낮은 가격 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${pageScope.sort == 'HIGHPRICE' }">
-									<button type="button" data-sort="HIGHPRICE" class="on" <%-- onclick="<%=url %>sort=HIGHPRICE" --%>>
+									<button type="button" data-sort="HIGHPRICE" class="on">
 										<span>높은 가격 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="HIGHPRICE" class="" <%-- onclick="<%=url %>sort=HIGHPRICE" --%>>
+									<button type="button" data-sort="HIGHPRICE" class="">
 										<span>높은 가격 순</span>
 									</button>
 								</c:otherwise>
@@ -964,7 +975,6 @@
 						<%
 						if(!list.isEmpty()){
 						for(AccommoDTO dto : list) {
-							//화면에 출력한 숙소는 자동으로 지도에 마크됨
 						%>
 						<li class="list_4 adcno1"><a
 							href="https://www.goodchoice.kr/product/detail?ano=63624&amp;adcno=1&amp;sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>"
@@ -992,7 +1002,6 @@
 									</div>
 									<div class="price">
 										<div class="map_html">
-										<%if(reserve == null || (d != null && d == "d")){ %>
 											<p>
 												<%if(dto.getdPrice() != 0){ %>
 													대실&nbsp;
@@ -1001,21 +1010,13 @@
 													대실 <b>숙소에 문의</b>
 												<%} %>
 											</p>
-										<%} %>
 										
-										<%if(reserve == null || s != null && s == "s"){ %>
 											<p>
-											<%if(dto.getsPrice() != 0){ %>
 													숙박&nbsp;<span class="build_badge"
 														style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b><%=dto.getsPrice() %>원</b>
-											<%} else {%>
-												숙박 <b>숙소에 문의</b>
-											<%} %>
 											</p>
-										<%} %>
 										</div>
 										
-										<%if(reserve == null || d != null && d == "d"){ %>
 											<p>
 											<%if(dto.getdPrice() != 0){ %>
 												대실&nbsp;<span class="build_badge"
@@ -1025,19 +1026,12 @@
 												대실 <b>숙소에 문의</b>
 											<%} %>
 											</p>
-										<%} %>
 										
-										<%if(reserve == null || s != null && s == "s"){ %>
 											<p>
-											<%if(dto.getsPrice() != 0){ %>
 												숙박&nbsp;<span class="build_badge"
 													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약</span>&nbsp;<b
 													style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice() %>원</b>
-											<%} else {%>
-												숙박 <b>숙소에 문의</b>
-											<%} %>
 											</p>
-										<%} %>
 									</div>
 								</div>
 						</a></li>
