@@ -137,15 +137,15 @@ function pop_price(){
 $(function(){
 
 	/* 이용정보 숙박일때 숨김 */
-	var time_drag = $('.time_drag #usetime').length;
-	if (time_drag !== 1){
-		$('.time_drag').hide();
-		$('.info_chkin h3').css('margin-top','0');
-	}
-
-    if ($('.alert_msg_content').length > 0) {
-        alert_Msg($('.alert_msg_content').html());
-    }
+//	var time_drag = $('.time_drag #usetime').length;
+//	if (time_drag !== 1){
+//		$('.time_drag').hide();
+//		$('.info_chkin h3').css('margin-top','0');
+//	}
+//
+//    if ($('.alert_msg_content').length > 0) {
+//        alert_Msg($('.alert_msg_content').html());
+//    }
 
 	/* 여행 유형 옆에 ? 버튼 */
 	$('.list_wrap .question_mark').click(function(){
@@ -205,39 +205,41 @@ $(function(){
         idx++;
     }
 
-	$('#usetime').owlCarousel({
-		dragEndSpeed:300,
-		stagePadding: 16,
-		loop:false,
-		margin:0,
-		nav:false,
-		responsive:{
-			0:{
-				items:4
-			},
-			360:{
-				items:5
-			},
-			412:{
-				items:6
-			},
-			480:{
-				items:7
-			},
-			520:{
-				items:8
-			},
-			768:{
-				items:10
-			},
-			1024:{
-				items:8
-			}
-		},
-        startPosition:start_hash
-	});
+//	$('#usetime').owlCarousel({
+//		dragEndSpeed:300,
+//		stagePadding: 16,
+//		loop:false,
+//		margin:0,
+//		nav:false,
+//		responsive:{
+//			0:{
+//				items:4
+//			},
+//			360:{
+//				items:5
+//			},
+//			412:{
+//				items:6
+//			},
+//			480:{
+//				items:7
+//			},
+//			520:{
+//				items:8
+//			},
+//			768:{
+//				items:10
+//			},
+//			1024:{
+//				items:8
+//			}
+//		},
+//        startPosition:start_hash
+//	});
 
 	// TODO: 입실시간 클릭
+    var max_use_time = $('.dayuse').text();
+    console.log("max_use_time: " + max_use_time);
     $(".time_drag").on('click', '.owl-carousel button.item', function(e){
         e.preventDefault();
         if($(this).hasClass("disable")) return false;
@@ -245,41 +247,42 @@ $(function(){
         $(".owl-carousel button.item").removeClass("enable");	//초기화
         $item_obj = $(this).parent();
 
-        var use_stime = $item_obj.find('.item').attr("times");
-        var use_etime = $item_obj.next().find('.item').attr("times");
-
-        // 무한대실 이요일 경우 시간 늘리기
-        var unlimit_msg = '';
-        if(Number($('#maxUnlimitedRentHour').val())>0){
-            if(Number($('#availableUnlimitedRentEndHour').val()) >= Number($item_obj.find('.item').attr("times"))){
-                Number($('input[name=dayuse_time]').val($('#maxUnlimitedRentHour').val()));
-                unlimit_msg = '(무한대실) ';
-            }else{
-                Number($('input[name=dayuse_time]').val($('input[name=old_dayuse_time]').val()));
-            }
-        }
+        var use_stime = setDate($item_obj.find('.item').attr("data-time"));
+        var use_etime = setDate($item_obj.next().find('.item').attr("data-time"));
+		console.log("use_stime: " + use_stime + ", use_etime: " + use_etime);
+		console.log(typeof use_stime)
 
         var $button_length = $('.owl-carousel button.item').length;
         var $current_index = $('.owl-carousel button.item').index($(this));
 
         // 이용시간 활성화
-        for(var i=0;i<Number($('input[name=dayuse_time]').val());i++){
-            if(i==0)use_stime = Number($item_obj.find('.item').attr("times"));
+//        for(var i=0;i<Number($('input[name=dayuse_time]').val());i++){
+        for(var i=0;i<(max_use_time * 2);i++){
+            if(i==0)use_stime = setDate($item_obj.find('.item').attr("data-time"));
             if ($current_index + i >= $button_length - 1) continue;
 
             $item_obj.find('.item').addClass('enable');
 
-            use_etime = Number($item_obj.find('.item').attr("times"))+1;
-
+            use_etime = setDate($item_obj.find('.item').attr("data-time"));
+			console.log("use_stime: " + use_stime + ", use_etime: " + use_etime);
             $item_obj = $item_obj.next();
         }
 
-        $('.use_time').text(use_stime+":00 - "+use_etime+":00");
+//        $('.use_time').text(use_stime+":00 - "+use_etime+":00");
         $('.title rol').eq(0).text('');
         $('.title rol').eq(1).text('이용');
-        $('.dayuse').text(unlimit_msg+$(".owl-carousel button.enable").length);
-        if(Number($(".owl-carousel button.enable").length) < Number($('input[name=dayuse_time]').val())){
-            alert_Msg(use_stime+"시에 입실하시면<br>"+$(".owl-carousel button.enable").length+"시간 이용하실 수 있습니다.");
+        var use_time = Number($(".owl-carousel button.enable").length)
+        var tmp = use_time / 2;
+        var alert_use_time;
+        alert_use_time = (Math.floor(tmp) > 0) ? (Math.floor(tmp) + "시간") : ""
+        if (tmp - Math.floor(tmp) > 0){
+			alert_use_time += " 30분";
+		} 
+//        $('.dayuse').text(unlimit_msg+$(".owl-carousel button.enable").length);
+//        $('.dayuse').text(($(".owl-carousel button.enable").length)/2);
+//        if(Number($(".owl-carousel button.enable").length) < Number($('input[name=dayuse_time]').val())){
+        if(Number($(".owl-carousel button.enable").length) < max_use_time * 2){
+            alert_Msg(use_stime+"에 입실하시면<br>"+(alert_use_time)+" 이용하실 수 있습니다.");
         }
 
         //var last_chkin_date = new Date($('#checkin_date').val());
@@ -361,14 +364,28 @@ $(function(){
     })*/
 });
 // Main ---------------------------------------------------------------------------------------------------------------E
+function setDate(date){
+	console.log(date)
+	var hour = date.substring(11, 13);
+	var minute = date.substring(14, 16);
+	if (minute.charAt(0) == '0') {
+		return (hour + "시"); 
+		
+	} else {
+		return (hour + "시 " + minute + "분"); 
+		
+	}
+}
+
+
 
 // #1.결제하기
 function payment_confirm(){
     //var regName =  /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
     var regName = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|\*]+$/;
     var regPhone = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
-    var buyer = $('input[name=do_user_name]');
-    var buyer_phone = $('input[name=do_user_tel]');
+    var buyer = $('input[name=userName]');
+    var buyer_phone = $('input[name=userPhone]');
     var login_on = $('#order_form input[name=uno]').val() ? true : false;
     var parkingChk = $('.visit .parking_type_btn.on').hasClass('on');
     var adcno = $('#order_form input[name=adcno]').val();
@@ -396,19 +413,6 @@ function payment_confirm(){
         return false;
     }
 
-    if(regPhone.test(buyer_phone.val())==false){
-        alert_Msg('휴대폰 번호를 확인해 주세요.');
-        return false;
-    }
-
-    if ($('#verificationCode').length > 0) {
-        if(buyer_phone.data('phoneverify') != 'Y'
-            || buyer_phone.data('phoneverify') === undefined) {
-            alert_Msg('휴대폰 번호 미인증 되었습니다.');
-            return false;
-        }
-    }
-
     if($('#order_form').find('input[name=checkin_type]').val()==1){
         if($('input[name=dayuse_select]').val()=="N"){
             alert_Msg('이용시간을 선택해주세요.');
@@ -416,41 +420,13 @@ function payment_confirm(){
         }
     }
 
-	if($("#travel_type").length != 0 && !$('#travel_type').find('button').hasClass('on')){
-		alert_Msg('여행 유형을 선택해 주세요.');
-		return false;
-	}
-
-    buyer_phone.val(buyer_phone.val().replace(/\-/ig, ''));
-
-    // 도보 체크
     /*if(adcno==1 && parkingUse!=undefined){
         if(!parkingChk){
             alert_Msg('<b>방문 방법</b>을 선택해주세요.<br> 도보 / 차량');
             return false;
         }
     }*/
-    if(!categorySaleTimeCheck()){
-        return false;
-    }
-
-    // 약관 체크
-	if($('.guest_chk_area').length == 1){
-		// 비회원
-		if($('.agree input[name=checkOne]:checked').length !== 4){
-            alert_Msg('필수 이용 동의 항목에 동의(체크)해주세요.');
-            return false;
-		}
-	}else{
-		// 회원
-		if($('.agree input[name=checkOne]:checked').length !== 3){
-            alert_Msg('필수 이용 동의 항목에 동의(체크)해주세요.');
-            return false;
-		}
-	}
-
-    // 예약내역 확인 팝업
-    pop_reserve('reserve_chk');
+	
 }
 
 // #2. 결제진행

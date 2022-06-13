@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="reservation.MyReserveDTO"%>
@@ -33,6 +34,7 @@
 	request.setCharacterEncoding("utf-8");
 	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd E HH:mm");
 	SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");
+	DecimalFormat df = new DecimalFormat("###,###");
 	
 	int num = Integer.parseInt(request.getParameter("num"));
 	String checkin = request.getParameter("checkin");
@@ -131,7 +133,7 @@
 												<p data-v-4c4f460e="">결제정보</p>
 												<p data-v-4c4f460e="">
 													<strong data-v-4c4f460e="">총 결제금액 </strong> <b
-														data-v-4c4f460e=""><%=price %>원</b>
+														data-v-4c4f460e=""><%=df.format(price) %>원</b>
 												</p>
 											</div>
 										</section>

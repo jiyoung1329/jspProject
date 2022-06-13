@@ -5,26 +5,28 @@ public class ReservationDTO {
 	private int num;
 	private String userEmail;
 	private int accommNum;
+	private String accommName;
 	private int roomNum;
+	private String roomName;
 	private String checkIn;
 	private String checkOut;
 	private int price;
-	private int isReserve;
 	private String visitMethod;
 	
 	public ReservationDTO() {}
 
-	public ReservationDTO(int num, String userEmail, int accommNum, int roomNum, String checkIn, String checkOut,
-			int price, int isReserve, String visitMethod) {
+	public ReservationDTO(int num, String userEmail, int accommNum, String accommName, int roomNum, String roomName,
+			String checkIn, String checkOut, int price, String visitMethod) {
 		super();
 		this.num = num;
 		this.userEmail = userEmail;
 		this.accommNum = accommNum;
+		this.accommName = accommName;
 		this.roomNum = roomNum;
+		this.roomName = roomName;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.price = price;
-		this.isReserve = isReserve;
 		this.visitMethod = visitMethod;
 	}
 
@@ -52,12 +54,28 @@ public class ReservationDTO {
 		this.accommNum = accommNum;
 	}
 
+	public String getAccommName() {
+		return accommName;
+	}
+
+	public void setAccommName(String accommName) {
+		this.accommName = accommName;
+	}
+
 	public int getRoomNum() {
 		return roomNum;
 	}
 
 	public void setRoomNum(int roomNum) {
 		this.roomNum = roomNum;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
 	}
 
 	public String getCheckIn() {
@@ -84,14 +102,6 @@ public class ReservationDTO {
 		this.price = price;
 	}
 
-	public int getIsReserve() {
-		return isReserve;
-	}
-
-	public void setIsReserve(int isReserve) {
-		this.isReserve = isReserve;
-	}
-
 	public String getVisitMethod() {
 		return visitMethod;
 	}
@@ -99,5 +109,6 @@ public class ReservationDTO {
 	public void setVisitMethod(String visitMethod) {
 		this.visitMethod = visitMethod;
 	}
+	
 	
 }

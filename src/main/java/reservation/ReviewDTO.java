@@ -5,18 +5,18 @@ public class ReviewDTO {
 	private String title;
 	private int score;
 	private String roomName;
-	private String userEmail;
+	private String userNickname;
 	private String content;
 	private String createDate;
 	
 	public ReviewDTO() {}
 
-	public ReviewDTO(String title, int score, String roomName, String userEmail, String content, String createDate) {
+	public ReviewDTO(String title, int score, String roomName, String userNickname, String content, String createDate) {
 		super();
 		this.title = title;
 		this.score = score;
 		this.roomName = roomName;
-		this.userEmail = userEmail;
+		this.userNickname = userNickname;
 		this.content = content;
 		this.createDate = createDate;
 	}
@@ -45,12 +45,12 @@ public class ReviewDTO {
 		this.roomName = roomName;
 	}
 
-	public String getUserEmail() {
-		return userEmail;
+	public String getUserNickname() {
+		return userNickname;
 	}
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setUserNickname(String userNickname) {
+		this.userNickname = userNickname;
 	}
 
 	public String getContent() {
@@ -69,7 +69,6 @@ public class ReviewDTO {
 		this.createDate = createDate;
 	}
 
-	
 	
 	
 

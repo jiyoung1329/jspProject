@@ -38,8 +38,6 @@
 <script type="text/javascript"
 	src="/jspProject/js/service/product.async.js"></script>
 <script type="text/javascript" src="/jspProject/js/service/main.js"></script>
-<script type="text/javascript"
-	src="/jspProject/js/service/reservation.js"></script>
 <!-- Body Spinner -->
 
 <div class="spinner show" style="display: none;">

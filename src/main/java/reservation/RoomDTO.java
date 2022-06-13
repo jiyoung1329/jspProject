@@ -2,6 +2,7 @@ package reservation;
 
 public class RoomDTO {
 	private int rNum;
+	private int accommNum;
 	private String name;
 	private String image;
 	private int sPrice;
@@ -13,10 +14,11 @@ public class RoomDTO {
 	
 	public RoomDTO() {}
 
-	public RoomDTO(int rNum, String name, String image, int sPrice, String checkIn, String checkOut, int dPrice,
-			String endTime, String useTime) {
+	public RoomDTO(int rNum, int accommNum, String name, String image, int sPrice, String checkIn, String checkOut,
+			int dPrice, String endTime, String useTime) {
 		super();
 		this.rNum = rNum;
+		this.accommNum = accommNum;
 		this.name = name;
 		this.image = image;
 		this.sPrice = sPrice;
@@ -33,6 +35,14 @@ public class RoomDTO {
 
 	public void setrNum(int rNum) {
 		this.rNum = rNum;
+	}
+
+	public int getAccommNum() {
+		return accommNum;
+	}
+
+	public void setAccommNum(int accommNum) {
+		this.accommNum = accommNum;
 	}
 
 	public String getName() {
@@ -98,6 +108,8 @@ public class RoomDTO {
 	public void setUseTime(String useTime) {
 		this.useTime = useTime;
 	}
+
+	
 	
 	
 

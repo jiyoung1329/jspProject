@@ -1,3 +1,4 @@
+<%@page import="reservation.ReviewDTO"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="reservation.RoomDTO"%>
 <%@page import="java.util.Date"%>
@@ -8,26 +9,44 @@
 	pageEncoding="UTF-8"%>
 
 <%
-	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd");
-	DecimalFormat decFormat = new DecimalFormat("###,###");
-	
-	request.setCharacterEncoding("utf-8");
-	String num = request.getParameter("num");
-	String originSelDate = request.getParameter("sel_date");
-	String originSelDate2 = request.getParameter("sel_date2");
-	
-	Date date1 = getFormat.parse(originSelDate);
-	Date date2 = getFormat.parse(originSelDate);
+SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
+SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd");
+SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
-	long diff = (date2.getTime() - date1.getTime()) / (24*60*60*1000);
-	String selDate = setFormat.format(date1);
-	String selDate2 = setFormat.format(date2);
-	
-	MotelDAO motelDao = new MotelDAO();
-	DetailDTO detail = motelDao.selectMotel(num);
-	System.out.println(detail.getRooms());
-	float avgReview = (float) detail.getSumReview() / detail.getReviews().size();
+DecimalFormat decFormat = new DecimalFormat("###,###");
+
+request.setCharacterEncoding("utf-8");
+String num = request.getParameter("num");
+String originSelDate = request.getParameter("sel_date");
+String originSelDate2 = request.getParameter("sel_date2");
+
+Date date1 = getFormat.parse(originSelDate);
+Date date2 = getFormat.parse(originSelDate2);
+
+long diff = (date2.getTime() - date1.getTime()) / (24 * 60 * 60 * 1000);
+String selDate = setFormat.format(date1);
+String selDate2 = setFormat.format(date2);
+
+MotelDAO motelDao = new MotelDAO();
+DetailDTO detail = motelDao.selectMotel(num);
+System.out.println(detail.getRooms());
+
+float avgReview = 0;
+if (detail.getReviews().size() > 0) {
+	avgReview = (float) detail.getSumReview() / detail.getReviews().size();
+}
+
+// 대실 시간 체크
+Date now = new Date();
+// 1. 대실 끝시간 체크
+int end;
+try {
+	end = Integer.parseInt(request.getParameter("endTime").substring(0, 2));
+
+} catch (Exception e) {
+	end = 0;
+}
+Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 %>
 
 <!DOCTYPE html>
@@ -113,8 +132,9 @@
 						<!-- Image Size : 490 x 348 -->
 
 						<!-- Swiper -->
-						<div class="swiper-container gallery-top swiper-container-horizontal swiper-container-fade">
-						<img src="<%=detail.getDetailImage()%>">
+						<div
+							class="swiper-container gallery-top swiper-container-horizontal swiper-container-fade">
+							<img src="<%=detail.getDetailImage()%>">
 						</div>
 						<!-- Add Arrows -->
 
@@ -127,7 +147,9 @@
 				<button type="button"
 					class="comiseo-daterangepicker-triggerbutton ui-button ui-corner-all ui-widget comiseo-daterangepicker-bottom comiseo-daterangepicker-vfit"
 					id="drp_autogen0">
-					<%=selDate %> - <%=selDate2 %><span class="ui-button-icon-space"> </span><span
+					<%=selDate%>
+					-
+					<%=selDate2%><span class="ui-button-icon-space"> </span><span
 						class="ui-button-icon ui-icon ui-icon-triangle-1-s"></span>
 				</button>
 
@@ -137,24 +159,32 @@
 					<!-- Info -->
 					<div class="info">
 						<p class="badge"></p>
-						<h2><%=detail.getName() %></h2>
+						<h2><%=detail.getName()%></h2>
 						<div class="score_cnt">
-							<span><%=avgReview %></span>
-							<% if (avgReview > 9.5){ %>
-								최고에요
-							<%} else if (9.0 <= avgReview && avgReview <= 9.5){ %>
-								추천해요
-							<%} else{ %>
-								만족해요
-							<%} %>
-							
-							<b id="review_cnt">&nbsp;리뷰 <em><%=detail.getReviews().size() %></em>개
+							<span><%=avgReview%></span>
+							<%
+							if (avgReview > 9.5) {
+							%>
+							최고에요
+							<%
+							} else if (9.0 <= avgReview && avgReview <= 9.5) {
+							%>
+							추천해요
+							<%
+							} else {
+							%>
+							만족해요
+							<%
+							}
+							%>
+
+							<b id="review_cnt">&nbsp;리뷰 <em><%=detail.getReviews().size()%></em>개
 							</b>
 							<p>
 								<a href="#" class="call">전화하기</a>
 							</p>
 						</div>
-						<p class="address"><%=detail.getAddress() %></p>
+						<p class="address"><%=detail.getAddress()%></p>
 					</div>
 
 					<div id="promotion-banner"></div>
@@ -177,120 +207,276 @@
 				</button>
 			</div>
 
-			<form id="product_filter_form" method="get"
-				action="#"
-				data-sel_date="<%=originSelDate %>" data-sel_date2="<%=originSelDate2 %>">
+			<form id="product_filter_form" method="get" action="#"
+				data-sel_date="<%=originSelDate%>"
+				data-sel_date2="<%=originSelDate2%>">
 				<!-- 날짜 선택 -->
-				<input id="num" type="hidden" name="num" value="<%=detail.getAccommNum() %>"> 
-				<input id="sel_date" type="hidden" name="sel_date" value="<%=originSelDate %>"> 
-				<input id="sel_date2" type="hidden" name="sel_date2" value="<%=originSelDate2 %>">
+				<input id="num" type="hidden" name="num"
+					value="<%=detail.getAccommNum()%>"> <input id="sel_date"
+					type="hidden" name="sel_date" value="<%=originSelDate%>">
+				<input id="sel_date2" type="hidden" name="sel_date2"
+					value="<%=originSelDate2%>">
 
 				<!-- 객실안내/예약 -->
 				<article class="room_info on">
 					<!-- 날짜 선택 -->
 					<div class="btn_date">
-						<span class="date_view"><b><%=selDate %> ~ <%=selDate2 %></b><em>&nbsp;·&nbsp;<%=diff %></em></span><strong>변경</strong>
+						<span class="date_view"><b><%=selDate%> ~ <%=selDate2%></b><em>&nbsp;·&nbsp;<%=diff%></em></span><strong>변경</strong>
 					</div>
 
 					<!-- 방정보 -->
-					<% for (RoomDTO room: detail.getRooms()){ %>
-						<div class="room">
-							<!-- 282 x 169 -->
-							<p class="pic_view ">
-								<img class="lazy"
-									data-original="<%=room.getImage() %>"
-									src="<%=room.getImage() %>"
-									alt="<%=detail.getName() %> | <%=room.getName()%>">
-							</p>
-							<div class="cal_bg visible">
-	                            <button type="button">닫기</button>
-	                        </div>
-							<strong class="title"><%=room.getName() %></strong>
-							<!-- swipe image -->
-							<div class="pic_wrap">
-							<img class="lazy" style="width: 100%;"
-									data-original="<%=room.getImage() %>"
-									src="<%=room.getImage() %>"
-									alt="<%=detail.getName() %> | <%=room.getName()%>">
-							</div>
-							<!-- //swipe image -->
-							<!-- room info -->
-							<div class="info">
-								<%-- 숙소가격이 0일때는 문의, 아니면 대실예약가능 --%>
-								<% if(room.getdPrice() == 0){ %>	
-									<div class="half none">
-										<div class="price">
-											<strong>대실</strong>
-											<div>
-												<p>숙소에 문의</p>
-											</div>
-											<ul>
-												<li><span>마감시간</span><%=room.getEndTime() %>&nbsp;</li>
-												<li><span>이용시간</span><%=room.getUseTime() %>&nbsp;</li>
-											</ul>
-										</div>
-										<button type="button" class="" style="">숙소에 문의 하세요</button>
-									</div>
-								<%}else{ %>
-									<div class="half">
-										<div class="price">
-											<strong>대실</strong>
-											<div>
-												<!-- 표시금액 -->
-												<p><span>예약</span><b style="color: rgba(0,0,0,1)"><%=decFormat.format(room.getdPrice()) %>원</b></p>
-											</div>
-											<ul>
-												<li><span>마감시간</span><%=room.getEndTime() %>&nbsp;</li>
-												<li><span>이용시간</span><%=room.getUseTime() %>&nbsp;</li>
-											</ul>
-										</div>
-										<button type="button" class="gra_left_right_red" style="">대실 예약</button>
-									</div>
-								<%} %>
-							
-								<%-- 숙소가격이 0일때는 문의, 아니면 대실예약가능 --%>
-								<% if(room.getsPrice() == 0){ %>	
-									<div class="half none">
-										<div class="price">
-											<strong>숙박</strong>
-											<div>
-												<p class="through_none"
-													style="text-decoration: inherit; visibility: hidden;"></p>
-												<p>숙소에 문의</p>
-											</div>
-											<ul>
-												<li><span>입실시간</span><%=room.getCheckIn() %>&nbsp;</li>
-												<li><span>퇴실시간</span><%=room.getCheckOut() %>&nbsp;</li>
-											</ul>
-										</div>
-										<button type="button" class="" style="">숙소에 문의 하세요</button>
-										<button type="button" class="gra_left_right_red" style="">숙소 예약</button>
-									</div>
-								<%}else{ %>
-									<div class="half">
-										<div class="price">
-											<strong>숙박</strong>
-											<div>
-												<!-- 표시금액 -->
-												<p><span>예약</span><b style="color: rgba(0,0,0,1)"><%=decFormat.format(room.getsPrice()) %>원</b></p>
-											</div>
-											<ul>
-												<li><span>마감시간</span><%=room.getCheckIn() %>&nbsp;</li>
-												<li><span>이용시간</span><%=room.getCheckOut() %>&nbsp;</li>
-											</ul>
-										</div>
-										<button type="button" class="gra_left_right_red" style="">숙박 예약</button>
-									</div>
-								<%} %>
-							</div>
-							<!-- //room info -->
+					<%
+					for (RoomDTO room : detail.getRooms()) {
+					%>
+					<div class="room">
+						<!-- 282 x 169 -->
+						<p class="pic_view ">
+							<img class="lazy" data-original="<%=room.getImage()%>"
+								src="<%=room.getImage()%>"
+								alt="<%=detail.getName()%> | <%=room.getName()%>">
+						</p>
+						<div class="cal_bg visible">
+							<button type="button">닫기</button>
 						</div>
-					<%} %>
+						<strong class="title"><%=room.getName()%></strong>
+						<!-- swipe image -->
+						<div class="pic_wrap">
+							<img class="lazy" style="width: 100%;"
+								data-original="<%=room.getImage()%>"
+								src="<%=room.getImage()%>"
+								alt="<%=detail.getName()%> | <%=room.getName()%>">
+						</div>
+						<!-- //swipe image -->
+						<!-- room info -->
+						<div class="info">
+							<%-- 숙소가격이 0일때는 문의, 아니면 대실예약가능 --%>
+							<%-- 현재시간이 대실 마감시간을 넘었을때에도 숙박에 문의 --%>
+							<%
+							if (room.getdPrice() == 0 || now.after(endTime)) {
+							%>
+							<div class="half none">
+								<div class="price">
+									<strong>대실</strong>
+									<div>
+										<p>숙소에 문의</p>
+									</div>
+									<ul>
+										<li><span>마감시간</span><%=room.getEndTime()%>&nbsp;</li>
+										<li><span>이용시간</span><%=room.getUseTime()%>&nbsp;</li>
+									</ul>
+								</div>
+								<button type="button" class="" style="">숙소에 문의 하세요</button>
+							</div>
+							<%
+							} else {
+							%>
+							<div class="half">
+								<div class="price">
+									<strong>대실</strong>
+									<div>
+										<!-- 표시금액 -->
+										<p>
+											<span>예약</span><b style="color: rgba(0, 0, 0, 1)"><%=decFormat.format(room.getdPrice())%>원</b>
+										</p>
+									</div>
+									<ul>
+										<li><span>마감시간</span><%=room.getEndTime()%>&nbsp;</li>
+										<li><span>이용시간</span><%=room.getUseTime()%>&nbsp;</li>
+									</ul>
+								</div>
+								<div class="reserve1_info mypageForm__form-inputs-wrap"
+									aria-hidden="true" style="display: none;">
+									<input type="text" name="price" aria-hidden="true"
+										style="display: none;" value="<%=room.getdPrice()%>">
+									<input type="text" name="accomNum" aria-hidden="true"
+										style="display: none;" value="<%=room.getAccommNum()%>">
+									<input type="text" name="accomName" aria-hidden="true"
+										style="display: none;" value="<%=detail.getName()%>">
+									<input type="text" name="roomNum" aria-hidden="true"
+										style="display: none;" value="<%=room.getrNum()%>"> <input
+										type="text" name="roomName" aria-hidden="true"
+										style="display: none;" value="<%=room.getName()%>"> <input
+										type="text" name="selDate" aria-hidden="true"
+										style="display: none;" value="<%=originSelDate%>"> <input
+										type="text" name="endTime" aria-hidden="true"
+										style="display: none;" value="<%=room.getEndTime()%>">
+									<input type="text" name="useTime" aria-hidden="true"
+										style="display: none;" value="<%=room.getUseTime()%>">
+								</div>
+								<button onclick="reserve1(this);" type="button"
+									class="gra_left_right_red" style="">대실 예약</button>
+							</div>
+							<%
+							}
+							%>
+
+							<%-- 숙소가격이 0일때는 문의, 아니면 대실예약가능 --%>
+							<%
+							if (room.getsPrice() == 0) {
+							%>
+							<div class="half none">
+								<div class="price">
+									<strong>숙박</strong>
+									<div>
+										<p class="through_none"
+											style="text-decoration: inherit; visibility: hidden;"></p>
+										<p>숙소에 문의</p>
+									</div>
+									<ul>
+										<li><span>입실시간</span><%=room.getCheckIn()%>&nbsp;</li>
+										<li><span>퇴실시간</span><%=room.getCheckOut()%>&nbsp;</li>
+									</ul>
+								</div>
+								<button type="button" class="" style="">숙소에 문의 하세요</button>
+							</div>
+							<%
+							} else {
+							%>
+							<div class="half">
+								<div class="price">
+									<strong>숙박</strong>
+									<div>
+										<!-- 표시금액 -->
+										<p>
+											<span>예약</span><b style="color: rgba(0, 0, 0, 1)"><%=decFormat.format(room.getsPrice())%>원</b>
+										</p>
+									</div>
+									<ul>
+										<li><span>입실시간</span><%=room.getCheckIn()%>&nbsp;</li>
+										<li><span>퇴실시간</span><%=room.getCheckOut()%>&nbsp;</li>
+									</ul>
+								</div>
+								<div class="reserve2_info mypageForm__form-inputs-wrap"
+									aria-hidden="true" style="display: none;">
+									<input type="text" name="price" aria-hidden="true"
+										style="display: none;" value="<%=room.getdPrice()%>">
+									<input type="text" name="accomNum" aria-hidden="true"
+										style="display: none;" value="<%=room.getAccommNum()%>">
+									<input type="text" name="accomName" aria-hidden="true"
+										style="display: none;" value="<%=detail.getName()%>">
+									<input type="text" name="roomNum" aria-hidden="true"
+										style="display: none;" value="<%=room.getrNum()%>"> <input
+										type="text" name="roomName" aria-hidden="true"
+										style="display: none;" value="<%=room.getName()%>"> <input
+										type="text" name="selDate" aria-hidden="true"
+										style="display: none;" value="<%=originSelDate%>"> <input
+										type="text" name="selDate2" aria-hidden="true"
+										style="display: none;" value="<%=originSelDate2%>"> <input
+										type="text" name="checkin" aria-hidden="true"
+										style="display: none;" value="<%=room.getCheckIn()%>">
+									<input type="text" name="checkout" aria-hidden="true"
+										style="display: none;" value="<%=room.getCheckOut()%>">
+								</div>
+								<button onclick="reserve2(this);" type="button"
+									class="gra_left_right_red" style="">숙박 예약</button>
+							</div>
+							<%
+							}
+							%>
+						</div>
+						<!-- //room info -->
+					</div>
+					<%
+					}
+					%>
 				</article>
 			</form>
 
 			<%@ include file="detailBaseInfo.jsp"%>
-			<%@ include file="detailReview.jsp"%>
+			<!-- 리뷰 -->
+			<article id="review" class="review">
+				<div class="score_top">
+					<strong>만족해요</strong>
+					<div class="score_wrap">
+						<div class="score_star star_40"></div>
+						<div class="num"><%=avgReview%></div>
+					</div>
+					<p>
+						전체 리뷰 <b><%=detail.getReviews().size() %></b>
+					</p>
+				</div>
+				<ul>
+					<% for (ReviewDTO review: detail.getReviews()){ %>
+					<li>
+						<div class="guest">
+							<p class="pic">
+								<img src="//image.goodchoice.kr/profile/ico/ico_22.png"
+									alt="<%=review.getUserNickname() %>">
+							</p>
+							<strong><%=review.getTitle() %></strong>
+							<div class="score_wrap_sm">
+								<div class="score_star star_50"></div>
+								<div class="num"><%=review.getScore() %></div>
+							</div>
+							<div class="name">
+								<b><%=review.getRoomName() %> · </b><%=review.getUserNickname() %>
+							</div>
+							<%-- get_score_star() --%>
+							<div class="txt"><%=review.getContent() %></div>
+							<%--get_date_diff() --%>
+							<span class="date"><%=review.getCreateDate() %></span>
+						</div>
+					</li>
+					<%} %>
+					<li>
+						<div class="guest">
+							<p class="pic">
+								<img src="//image.goodchoice.kr/profile/ico/ico_23.png"
+									alt="만족한방언">
+							</p>
+							<strong>조금만 더 신경 써 주세요.</strong>
+							<div class="score_wrap_sm">
+								<div class="score_star star_05"></div>
+								<div class="num">1.0</div>
+							</div>
+							<div class="name">
+								<b>더블 디럭스 (랜덤배정) 객실 이용 · </b>만족한방언
+							</div>
+							<div class="txt">에어컨 안나옴 물 온수 안나옴</div>
+							<span class="date">11일 전</span>
+						</div>
+					</li>
+					<li>
+						<div class="guest">
+							<p class="pic">
+								<img src="//image.goodchoice.kr/profile/ico/ico_25.png"
+									alt="수박색정신">
+							</p>
+							<strong>여기만한 곳은 어디에도 없을 거예요.</strong>
+							<div class="score_wrap_sm">
+								<div class="score_star star_50"></div>
+								<div class="num">10.0</div>
+							</div>
+							<div class="name">
+								<b>스파 디럭스(648호텔 패키지24시간 사용) 객실 이용 · </b>수박색정신
+							</div>
+							<div class="txt">처음 이용해봣는데,다른곳과달리 무인기계(?)로예약확인하고,키가나와서
+								신기햇어요ㅎㅎ</div>
+							<div class="gallery_re">
+								<div class="swiper-container swiper-type-3">
+									<ul class="swiper-wrapper">
+										<li class="swiper-slide"><img
+											src="//image.goodchoice.kr/talk/epilogue/7336142/6274683c4dab5.jpg"
+											alt="여기만한 곳은 어디에도 없을 거예요."></li>
+									</ul>
+									<div class="swiper-button-next"></div>
+									<div class="swiper-button-prev"></div>
+								</div>
+							</div>
+							<span class="date">28일 전</span>
+						</div>
+						<div id="pagination">
+							<div class="paging">
+								<button class="on">1</button>
+								<button>2</button>
+								<button>3</button>
+								<button>4</button>
+								<button>5</button>
+								<button class="next">다음</button>
+							</div>
+						</div>
+			</article>
+			<!-- //리뷰 -->
 
 		</div>
 		<!-- //Content  -->
@@ -499,4 +685,44 @@
 	<iframe src="https://bid.g.doubleclick.net/xbbe/pixel?d=KAE"
 		style="display: none;"> </iframe>
 </body>
+<script>
+	function reserve1(obj) {
+		var form = document.createElement("form");
+		form.setAttribute("charset", "UTF-8");
+		form.setAttribute("method", "Post"); //Post 방식
+		form.setAttribute("action", "roomReservation3.jsp"); //요청 보낼 주소
+
+		var inputs = obj.previousElementSibling.children;
+		console.log(inputs);
+		for (var i = 0; i < inputs.length; i++) {
+			var hiddenField = document.createElement("input");
+			hiddenField.setAttribute("type", "hidden");
+			hiddenField.setAttribute("name", inputs[i].name);
+			hiddenField.setAttribute("value", inputs[i].value);
+			form.appendChild(hiddenField);
+		}
+		document.body.appendChild(form);
+		form.submit();
+	}
+
+	function reserve2(obj) {
+
+		var form = document.createElement("form");
+		form.setAttribute("charset", "UTF-8");
+		form.setAttribute("method", "Post"); //Post 방식
+		form.setAttribute("action", "roomReservation2.jsp"); //요청 보낼 주소
+
+		var inputs = obj.previousElementSibling.children;
+		console.log(inputs);
+		for (var i = 0; i < inputs.length; i++) {
+			var hiddenField = document.createElement("input");
+			hiddenField.setAttribute("type", "hidden");
+			hiddenField.setAttribute("name", inputs[i].name);
+			hiddenField.setAttribute("value", inputs[i].value);
+			form.appendChild(hiddenField);
+		}
+		document.body.appendChild(form);
+		form.submit();
+	}
+</script>
 </html>

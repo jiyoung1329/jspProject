@@ -40,7 +40,28 @@ public class ReservationDAO {
 	
 	
 	// 예약 내역 저장
-	
+	public void insertReservation(ReservationDTO dto) {
+		// num, user_email, accomm_num, room_num, check_in, check_out, price, is_reserve, visit_method
+		String query = "insert into reservation values(reservation_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try {
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getUserEmail());
+			ps.setInt(2, dto.getAccommNum());
+			ps.setInt(3, dto.getRoomNum());
+			ps.setString(4, dto.getCheckIn());
+			ps.setString(5, dto.getCheckOut());
+			ps.setInt(6, dto.getPrice());
+			ps.setInt(7, 0);
+			ps.setString(8, dto.getVisitMethod());
+			
+			ps.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			exit();
+		}
+	}
 	
 	// 예약 내역 불러오기
 	public ArrayList<MyReserveDTO> selectAllReservation(String email) {
@@ -49,8 +70,8 @@ public class ReservationDAO {
 		String query = "select m.name as member_name, m.phone as member_phone, a.name as accom_name, a.thumnail as accom_thumnail, "
 				+ "r.name as room_name, re.num as reserve_num, re.check_in as checkin, re.check_out as checkout, re.is_reserve as is_reserve, re.price as price "
 				+ "from reservation re join member m on re.user_email = ? "
-				+ "join accommodation a on re.accomm_num = a.num "
-				+ "join room r on re.room_num = r.num order by re.num desc";
+				+ "join accommodation a on re.accomm_num = a.accomm_num "
+				+ "join room r on re.room_num = r.r_num order by re.num desc";
 		
 //		System.out.println(query);
 		try {
@@ -84,6 +105,7 @@ public class ReservationDAO {
 		return reservations;
 		
 	}
+	
 	
 	// 예약 내역 삭제
 	public void deleteReservation(String num) {
