@@ -116,7 +116,7 @@ public class AccommoDAO {
 		String query = "";
 		
 		if(sort == null || sort.equals("DISTANCE")) {
-			query = "SELECT B.accomm_num, MIN(B.s_price) as result_s_price, MIN(B.d_price) as result_d_price "
+			query = "SELECT B.accomm_num, ROUND(AVG(B.s_price), -3) as result_s_price, ROUND(AVG(B.d_price), -3) as result_d_price "
 					+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
 					+ "FROM (" + innerQuery + ")A "
 					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
@@ -131,6 +131,7 @@ public class AccommoDAO {
 					+ "FROM (" + innerQuery + ")A "
 					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
 		}
+		System.out.println(query);
 		
 		try {
 			ps = conn.prepareStatement(query);
@@ -152,10 +153,42 @@ public class AccommoDAO {
 		}
 		return list;
 	}
+	
+	public ArrayList<MotelDTO> filterByDate(String whereQuery) {
+		ArrayList<MotelDTO> list = new ArrayList<>();
+		String query = "SELECT room.accomm_num, ROUND(AVG(room.s_price), -3) result_s_price, ROUND(AVG(room.d_price), -3) result_d_price FROM room JOIN (SELECT accomm_num FROM accommodation "
+				+ whereQuery + "ON room.accomm_num = A.accomm_num GROUP BY room.accomm_num";
+		System.out.println(query);
+		
+		try {
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				MotelDTO dto = new MotelDTO();
+				dto.setAccommoNum(rs.getInt("accomm_num"));
+				dto.setSprice(rs.getInt("result_s_price"));
+				dto.setDprice(rs.getInt("result_d_price"));
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
 
 	 public ArrayList<MotelDTO> filterByCondi(String whereQuery) {
 		 ArrayList<MotelDTO> list = new ArrayList<>();
-		 String query = "SELECT DISTINCT accomm_num FROM accomm_condition " + whereQuery;
+		 String query = "SELECT room.accomm_num, ROUND(AVG(room.s_price), -3) result_s_price, ROUND(AVG(room.d_price), -3) result_d_price "
+		 		+ "FROM room JOIN (SELECT DISTINCT accomm_num FROM accomm_condition " + whereQuery + "ON room.accomm_num = A.accomm_num GROUP BY room.accomm_num";
+		 System.out.println(query);
 		 
 		 try {
 				ps = conn.prepareStatement(query);
@@ -164,6 +197,8 @@ public class AccommoDAO {
 				while (rs.next()) {
 					MotelDTO dto = new MotelDTO();
 					dto.setAccommoNum(rs.getInt("accomm_num"));
+					dto.setSprice(rs.getInt("result_s_price"));
+					dto.setDprice(rs.getInt("result_d_price"));
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -183,7 +218,12 @@ public class AccommoDAO {
 			ArrayList<MotelDTO> list = new ArrayList<>();
 			String query = "";
 			
-			if(sort == null || sort.equals("SCORE") || sort.equals("LOWPRICE")) {
+			if(sort == null || sort.equals("SCORE")) {
+				query = "SELECT B.accomm_num, ROUND(AVG(B.s_price), -3) as result_s_price, ROUND(AVG(B.d_price), -3) as result_d_price "
+						+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
+						+ "FROM (" + innerQuery + ")A "
+						+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
+			} else if(sort.equals("LOWPRICE")) {
 				query = "SELECT B.accomm_num, MIN(B.s_price) as result_s_price, MIN(B.d_price) as result_d_price "
 						+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
 						+ "FROM (" + innerQuery + ")A "

@@ -172,12 +172,6 @@
 		String tmp_sel_date = request.getParameter("sel_date");
 		String tmp_sel_date2 = request.getParameter("sel_date2");
 
-		//매개변수로 전달된 날짜가 있다면
-		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
-			sel_date = tmp_sel_date;
-			sel_date2 = tmp_sel_date2;
-		}
-
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
 		pageContext.setAttribute("sort", sort);
@@ -190,9 +184,22 @@
 
 		//지역에 속한 모텔 불러오기
 		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
-
+		System.out.println("\n숙박 0원 필터링 전: " + list.size());
+		
 		//필터링
 		if (!list.isEmpty()) {
+			ArrayList<AccommoDTO> tmp = null;
+			
+			//매개변수로 전달된 날짜가 있다면
+			if ((tmp_sel_date != null && tmp_sel_date2 != null) && (!tmp_sel_date.equals(sel_date) || !tmp_sel_date2.equals(sel_date2))) {
+				tmp = list;
+				sel_date = tmp_sel_date;
+				sel_date2 = tmp_sel_date2;
+				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
+				tmp = service.filterByDate(sel_date, sel_date2, tmp);
+				System.out.println("날짜 필터링 후: " + tmp.size());
+			}
+			
 			if (reserve != null) {
 				for (String r : reserve) {
 					if (r.equals("d"))
@@ -214,15 +221,15 @@
 					response.sendRedirect(url);
 				}
 				
-				list = service.filterSPriceZero(list);
 				if(d != null && s == null){
 					list = service.filterDPriceZero(list);
+					System.out.println("대실 0원 필터링 후: " + list.size());
 				}
 				list = service.filterByPrice(minPrice, maxPrice, list);
 			}else{
-				list = service.filterSPriceZero(list);
 				if(d != null && s == null){
 					list = service.filterDPriceZero(list);
+					System.out.println("대실 0원 필터링 후: " + list.size());
 				}
 			}
 			
@@ -236,13 +243,23 @@
 						tmino.add(t);
 				}
 				list = service.filterByCondi(tmino, list);
+				System.out.println("상세조건 0원 필터링 후: " + list.size());
 			}
-
+			
 			//모텔 정렬
-			if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
-				list = service.sortMotelAsc(list);
-			} else {
-				list = service.sortMotelDesc(list);
+			list = service.filterSPriceZero(list);
+			if(tmp != null && !tmp.isEmpty()){
+				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+					list = service.sortMotelAsc(tmp);
+				} else {
+					list = service.sortMotelDesc(tmp);
+				}
+			}else{
+				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+					list = service.sortMotelAsc(list);
+				} else {
+					list = service.sortMotelDesc(list);
+				}
 			}
 		}
 		%>
@@ -926,7 +943,7 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null }">
+								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null || pageScope.sort == '' }">
 									<button type="button" data-sort="DISTANCE" class="on">
 										<span>거리 순</span>
 									</button>
@@ -1001,36 +1018,44 @@
 										</div>
 									</div>
 									<div class="price">
-										<div class="map_html">
-											<p>
-												<%if(dto.getdPrice() != 0){ %>
-													대실&nbsp;
-													<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
-												<%} else {%>
-													대실 <b>숙소에 문의</b>
-												<%} %>
-											</p>
+                              <div class="map_html">
+                              <%if(reserve == null || d != null){ %>
+                                 <p>
+                                    <%if(dto.getdPrice() != 0){ %>
+                                       대실&nbsp;
+                                       <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                    <%} else {%>
+                                       대실 <b>숙소에 문의</b>
+                                    <%} %>
+                                 </p>
+                              <%} %>
 
-											<p>
-												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
-											</p>
-										</div>
-										
-											<p>
-											<%if(dto.getdPrice() != 0){ %>
-												대실&nbsp;
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
-											<%} else {%>
-												대실 <b>숙소에 문의</b>
-											<%} %>
-											</p>
-										
-											<p>
-												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
-											</p>
-									</div>
+                              <%if(reserve == null || s != null){ %>
+                                 <p>
+                                    숙박&nbsp; 
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                 </p>
+                              <%} %>
+                              </div>
+                              
+                              <%if(reserve == null || d != null){ %>
+                                 <p>
+                                 <%if(dto.getdPrice() != 0){ %>
+                                    대실&nbsp;
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                 <%} else {%>
+                                    대실 <b>숙소에 문의</b>
+                                 <%} %>
+                                 </p>
+                              <%} %>
+                              
+                              <%if(reserve == null || s != null){ %>
+                                 <p>
+                                    숙박&nbsp; 
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                 </p>
+                              <%} %>
+                           </div>
 								</div>
 						</a></li>
 						<%
