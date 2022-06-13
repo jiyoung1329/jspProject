@@ -119,15 +119,22 @@
 
 	<!-- Wrap -->
 	<div class="wrap show">
-
+	
 		<!-- Header -->
-		<%@include file="../header.jsp"%>
+		<header style="background-color: rgb(253,3,84)">
+		<%@include file="../header.jsp"%> 
+		</header>
 
 		<%
 		request.setCharacterEncoding("utf-8");
-
+		
+		String keyword = request.getParameter("keyword");
+		if(keyword == null || keyword == ""){
+			response.sendRedirect("../reservation/motel_search.jsp");
+		}
+		
 		//지역 기본값
-		String[] area = { "강남", "역삼", "삼성", "논현" };
+		/* String[] area = { "강남", "역삼", "삼성", "논현" };
 
 		String[] tmp_area = request.getParameterValues("area");
 		String[] param_area = request.getParameterValues("area[]");
@@ -147,14 +154,15 @@
 			String[] new_arr = result_arr.split(", ");
 			area = new_arr;
 		}
-		pageContext.setAttribute("area", area);
+		pageContext.setAttribute("area", area); */
 
-		String url = "motel_search.jsp?";
+		/* String url = "../reservation/motel_search.jsp?"; */
+		/* String url = "motel_search.jsp?";
 		for (int i = 0; i < area.length; i++) {
 			url += "area=" + area[i];
 			if (i != area.length - 1)
 				url += "&";
-		}
+		} */
 
 		//현재 날짜 불러옴
 		Date date = new Date();
@@ -180,6 +188,7 @@
 
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
+		System.out.println(sort);
 		pageContext.setAttribute("sort", sort);
 		
 		//대실, 숙박
@@ -187,11 +196,21 @@
 		String d = null, s = null;
 
 		AccommoService service = new AccommoService();
+		ArrayList<AccommoDTO> list = service.selectAllSearch(keyword, sort);
+		
+		//정렬
+		if(list.isEmpty()) {
+			list = service.filterSPriceZero(list);
+			if (sort == null || sort == "" || sort.equals("SCORE")) {
+				list = service.sortMotelScoreDesc(list);
+			} else if(sort.equals("LOWPRICE")) {
+				list = service.sortMotelAsc(list);
+			} else {
+				list = service.sortMotelDesc(list);
+			}
+		}
 
-		//지역에 속한 모텔 불러오기
-		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
-
-		//필터링
+		/* //필터링
 		if (!list.isEmpty()) {
 			if (reserve != null) {
 				for (String r : reserve) {
@@ -211,7 +230,7 @@
 					minPrice = Integer.parseInt(min_price);
 					maxPrice = Integer.parseInt(max_price);
 				} catch (Exception e) {
-					response.sendRedirect(url);
+					out.print("<script>location.href='" + url + "';</script>");
 				}
 				
 				list = service.filterSPriceZero(list);
@@ -239,56 +258,43 @@
 			}
 
 			//모텔 정렬
-			if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+			/* if (sort == null || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
 				list = service.sortMotelAsc(list);
 			} else {
 				list = service.sortMotelDesc(list);
-			}
-		}
+			} 
+		}  */
 		%>
-		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
+		<form id="product_filter_form" method="post" action="result.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
 			<input type="hidden" name="sort" id="sort" value="<%=sort %>">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
-			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])pageContext.getAttribute("area")) %>">
+			<input type="hidden" name="keyword" value="<%=keyword %>">
 	
-			<div class="listpage">
-				<!-- Result Top -->
-				<div class="fix_srch">
-					<div class="srch_bar">
-						<div class="wrap_inp">
-							<input type="text" placeholder="지역, 숙소명">
-						</div>
-						<button class="btn_cancel" onclick="srch_close()">취소</button>
-					</div>
-				</div>
-				<!-- //Result Top -->
-			</div>
+			<!-- Result Top -->
+            <div class="fix_srch">
+                <div class="srch_bar">
+                    <div class="wrap_inp">
+                        <input type="text" placeholder="지역, 숙소명">
+                    </div>
+                    <button class="btn_cancel" onclick="srch_close()">취소</button>
+                </div>
+            </div>
+            <!-- //Result Top -->
+			
+			<%-- <span class="keyword">'<%=keyword %>'</span> --%>
 
-			<!-- Sub Top -->
-			<div class="sub_top_wrap">
-				<!-- 페이백일때 클래스 추가 early_top -->
-				<div class="sub_top bg_kong_1">
-					<h2>모텔</h2>
-					<div class="area">
-						<div class="btn_area">
-							<span>서울</span>
-							<%for(int i = 0; i < area.length; i++){ %>
-								<%=area[i] %>
-								<%if(i != area.length - 1){%>
-									/
-								<%}
-							}%>
-						</div>
-						<div class="btn_date">
-							<span class="date_view"><b><%=sel_date%> ~ <%=sel_date2%></b><em>&nbsp;·&nbsp;1박</em></span>
-						</div>
-					</div>
-					<span class="keyword"></span>
-				</div>
-			</div>
-			<!-- //Sub Top -->
-
+			 <!-- Sub Top -->
+            <div class="sub_top_wrap result_top">
+                <div class="sub_top">
+                    <div class="area">
+                        <div class="btn_date"><span class="date_view"><b><%=sel_date %> ~ <%=sel_date2 %></b><em>&nbsp;·&nbsp;1박</em></span></div>
+                    </div>
+                    <span class="keyword">'<%=keyword %>'</span>
+                </div>
+            </div>
+            <!-- //Sub Top -->
+            
 			<!-- Datepicker -->
 			<input type="text" class="product_date" style="display: none;">
 			<button type="button"
@@ -355,46 +361,46 @@
 											인기숙소<span>HOT</span>
 									</a></li>
 									<li><a
-										href="motel_search.jsp?area=강남&area=역삼&area=삼성&area=논현"
+										href="${root }reservation/motel_search.jsp?area=강남&area=역삼&area=삼성&area=논현"
 										class="on">강남/역삼/삼성/논현</a></li>
 									<li><a
-										href="motel_search.jsp?area=서초&area=신사&area=방배">서초/신사/방배</a></li>
+										href="${root }reservation/motel_search.jsp?area=서초&area=신사&area=방배">서초/신사/방배</a></li>
 									<li><a
-										href="motel_search.jsp?area=잠실&area=방이">잠실/방이</a></li>
+										href="${root }reservation/motel_search.jsp?area=잠실&area=방이">잠실/방이</a></li>
 									<li><a
-										href="motel_search.jsp?area=잠실새내&area=신천">잠실새내/신천</a></li>
+										href="${root }reservation/motel_search.jsp?area=잠실새내&area=신천">잠실새내/신천</a></li>
 									<li><a
-										href="motel_search.jsp?area=영등포&area=여의도">영등포/여의도</a></li>
+										href="${root }reservation/motel_search.jsp?area=영등포&area=여의도">영등포/여의도</a></li>
 									<li><a
-										href="motel_search.jsp?area=구로&area=금천&area=오류&area=신도림">구로/금천/오류/신도림</a></li>
+										href="${root }reservation/motel_search.jsp?area=구로&area=금천&area=오류&area=신도림">구로/금천/오류/신도림</a></li>
 									<li><a
-										href="motel_search.jsp?area=강서&area=화곡&area=까치산역&area=목동">강서/화곡/까치산역/목동</a></li>
+										href="${root }reservation/motel_search.jsp?area=강서&area=화곡&area=까치산역&area=목동">강서/화곡/까치산역/목동</a></li>
 									<li><a
-										href="motel_search.jsp?area=천호&area=길동&area=둔촌">천호/길동/둔촌</a></li>
+										href="${root }reservation/motel_search.jsp?area=천호&area=길동&area=둔촌">천호/길동/둔촌</a></li>
 									<li><a
-										href="motel_search.jsp?area=서울대&area=신림&area=사당&area=동작">서울대/신림/사당/동작</a></li>
+										href="${root }reservation/motel_search.jsp?area=서울대&area=신림&area=사당&area=동작">서울대/신림/사당/동작</a></li>
 									<li><a
-										href="motel_search.jsp?area=종로&area=대학로">종로/대학로</a></li>
+										href="${root }reservation/motel_search.jsp?area=종로&area=대학로">종로/대학로</a></li>
 									<li><a
-										href="motel_search.jsp?area=용산&area=중구&area=명동&area=이태원">용산/중구/명동/이태원</a></li>
+										href="${root }reservation/motel_search.jsp?area=용산&area=중구&area=명동&area=이태원">용산/중구/명동/이태원</a></li>
 									<li><a
-										href="motel_search.jsp?area=성신여대&area=성북&area=월곡">성신여대/성북/월곡</a></li>
+										href="${root }reservation/motel_search.jsp?area=성신여대&area=성북&area=월곡">성신여대/성북/월곡</a></li>
 									<li><a
-										href="motel_search.jsp?area=노원&area=도봉&area=창동">노원/도봉/창동</a></li>
+										href="${root }reservation/motel_search.jsp?area=노원&area=도봉&area=창동">노원/도봉/창동</a></li>
 									<li><a
-										href="motel_search.jsp?area=강북&area=수유&area=미아">강북/수유/미아</a></li>
+										href="${root }reservation/motel_search.jsp?area=강북&area=수유&area=미아">강북/수유/미아</a></li>
 									<li><a
-										href="motel_search.jsp?area=왕십리&area=성수&area=금호">왕십리/성수/금호</a></li>
+										href="${root }reservation/motel_search.jsp?area=왕십리&area=성수&area=금호">왕십리/성수/금호</a></li>
 									<li><a
-										href="motel_search.jsp?area=건대&area=광진&area=구의">건대/광진/구의</a></li>
+										href="${root }reservation/motel_search.jsp?area=건대&area=광진&area=구의">건대/광진/구의</a></li>
 									<li><a
-										href="motel_search.jsp?area=동대문&area=장안&area=청량리&area=답십리">동대문/장안/청량리/답십리</a></li>
+										href="${root }reservation/motel_search.jsp?area=동대문&area=장안&area=청량리&area=답십리">동대문/장안/청량리/답십리</a></li>
 									<li><a
-										href="motel_search.jsp?area=중량&area=상봉&area=면목&area=태릉">중랑/상봉/면목/태릉</a></li>
+										href="${root }reservation/motel_search.jsp?area=중량&area=상봉&area=면목&area=태릉">중랑/상봉/면목/태릉</a></li>
 									<li><a
-										href="motel_search.jsp?area=신촌&area=홍대&area=서대문&area=마포">신촌/홍대/서대문/마포</a></li>
+										href="${root }reservation/motel_search.jsp?area=신촌&area=홍대&area=서대문&area=마포">신촌/홍대/서대문/마포</a></li>
 									<li><a
-										href="motel_search.jsp?area=은평&area=연신내&area=불광">은평/연신내/불광</a></li>
+										href="${root }reservation/motel_search.jsp?area=은평&area=연신내&area=불광">은평/연신내/불광</a></li>
 								</ul>
 								<ul class="city_child">
 									<li><a href="https://www.goodchoice.kr/product/home/2">경기
@@ -926,14 +932,14 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null }">
-									<button type="button" data-sort="DISTANCE" class="on">
-										<span>거리 순</span>
+								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null }">
+									<button type="button" data-sort="SCORE" class="on">
+										<span>평점 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="DISTANCE" class="">
-										<span>거리 순</span>
+									<button type="button" data-sort="SCORE" class="">
+										<span>평점 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
@@ -1089,8 +1095,7 @@
 		<!-- #3 거리순/추천순 팝업 -->
 		<div class="layer pop_sort box_shadow">
 			<ul>
-				<li><button type="button" data-sort="DISTANCE" class="active">거리
-						순</button></li>
+				<li><button type="button" data-sort="DISTANCE" class="active">인기순</button></li>
 				<li><button type="button" data-sort="LOWPRICE" class="">낮은
 						가격 순</button></li>
 				<li><button type="button" data-sort="HIGHPRICE" class="">높은
@@ -1122,9 +1127,8 @@
 	<script type="text/javascript" src="${root }/js/library/iscroll.js"></script>
 
 	<!-- Service -->
-	<!-- ?rand=1653988749 -->
 	<script type="text/javascript"
-		src="${root }/js/service/common.js"></script>
+		src="${root }/js/service/common.js?rand=1653988749"></script>
 	<script type="text/javascript"
 		src="${root }/js/service/geolocation.js?rand=1653988749"></script>
 

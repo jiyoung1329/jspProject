@@ -360,6 +360,44 @@ function pop_map_m(){
 
 }
 
+    function displayAddress( _latlng ) {
+    	var position = _latlng.getLat() + ',' + _latlng.getLng();
+
+		$.xResponse( '/product/srp_search', {action: 'location', location: position, page: 1, size: 1, distance: 1} ).done(function( _result ) {
+			if (_result.code != 200) {
+				console.log("search error :: " + _result.code);
+				return;
+			}
+
+			if (_result.data == null || _result.data.total_count == 0 || _result.data.list.length == 0) {
+				$('.pop_map .address').html('주소 정보가 없습니다.');
+				return;
+			}
+
+			$('.pop_map .address').html(_result.data.list[0].jibunFullAddr);
+		});
+    };
+
+    var hTimer = null;
+
+	daum.maps.event.addListener(map, 'dragstart', function() {
+		if (hTimer !== null) {
+			clearTimeout(hTimer);
+			hTimer = null;
+		}
+	});
+
+	daum.maps.event.addListener(map, 'dragend', function() {
+		hTimer = setTimeout(function() {
+			displayAddress(map.getCenter());
+		}, 2000);
+	});
+
+    daum.maps.event.addListener(map, 'bounds_changed', function(event) {
+        if (locations.length < 2)
+            this.setLevel(4);
+    });
+
 /* 지도 PC */
 function pop_map_pc(){
     $('.srp_recommend_srch').hide();

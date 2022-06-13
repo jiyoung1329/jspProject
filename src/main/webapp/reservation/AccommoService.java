@@ -18,7 +18,20 @@ public class AccommoService {
 		}
 		innerQuery = innerQuery.substring(0, innerQuery.length() - 4);
 
-		ArrayList<MotelDTO> motelList = dao.filterByArea(area, sort, innerQuery);
+		ArrayList<MotelDTO> motelList = dao.filterByArea(sort, innerQuery);
+		list = dao.selectAll(motelList);
+		list = dao.getAccommScore(list);
+		return list;
+	}
+	
+	public ArrayList<AccommoDTO> selectAllSearch(String keyword, String sort) {
+		ArrayList<AccommoDTO> list = new ArrayList<>();
+
+		String innerQuery = "SELECT a.accomm_num FROM accommodation a JOIN accomm_condition ac ON a.accomm_num = ac.accomm_num "
+				+ "JOIN condition c ON ac.condi_num = c.num " + "WHERE a.address like '%" + keyword
+				+ "%' or a.name like '%" + keyword + "%' or c.name like '%" + keyword + "%'";
+
+		ArrayList<MotelDTO> motelList = dao.filterBySearch(sort, innerQuery);
 		list = dao.selectAll(motelList);
 		list = dao.getAccommScore(list);
 		return list;
@@ -46,6 +59,22 @@ public class AccommoService {
 			for (int j = i + 1; j < list.size(); j++) {
 				AccommoDTO dto = list.get(j);
 				if (dto.getsPrice() > list.get(max).getsPrice()) {
+					max = j;
+				}
+			}
+			AccommoDTO tmp = list.get(max);
+			list.set(max, list.get(i));
+			list.set(i, tmp);
+		}
+		return list;
+	}
+	
+	public ArrayList<AccommoDTO> sortMotelScoreDesc(ArrayList<AccommoDTO> list) {
+		for (int i = 0; i < list.size(); i++) {
+			int max = i;
+			for (int j = i + 1; j < list.size(); j++) {
+				AccommoDTO dto = list.get(j);
+				if (dto.getScore() > list.get(max).getScore()) {
 					max = j;
 				}
 			}
@@ -115,5 +144,5 @@ public class AccommoService {
 		
 		return result;
 	}
-
+	
 }
