@@ -993,8 +993,8 @@
 						if(!list.isEmpty()){
 						for(AccommoDTO dto : list) {
 						%>
-						<li class="list_4 adcno1"><a
-							href="https://www.goodchoice.kr/product/detail?ano=63624&amp;adcno=1&amp;sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>"
+						<li class="list_4 adcno1">
+						<a href="detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
 							data-ano="63624" data-adcno="1" data-alat="37.49722015035"
 							data-alng="127.02931626635" data-distance="7.635"
 							data-affiliate="1">
@@ -1105,6 +1105,7 @@
 			<div class="address">${'장소' }</div>
 			<div class="inner_map" id="map">
 				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8"></script>
+				<script src="${root }/js/service/kakao.map.api.js"></script>
 			</div>
 			<div class="btn_set">
 				<button class="gra_left_right_red">설정 완료</button>
