@@ -1,4 +1,4 @@
-package test;
+package reservation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +15,7 @@ public class AccommoDAO {
 
 	public AccommoDAO() {
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user = "admin";
+		String user = "oracle";
 		String pw = "oracle";
 
 		try {

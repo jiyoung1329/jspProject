@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -64,7 +66,7 @@
 		<div class="main_spot">취향대로 머물다 여기어때</div>
 		<div class="main_link">
 			<ul>
-				<li><a href="/jspProject/reservation/motel_search.jsp" menu-link="1"><span class="ico_01">&nbsp;</span><p>모텔</p></a></li>
+				<li><a href="${root }/reservation/motel_search.jsp" menu-link="1"><span class="ico_01">&nbsp;</span><p>모텔</p></a></li>
 				<li><a href="#" menu-link="2"><span class="ico_02">&nbsp;</span><p>호텔·리조트</p></a></li>
 				<li><a href="#" menu-link="3"><span class="ico_03">&nbsp;</span><p>펜션</p></a></li>
 				<li><a href="#" menu-link="6"><span class="ico_04">&nbsp;</span><p>게스트하우스</p></a></li>

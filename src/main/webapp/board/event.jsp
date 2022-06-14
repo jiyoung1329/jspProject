@@ -1,5 +1,10 @@
+<%@page import="board.EventDAO"%>
+<%@page import="board.EventDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,19 +18,22 @@
 
 	<!-- CSS -->
     <title>취향대로 머물다 여기어때</title>
-    <link rel="stylesheet" href="/jspProject/css/common.css">
-    <link rel="stylesheet" href="/jspProject/css/more.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
+    <link rel="stylesheet" href="${root }/css/more.css">
     <link rel="canonical" href="https://www.goodchoice.kr/">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
     
 </head>
 <body class="pc">
-
+<%
+	EventDAO eventDao = new EventDAO();
+	ArrayList<EventDTO> events = eventDao.selectAll();
+%>
 <!-- Wrap -->
 <div class="wrap show">
-<%@ include file="../ex_header.jsp" %>
+<%@ include file="../header.jsp" %>
 
 	<!-- Sub Top -->
 	<div class="sub_top_wrap">
@@ -53,18 +61,20 @@
 			<div class="event">
 				<div class="mobile_top">이벤트</div>	
 				<ul id="event" class="event_list">
+					<% for(EventDTO event: events){ %>
 					<li>
-						<b>6월 우리 즉시할인 - 신용카드</b>
-						<span>기간: 2022.06.01 ~ 2022.06.30</span>
+						<b><%=event.getTitle() %></b>
+						<span>기간: <%=event.getStartDate() %> ~ <%=event.getEndDate() %></span>
 						<a href="/more/eventView/2347?page=0"><img src="//image.goodchoice.kr" alt=""></a>
 					</li>
+					<%} %>
 				</ul>	
 			</div>
 		</div>
 		<!-- //notification -->
 	</div>
 	<!-- //Content  -->
-<%@ include file="../ex_footer.jsp" %>
+<%@ include file="../footer.jsp" %>
 
 </div>
 
@@ -74,9 +84,9 @@
 
 <!-- Script -->
 <%@ include file="../script.jsp" %>
-<script type="text/javascript" src="/jspProject/js/library/validation/jquery.validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/more.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+<script type="text/javascript" src="${root }/js/service/more.js"></script>
 
 </body>
 </html>

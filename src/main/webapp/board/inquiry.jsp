@@ -1,5 +1,9 @@
+<%@page import="board.InquiryDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,19 +17,30 @@
 
 	<!-- CSS -->
     <title>취향대로 머물다 여기어때</title>
-    <link rel="stylesheet" href="/jspProject/css/common.css">
-    <link rel="stylesheet" href="/jspProject/css/more.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
+    <link rel="stylesheet" href="${root }/css/more.css">
     <link rel="canonical" href="https://www.goodchoice.kr/">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
     
 </head>
+
+<jsp:useBean id="inquiryDao" class="board.InquiryDAO" />
+<%
+	String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='../member/login.jsp'</script>");
+	}
+	
+	ArrayList<InquiryDTO> inquires = inquiryDao.selectAll(email);
+%>
+
 <body class="pc">
 
 <!-- Wrap -->
 <div class="wrap show">
-<%@ include file="../ex_header.jsp" %>
+<%@ include file="../header.jsp" %>
 
 	<!-- Sub Top -->
 	<div class="sub_top_wrap">
@@ -68,57 +83,59 @@
 				<div class="tab_each" style="display:block">
 			
 					<ul class="show_list open_list" id="inquiry_list">
-						<li onclick="">
-							<a href="https://www.goodchoice.kr/more/inquiry#inquiry_list" class="list_que"><!-- 답변완료/ NEW 버튼 2벌임 -->
-								<p><b>이용문의</b>
-									문의는 없습니다. 테스트 용입니다.<b class="reply_chk">문의 등록</b>
-								</p>
-								<span>작성일 2022. 06. 02</span>
-							</a>
-				
-							<div class="list_ans">
-								<b class="title">문의</b>
-								<div>문의는 없습니다. 테스트 용이니 곧 바로 삭제하겟습니다</div>
-							</div>
-				
-						</li>
+						<c:forEach var="inquiry" items="${inquires }" >
+							<li onclick="">
+								<a href="https://www.goodchoice.kr/more/inquiry#inquiry_list" class="list_que"><!-- 답변완료/ NEW 버튼 2벌임 -->
+									<p><b>이용문의</b>
+										${inquiry.getContent() }<b class="reply_chk">문의 등록</b>
+									</p>
+									<span>작성일 ${inquiry.getCreate_date() }</span>
+								</a>
+					
+								<div class="list_ans">
+									<b class="title">문의</b>
+									<div>${inquiry.getContent() }</div>
+								</div>
+							</li>
+						</c:forEach>
+						
 					</ul>
 				</div>
 				<!-- //문의 리스트 -->
 			
 				<!-- 문의 작성 -->
 				<div class="tab_each">
-					<form name="inq-form" method="post" action="/more/inquiry_submit">
+					<form name="inq-form" method="post" action="inquiryService.jsp">
 						<div class="alert_top">
 							<p>여기어때 이용 중 불편하신 점을 문의주시면 <em>최대한 빠른 시일내에 답변 드리겠습니다.</em></p>
 						</div>
 	
 						<section class="info_wrap">
 							<b>카테고리유형</b>
-							<select name="room_type" id="" class="select_type_2">
+							<select name="room_type" id="room_type" class="select_type_2">
 								<option value="">카테고리유형을 선택하세요</option>
-								<option value="1">모텔</option>
-								<option value="2">호텔·리조트</option>
-								<option value="3">펜션</option>
-								<option value="6">게스트하우스</option>
-								<option value="5">캠핑/글램핑</option>
-								<option value="7">한옥</option>
-								<option value="10">액티비티</option>
-								<option value="11">현금성(유상)포인트</option>
+								<option value="모텔">모텔</option>
+								<option value="호텔·리조트">호텔·리조트</option>
+								<option value="펜션">펜션</option>
+								<option value="게스트하우스">게스트하우스</option>
+								<option value="캠핑/글램핑">캠핑/글램핑</option>
+								<option value="한옥">한옥</option>
+								<option value="액티비티">액티비티</option>
+								<option value="현금성(유상)포인트">현금성(유상)포인트</option>
 							</select>
 	
 							<b>문의유형</b>
 							<select name="inq_type" id="inq_type" class="select_type_2">
 								<option value="">문의유형을 선택하세요</option>
-								<option value="8">이벤트</option>
-								<option value="7">예약/결제</option>
-								<option value="9">취소/환불</option>
-								<option value="2">혜택받기</option>
-								<option value="1">이용문의</option>
-								<option value="4">회원정보</option>
-								<option value="3">리뷰</option>
-								<option value="10">환불신청</option>
-								<option value="99">기타</option>
+								<option value="이벤트">이벤트</option>
+								<option value="예약/결제">예약/결제</option>
+								<option value="취소/환불">취소/환불</option>
+								<option value="혜택받기">혜택받기</option>
+								<option value="이용문의">이용문의</option>
+								<option value="회원정보">회원정보</option>
+								<option value="리뷰">리뷰</option>
+								<option value="환불신청">환불신청</option>
+								<option value="기타">기타</option>
 							</select>
 	
 							<div class="phone-block">
@@ -150,7 +167,7 @@
 							</div>
 						</section>
 						<section class="btn_wrap ">
-							<button class="btn_red_fill" type="button" onclick="$.inqSubmit();">작성 완료</button>
+							<button class="btn_red_fill" type="button" onclick="validation()">작성 완료</button>
 						</section>
 					</form>
 				</div>
@@ -160,7 +177,7 @@
 		<!-- //align_rt -->
 	</div>
 	<!-- //Content  -->
-<%@ include file="../ex_footer.jsp" %>
+<%@ include file="../footer.jsp" %>
 
 </div>
 
@@ -170,9 +187,56 @@
 
 <!-- Script -->
 <%@ include file="../script.jsp" %>
-<script type="text/javascript" src="/jspProject/js/library/validation/jquery.validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/more.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+<script type="text/javascript" src="${root }/js/service/more.js"></script>
+
+<script>
+function validation(){
+	var phoneRegExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?([0-9]{3,4})-?([0-9]{4})$/;
+	var emailRegExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+	// 카테고리 검증
+	if (!$('#room_type option:selected').val()){
+		alert('카테고리를 선택해주세요.');
+		return;
+	}
+	// type 검증
+	if (!$('#inq_type option:selected').val()){
+		alert('문의 유형을 선택해주세요.');
+		return;
+	}
+	// 휴대폰
+	var phone = $('.js-phone-number').val()
+	if (phone){
+		if (!phoneRegExp.test(phone)){
+			alert('핸드폰 번호를 정확히 입력해주세요.')
+		}
+	}
+	
+	// 이메일
+	var email = $('.js-email-string').val()
+	if (email){
+		if (!emailRegExp.test(email)){
+			alert('이메일을 정확히 입력해주세요.')
+		}
+	}
+	
+	// content 
+	if (!$('#questionTextarea').val()){
+		alert('문의 내용을 작성해주세요');
+		return;
+	} else if ($('#questionTextarea').val().length < 10){
+		alert('문의 내용을 10자 이상 입력해주세요');
+		return;
+	}
+	
+	var form = document.forms['inq-form'];
+	form.submit();
+	
+
+}
+</script>
 
 </body>
 </html>

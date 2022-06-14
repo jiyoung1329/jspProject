@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!-- 숙소정보 -->
 <article class="detail_info">
 	<!-- 기본 정보 -->
@@ -84,7 +86,20 @@
 			<li><br></li>
 			<li>#코로나로인하여 펜트하우스A,펜트하우스B,펜트하우스648 객실은 인원이 변동될수 있습니다</li>
 		</ul>
-		<div class="map" id="google_maps"></div>
+		<div class="map" id="detail_kakao_map" stlye="width:100%; height: 160px;">
+		
+		</div>		
+		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=512a8a42d9c7729fc5822863ba18e896"></script>
+		<script>
+			var container = document.getElementById('detail_kakao_map');
+			var options = {
+				center: new kakao.maps.LatLng(37.537183, 128.005454),
+				level: 3
+			};
+	
+			var map = new kakao.maps.Map(container, options);
+		</script>
+
 	</section>
 
         
