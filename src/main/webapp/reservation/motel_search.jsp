@@ -1,13 +1,11 @@
+<%@page import="reservation.AccommoService"%>
+<%@page import="reservation.AccommoDAO"%>
+<%@page import="reservation.AccommoDTO"%>
 <%@page import="java.net.URI"%>
 <%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.util.HashSet"%>
-<%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
-<%@page import="test.ComparatorAccommo"%>
-<%@page import="test.SortMotelService"%>
-<%@page import="test.AccommoDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="test.AccommoDAO"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -179,7 +177,6 @@
 
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
-		System.out.println("sort: " + sort);
 		pageContext.setAttribute("sort", sort);
 
 		//대실, 숙박
@@ -190,20 +187,19 @@
 
 		//지역에 속한 모텔 불러오기
 		ArrayList<AccommoDTO> list = service.filterByArea(area, sort);
-		System.out.println("숙박 0원 필터링 전: " + list.size());
+		System.out.println("숙박 0원 필터링 전: " + list.size() + "개");
 
 		//필터링
 		if (!list.isEmpty()) {
 			ArrayList<AccommoDTO> tmp = null;
 
-			//날짜 필터링
 			if ((tmp_sel_date != null && tmp_sel_date2 != null) && (!tmp_sel_date.equals(sel_date) || !tmp_sel_date2.equals(sel_date2))) {
 				tmp = list;
 				sel_date = tmp_sel_date;
 				sel_date2 = tmp_sel_date2;
 				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
-				System.out.println("날짜 필터링 후: " + tmp.size());
+				System.out.println("날짜 필터링 후: " + tmp.size() + "개");
 			}
 
 			//놀이시설 필터링
@@ -216,7 +212,7 @@
 						tmino.add(t);
 				}
 				list = service.filterByCondi(tmino, list);
-				System.out.println("상세조건 0원 필터링 후: " + list.size());
+				System.out.println("상세조건 0원 필터링 후: " + list.size() + "개");
 			}
 
 			//숙박, 대여 
@@ -242,6 +238,7 @@
 				}
 			}
 
+			System.out.println("정렬 기준: " + sort);
 			//오늘과 내일이 아닌 다른 날짜를 매개변수로 전달 받았을 때
 			if (tmp != null && !tmp.isEmpty()) {
 				tmp = service.addMotelInfo(sort, tmp);
@@ -249,17 +246,17 @@
 
 				if (reserve != null && (d != null && s == null)) {
 					tmp = service.filterDPriceZero(tmp);
-					System.out.println("대실 0원 필터링 후: " + tmp.size());
+					System.out.println("대실 0원 필터링 후: " + tmp.size() + "개");
 				}
 				if (minPrice != 0 && maxPrice != 0)
 					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
 
 				if (sort == null || sort == "" || sort.equals("SCORE")) {
-					tmp = service.sortMotelScoreDesc(tmp);
+					list = service.sortMotelScoreDesc(tmp);
 				} else if(sort.equals("LOWPRICE")) {
-					tmp = service.sortMotelAsc(tmp);
+					list = service.sortMotelAsc(tmp);
 				} else {
-					tmp = service.sortMotelDesc(tmp);
+					list = service.sortMotelDesc(tmp);
 				}
 			} else { 
 				list = service.addMotelInfo(sort, list);
@@ -267,14 +264,13 @@
 
 				if (reserve != null && (d != null && s == null)) {
 					list = service.filterDPriceZero(list);
-					System.out.println("대실 0원 필터링 후: " + list.size());
+					System.out.println("대실 0원 필터링 후: " + list.size() + "개");
 				}
 				if (minPrice != 0 && maxPrice != 0){
 					list = service.filterByPrice(minPrice, maxPrice, list);
-					System.out.println("가격 필터링 후: " + list.size());
+					System.out.printf("%d만원 ~ %d만원 가격 필터링 후: %d개", minPrice, maxPrice, list.size());
 				}
 
-				//왜 가격 & 상세조건 필터링 했을 때 max가 뜨지??
 				if (sort == null || sort == "" || sort.equals("SCORE")) {
 					list = service.sortMotelScoreDesc(list);
 				} else if(sort.equals("LOWPRICE")) {
