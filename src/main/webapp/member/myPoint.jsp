@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,17 +15,24 @@
 
 	<!-- CSS -->
     <title>취향대로 머물다 여기어때</title>
-    <link rel="stylesheet" href="/jspProject/css/common.css">
-    <link rel="stylesheet" href="/jspProject/css/font.css">
-    <link rel="stylesheet" href="/jspProject/css/my.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
+    <link rel="stylesheet" href="${root }/css/font.css">
+    <link rel="stylesheet" href="${root }/css/my.css">
     <link rel="canonical" href="https://www.goodchoice.kr/">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
     
 </head>
 <body class="pc">
-
+<% 
+	String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+	}
+// 	String email = "test@naver.com";
+	
+%>
 <!-- Wrap -->
 <div class="wrap show">
 <%@ include file="../header.jsp" %>
@@ -81,12 +90,12 @@
 
 <!-- Script -->
 <%@ include file="../script.jsp" %>
-<script type="text/javascript" src="/jspProject/js/library/validation/jquery.validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/my.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/mypage.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/phone-verification.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+<script type="text/javascript" src="${root }/js/service/validate.js"></script>
+<script type="text/javascript" src="${root }/js/service/my.js"></script>
+<script type="text/javascript" src="${root }/js/service/mypage.js"></script>
+<script type="text/javascript" src="${root }/js/service/phone-verification.js"></script>
 
 </body>
 </html>

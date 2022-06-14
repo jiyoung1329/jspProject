@@ -11,12 +11,13 @@
 <%@page import="javax.mail.Session"%>
 <%@page import="javax.mail.Authenticator"%>
 <%@page import="java.util.Properties"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <%
 request.setCharacterEncoding("utf-8");
 
 String from = "kmje2275@naver.com";
-String subject = "test";
+String subject = "[여기어때] 비밀번호를 알려드립니다.";
 String email = request.getParameter("email");
 
 MemberDAO memberDao =  new MemberDAO();
@@ -191,7 +192,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
     <!-- 에러페이지 -->
 <div class="error_page">
         <p><br><%=email%> 으로 비밀번호를 발송하였습니다.</p>
-    <a href="/Project/index.jsp" class="btn_link gra_left_right_red">HOME</a>
+    <a href="${root }/index.jsp" class="btn_link gra_left_right_red">HOME</a>
 </div>
 
     <!-- Footer -->

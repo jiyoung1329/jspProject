@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <html lang="ko" data-n-head="%7B%22lang%22:%7B%22ssr%22:%22ko%22%7D%7D">
 <head>
 <meta charset="UTF-8">
@@ -14,8 +16,8 @@
 
 
 <link rel="preload" href="/common.css" as="style">
-<link rel="stylesheet" href="/common.css">
-<link rel="stylesheet" href="/jspProjec2/css/111.css" type="text/css">
+<link rel="stylesheet" href="${root }/css/common.css">
+<link rel="stylesheet" href="${root }/css/delete.css" type="text/css">
 <link rel="shortcut icon"
 	href="https://image.goodchoice.kr/images/web_v3/favicon_170822.ico"
 	type="image/x-icon">
@@ -33,8 +35,10 @@
 <!-- <link rel="canonical" href="<?php echo $url; ?>" /> -->
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
-<script type="text/javascript" src="/js/library/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="/js/library/jquery.cookie.js"></script>
+<script type="text/javascript" src="${root }js/library/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="${root }js/library/jquery.cookie.js"></script>
+<script type="text/javascript" src="${root }js/service/join.js"></script>
+
 
 <!-- https://stackoverrun.com/ko/q/6293266 링크와 관련내용 필요없어보임 -->
 <script>!function(e,n,t){if("standalone"in n&&n.standalone){var o,a=e.location,i=/^(_document|html)$/i;e.addEventListener("click",(function(e){for(o=e.target;!i.test(o.nodeName);)o=o.parentNode;"href"in o&&(o.href.indexOf("http")||~o.href.indexOf(a.host))&&(e.preventDefault(),a.href=o.href)}),!1)}}(document,window.navigator)</script>
@@ -68,7 +72,7 @@
 							<div class="withdraw_title" data-v-21c46902="">
 								<p data-v-21c46902="">회원탈퇴</p>
 								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-									data-v-21c46902="" class="">
+									data-v-21c46902="" class=""onclick="javascript:location.href='${root }/index.jsp'">
 									<path
 										d="M10 8.586l5.657-5.657 1.414 1.414L11.414 10l5.657 5.657-1.414 1.414L10 11.414l-5.657 5.657-1.414-1.414L8.586 10 2.929 4.343l1.414-1.414z"
 										data-v-21c46902=""></path></svg>
@@ -122,36 +126,21 @@
 										<div data-v-9700c5a6="" class="checkbox-area">
 											<div data-v-9700c5a6="" class="checkbox"
 												style="display: inline-block;">
-												<div
-													style="display: inline-block; vertical-align: text-top; width: 20px; height: 20px; overflow: hidden; margin: 0px 8px 0px auto;">
-													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"
-														width="60" height="60" preserveAspectRatio="xMidYMid meet"
-														style="width: 100%; height: 100%; transform: translate3d(0px, 0px, 0px); content-visibility: visible;">
-														<defs>
-														<clipPath id="__lottie_element_44">
-														<rect width="60" height="60" x="0" y="0"></rect></clipPath></defs>
-														<g clip-path="url(#__lottie_element_44)">
-														<g
-															transform="matrix(0.949999988079071,0,0,0.949999988079071,30,30)"
-															opacity="1" style="display: block;">
-														<g opacity="1" transform="matrix(3,0,0,3,0,0)">
-														<path fill="rgb(0,0,0)" fill-opacity="0.56"
-															d=" M-6,-9 C-7.659999847412109,-9 -9,-7.659999847412109 -9,-6 C-9,-6 -9,6 -9,6 C-9,7.659999847412109 -7.659999847412109,9 -6,9 C-6,9 6,9 6,9 C7.659999847412109,9 9,7.659999847412109 9,6 C9,6 9,-6 9,-6 C9,-7.659999847412109 7.659999847412109,-9 6,-9 C6,-9 -6,-9 -6,-9z M-6,-10 C-6,-10 6,-10 6,-10 C8.210000038146973,-10 10,-8.210000038146973 10,-6 C10,-6 10,6 10,6 C10,8.210000038146973 8.210000038146973,10 6,10 C6,10 -6,10 -6,10 C-8.210000038146973,10 -10,8.210000038146973 -10,6 C-10,6 -10,-6 -10,-6 C-10,-8.210000038146973 -8.210000038146973,-10 -6,-10z"></path></g></g>
-														<g style="display: none;">
-														<g>
-														<path></path></g></g>
-														<g style="display: none;">
-														<g>
-														<path></path></g></g></g></svg>
-												</div>
-												<span></span>
+											
+												
 											</div>
-											<span data-v-9700c5a6="" class="checkbox-area__text">위
-												주의사항을 모두 숙지했고, 탈퇴에 동의합니다</span>
-										</div>
-										<button data-v-9700c5a6="" disabled="disabled" class="button">
+										
+							 <div class="terms_agree">
+										<p class="all_check">
+							               <input type="checkbox" id="checkAll" class="inp_chk_02 chk_default">위 주의사항을 모두 숙지했고, 탈퇴에 동의합니다
+							            </p>
+
+										<button data-v-9700c5a6=""  class="button" name = "checkButton" id = "terms_agree_btn" disabled="" onclick ="javascript:location.href='${root }/member/deleteService.jsp'">
 											진짜 안녕</button>
-									</div>
+											
+										</div>	
+										</div>
+									</div>	
 								</div>
 							</div>
 						</div>

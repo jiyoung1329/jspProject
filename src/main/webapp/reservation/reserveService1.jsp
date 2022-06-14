@@ -4,10 +4,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
+	request.setCharacterEncoding("utf-8");
+
+	String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+	}
+
 	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat setFormat = new SimpleDateFormat("yyyy.MM.dd E ");
 	
-	request.setCharacterEncoding("utf-8");
 	int price = Integer.parseInt(request.getParameter("price"));
 	int accomNum = Integer.parseInt(request.getParameter("accomNum"));
 	int roomNum = Integer.parseInt(request.getParameter("roomNum"));
@@ -27,8 +33,8 @@
 	dto.setRoomNum(roomNum);
 	dto.setCheckIn(selDate);
 	dto.setCheckOut(selDate2);
-// 	dto.setUserEmail((String) session.getAttribute("email"));
-	dto.setUserEmail("test@naver.com");
+	dto.setUserEmail(email);
+// 	dto.setUserEmail("test@naver.com");
 	dto.setVisitMethod(visit);
 	
 	ReservationDAO reserveDao = new ReservationDAO();

@@ -6,6 +6,8 @@
 <%@page import="reservation.MyReserveDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +20,10 @@
 <meta name="description"
 	content="전국 호텔, 펜션, 모텔부터 워터파크, 놀이공원, 아쿠아리움까지 최저가 할인 예약">
 
-<link rel="preload" href="/jspProject/css/common.css" as="style">
-<link rel="stylesheet" href="/jspProject/css/common.css">
-<link rel="stylesheet" href="/jspProject/css/my2.css">
-<link rel="stylesheet" href="/jspProject/css/more.css">
+<link rel="preload" href="${root }/css/common.css" as="style">
+<link rel="stylesheet" href="${root }/css/common.css">
+<link rel="stylesheet" href="${root }/css/my2.css">
+<link rel="stylesheet" href="${root }/css/more.css">
 <link rel="shortcut icon"
 	href="https://image.goodchoice.kr/images/web_v3/favicon_170822.ico"
 	type="image/x-icon">
@@ -31,9 +33,9 @@
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+	src="${root }/js/library/jquery-1.12.4.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.cookie.js"></script>
+	src="${root }/js/library/jquery.cookie.js"></script>
 <!-- vuejs 스타일 시트 써야하는데 너무 긺 - 이 코드 없으면 mobile에서 다시예약버튼이 이상하게 보임 -->
 <%--
 	<style data-vue-ssr-id="7e56e4e3:0 a4416d6a:0 34c88125:0 6dddd935:0 879b8502:0 edcdab14:0 62376f3c:0 e11ef8c8:0 b13ffd10:0" > 부분
@@ -42,7 +44,11 @@
 </head>
 <%
 request.setCharacterEncoding("utf-8");
-String userNickname = "등적색핵탄두";
+String userNickname = (String) session.getAttribute("nickname");
+if (userNickname.isEmpty()){
+	out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+}
+// String userNickname = "등적색핵탄두";
 
 SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd E HH:mm");
 SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <html lang="ko"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,19 +14,19 @@
 
 	<!-- CSS -->
     <title>회원 가입 | 여기어때</title>
-    <link rel="stylesheet" href="/Project/css/common.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
     <link rel="canonical" href="https://www.goodchoice.kr/user/join">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/Project/js/library/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/additional-methods.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/jquery.validate.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/localization/messages_ko.js"></script>
-    <script type="text/javascript" src="/Project/js/modules/dialogPopup.js"></script>
-    <script type="text/javascript" src="/Project/js/service/join.js"></script>
-    <script type="text/javascript" src="/Project/js/service/phone-verification.js"></script>
-    <script type="text/javascript" src="/Project/js/service/user-validate.js"></script>
-    <script type="text/javascript" src="/Project/js/service/validate.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/localization/messages_ko.js"></script>
+    <script type="text/javascript" src="${root }/js/modules/dialogPopup.js"></script>
+    <script type="text/javascript" src="${root }/js/service/join.js"></script>
+    <script type="text/javascript" src="${root }/js/service/phone-verification.js"></script>
+    <script type="text/javascript" src="${root }/js/service/user-validate.js"></script>
+    <script type="text/javascript" src="${root }/js/service/validate.js"></script>
     
     <script>
 var _BASE_URL = 'https://www.goodchoice.kr/';
@@ -106,7 +108,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
                             <ul>
                                 <li><a href="https://www.goodchoice.kr/more/notice">공지사항</a></li>
                                 <li><a href="https://www.goodchoice.kr/more/event">이벤트</a></li>
-                                <!-- <li><a href="https://www.goodchoice.kr/more/project">혁신 프로젝트</a></li> -->
+                                <!-- <li><a href="https://www.goodchoice.kr/more${root }">혁신 프로젝트</a></li> -->
                                 <li><a href="https://www.goodchoice.kr/more/faq">고객문의</a></li>
                                 <li><a href="https://www.goodchoice.kr/my/notiSetting">알림설정</a></li>
                                 <li>
@@ -178,7 +180,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
             </p>
 
             <button type="button" class="btn_link" id="terms_agree_btn" disabled="" 
-            onclick="javascript:location.href='/Project/member/registerEmail.jsp';"><span>다음</span></button>
+            onclick="javascript:location.href='${root }/member/registerEmail.jsp';"><span>다음</span></button>
            
         </div>
     </section>

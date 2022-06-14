@@ -1,8 +1,6 @@
-ㄴ<%@page import="java.util.HashSet"%>
+<%@page import="java.util.HashSet"%>
 <%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
-<%@page import="test.ComparatorAccommo"%>
-<%@page import="test.SortMotelService"%>
 <%@page import="test.AccommoDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="test.AccommoDAO"%>

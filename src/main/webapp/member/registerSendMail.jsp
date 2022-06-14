@@ -12,12 +12,13 @@
 <%@page import="javax.mail.Session"%>
 <%@page import="javax.mail.Authenticator"%>
 <%@page import="java.util.Properties"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <%
 request.setCharacterEncoding("utf-8");
 
 String from = "kmje2275@naver.com";
-String subject = "test";
+String subject = "[여기어때] 회원가입에 필요한 인증번호 전송드립니다.";
 String email = request.getParameter("email");
 
 Random random = new Random();
@@ -66,6 +67,6 @@ try{
     return;
 }
     
-out.println("<script>alert('Send Mail Success!!');location.href='/Project/member/registerNumCheck.jsp';</script>");
+out.println("<script>alert('Send Mail Success!!');location.href='registerNumCheck.jsp';</script>");
 // 성공 시
 %>

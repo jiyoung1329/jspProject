@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <html lang="ko"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,22 +14,22 @@
 
 	<!-- CSS -->
     <title>비밀번호 재설정 | 여기어때</title>
-    <link rel="stylesheet" href="/Project/css/common.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
     <link rel="canonical" href="https://www.goodchoice.kr/user/passwdResetStart">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
     <script src="https://connect.facebook.net/en_US/sdk.js?hash=c7757019ef4214788d0050ccbcd0c9a4" async="" crossorigin="anonymous"></script>
     <script id="facebook-jssdk" src="//connect.facebook.net/en_US/sdk.js"></script>
-    <script type="text/javascript" src="/Project/js/library/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/additional-methods.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/jquery.validate.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/localization/messages_ko.js"></script>
-    <script type="text/javascript" src="/Project/js/modules/dialogPopup.js"></script>
-    <script type="text/javascript" src="/Project/js/service/join.js"></script>
-    <script type="text/javascript" src="/Project/js/service/phone-verification.js"></script>
-    <script type="text/javascript" src="/Project/js/service/user-validate.js"></script>
-    <script type="text/javascript" src="/Project/js/service/validate.js"></script>
-    <script type="text/javascript" src="/Project/js/service/login.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/localization/messages_ko.js"></script>
+    <script type="text/javascript" src="${root }/js/modules/dialogPopup.js"></script>
+    <script type="text/javascript" src="${root }/js/service/join.js"></script>
+    <script type="text/javascript" src="${root }/js/service/phone-verification.js"></script>
+    <script type="text/javascript" src="${root }/js/service/user-validate.js"></script>
+    <script type="text/javascript" src="${root }/js/service/validate.js"></script>
+    <script type="text/javascript" src="${root }/js/service/login.js"></script>
     
     
     <script>
@@ -114,7 +116,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
                             <ul>
                                 <li><a href="https://www.goodchoice.kr/more/notice">공지사항</a></li>
                                 <li><a href="https://www.goodchoice.kr/more/event">이벤트</a></li>
-                                <!-- <li><a href="https://www.goodchoice.kr/more/project">혁신 프로젝트</a></li> -->
+                                <!-- <li><a href="https://www.goodchoice.kr/more${root }">혁신 프로젝트</a></li> -->
                                 <li><a href="https://www.goodchoice.kr/more/faq">고객문의</a></li>
                                 <li><a href="https://www.goodchoice.kr/my/notiSetting">알림설정</a></li>
                                 <li>
@@ -140,7 +142,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
     <!-- 로그인 pop_layer_w('pop_login') -->
 <div class="layer_fix layer_unfix pop_login pop_mem_reserve new-style-form">
     <section>
-        <form id="loginForm" action="/Project/member/pwSendMail.jsp" autocomplete="off" method="post" novalidate="novalidate">
+        <form id="loginForm" action="${root }/member/pwSendMail.jsp" autocomplete="off" method="post" novalidate="novalidate">
             <input type="hidden" name="returnUrl" value="">
             <input type="hidden" name="yeogi_token" value="8c1ed6e1cf02fe6eba7ebf5a8b561e35">
 

@@ -1,3 +1,5 @@
+<%@page import="reservation.AccommoDTO"%>
+<%@page import="reservation.AccommoService"%>
 <%@page import="java.net.URI"%>
 <%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.util.HashSet"%>
@@ -182,7 +184,9 @@
 		String[] reserve = request.getParameterValues("reserve[]");
 		String d = null, s = null;
 
+		System.out.println("service: " + new AccommoService());
 		AccommoService service = new AccommoService();
+		System.out.println("service: " + service);
 
 		//지역에 속한 모텔 불러오기
 		ArrayList<AccommoDTO> list = service.filterByArea(area, sort);

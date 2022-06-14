@@ -2,6 +2,8 @@
 <%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,22 +17,22 @@
 
 	<!-- CSS -->
     <title>취향대로 머물다 여기어때</title>
-    <link rel="stylesheet" href="/jspProject/css/common.css">
-    <link rel="stylesheet" href="/jspProject/css/font.css">
-    <link rel="stylesheet" href="/jspProject/css/my2.css">
+    <link rel="stylesheet" href="${root }/css/common.css">
+    <link rel="stylesheet" href="${root }/css/font.css">
+    <link rel="stylesheet" href="${root }/css/my2.css">
     <link rel="canonical" href="https://www.goodchoice.kr/">
     <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
     <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
     
 </head>
 <body class="pc">
 <% 
-// 	String email = (String) session.getAttribute("email");
-// 	if (email.isEmpty()){
-// 		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
-// 	}
-	String email = "test@naver.com";
+	String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+	}
+// 	String email = "test@naver.com";
 	MemberDAO memberDao = new MemberDAO();
 	MemberDTO member = memberDao.selectEmail(email);
 	
@@ -181,8 +183,8 @@
 
 		<div class="bot_btn">
 			<p>여기어때를 이용하고 싶지 않으신가요?</p>
-			<button type="button" onclick="pop_twobtn('ell','로그아웃 하시겠습니까?','취소','로그아웃','close_layer()','logoutPro()');">로그아웃</button>
-			<button type="button"><a href="#">회원탈퇴</a></button>
+			<button type="button" onclick="location.href='logout.jsp';">로그아웃</button>
+			<button type="button"><a href="delete.jsp">회원탈퇴</a></button>
 		</div>
 	</div>
 </div>
@@ -197,12 +199,12 @@
 
 <!-- Script -->
 <%@ include file="../script.jsp" %>
-<script type="text/javascript" src="/jspProject/js/library/validation/jquery.validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/validation/additional-methods.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/validate.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/my.js"></script>
-<script src="/jspProject/js/service/mypage.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/phone-verification.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+<script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+<script type="text/javascript" src="${root }/js/service/validate.js"></script>
+<script type="text/javascript" src="${root }/js/service/my.js"></script>
+<script src="${root }/js/service/mypage.js"></script>
+<script type="text/javascript" src="${root }/js/service/phone-verification.js"></script>
 
 </body>
 </html>

@@ -8,10 +8,10 @@
 	
 	String user_email = (String) session.getAttribute("email");
 	
-	 // if (user_email == null){
-	//	out.print("<script> alert('로그인 후 이용가능합니다.'); location.href='../member/login.jsp';</script>");
-	//	return;
-	 //}
+	 if (user_email == null){
+		out.print("<script> alert('로그인 후 이용가능합니다.'); location.href='../member/login.jsp';</script>");
+		return;
+	 }
 
 	InquiryDAO inquiryDao = new InquiryDAO();
 
@@ -24,7 +24,7 @@
 	String content = request.getParameter("content");
 	
 	InquiryDTO inquiry = new InquiryDTO();
-	inquiry.setUser_email("test@naver.com");
+	inquiry.setUser_email(user_email);
 	inquiry.setCategory(category);
 	inquiry.setType(type);
 	inquiry.setPhone(phone);

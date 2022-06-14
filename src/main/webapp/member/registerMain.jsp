@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <html lang="ko"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -133,7 +134,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
                             <ul>
                                 <li><a href="https://www.goodchoice.kr/more/notice">공지사항</a></li>
                                 <li><a href="https://www.goodchoice.kr/more/event">이벤트</a></li>
-                                <!-- <li><a href="https://www.goodchoice.kr/more/project">혁신 프로젝트</a></li> -->
+                                <!-- <li><a href="https://www.goodchoice.kr/more${root }">혁신 프로젝트</a></li> -->
                                 <li><a href="https://www.goodchoice.kr/more/faq">고객문의</a></li>
                                 <li><a href="https://www.goodchoice.kr/my/notiSetting">알림설정</a></li>
                                 <li>

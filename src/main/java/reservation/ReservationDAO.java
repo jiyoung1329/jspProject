@@ -69,11 +69,11 @@ public class ReservationDAO {
 		
 		String query = "select m.name as member_name, m.phone as member_phone, a.name as accom_name, a.thumnail as accom_thumnail, r.name as room_name,"
 				+ " re.num as reserve_num, re.check_in as checkin, re.check_out as checkout, re.is_reserve as is_reserve, re.price as price, rev.num as review_num"
-				+ " from reservation re join member m on re.user_email =?"
+				+ " from reservation re join member m on re.user_email = m.email"
 				+ " join accommodation a on re.accomm_num = a.accomm_num"
 				+ " join room r on re.room_num = r.r_num"
 				+ " left join review rev on rev.reservation_num = re.num"
-				+ " order by re.is_reserve desc, re.num desc";
+				+ " where re.user_email=? order by re.is_reserve desc, re.num desc";
 		
 //		System.out.println(query);
 		try {

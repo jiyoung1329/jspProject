@@ -4,8 +4,11 @@
     pageEncoding="UTF-8"%>
 <%
 	request.setCharacterEncoding("utf-8");
-	// String email = (String) session.getAttribute("email");
-	String email = "test@naver.com";
+	String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
+	}	
+// 	String email = "test@naver.com";
 
 	String nickname = request.getParameter("unick");
 	String name = request.getParameter("uname");
