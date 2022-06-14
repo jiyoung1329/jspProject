@@ -127,9 +127,9 @@
 
 		<%
 		request.setCharacterEncoding("utf-8");
-		
+
 		String keyword = request.getParameter("keyword");
-		if(keyword == null || keyword == ""){
+		if (keyword == null || keyword == "") {
 			response.sendRedirect("../reservation/motel_search.jsp");
 		}
 
@@ -140,9 +140,8 @@
 		String[] param_area = request.getParameterValues("area[]");
 
 		//매개변수로 전달된 지역이 있다면
-		if (tmp_area != null && tmp_area.length > 0) {
+		if (tmp_area != null && tmp_area.length > 0)
 			area = tmp_area;
-		}
 
 		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기
 		if (param_area != null) {
@@ -183,7 +182,7 @@
 		String sort = request.getParameter("sort");
 		System.out.println(sort);
 		pageContext.setAttribute("sort", sort);
-		
+
 		//대실, 숙박
 		String[] reserve = request.getParameterValues("reserve[]");
 		String d = null, s = null;
@@ -191,13 +190,13 @@
 		AccommoService service = new AccommoService();
 
 		//지역에 속한 모텔 불러오기
-		ArrayList<AccommoDTO> list = service.selectAllSearch(keyword, sort);
+		ArrayList<AccommoDTO> list = service.filterBySearch(keyword, sort);
 		System.out.println("\n숙박 0원 제거하기 전 개수: " + list.size());
-		
+
 		//필터링
 		if (!list.isEmpty()) {
 			ArrayList<AccommoDTO> tmp = null;
-			
+
 			//매개변수로 전달된 날짜가 있다면
 			if ((tmp_sel_date != null && tmp_sel_date2 != null) && (!tmp_sel_date.equals(sel_date) || !tmp_sel_date2.equals(sel_date2))) {
 				tmp = list;
@@ -207,42 +206,7 @@
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
 				System.out.println("날짜 필터링 후: " + tmp.size());
 			}
-			
-			if (reserve != null) {
-				for (String r : reserve) {
-					if (r.equals("d"))
-						d = "d";
-					if (r.equals("s"))
-						s = "s";
-				}
-			}
-			
-			String min_price = request.getParameter("min_price");
-			String max_price = request.getParameter("max_price");
-			
-			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
-				int minPrice = 0, maxPrice = 0;
-				try {
-					minPrice = Integer.parseInt(min_price);
-					maxPrice = Integer.parseInt(max_price);
-					System.out.println(minPrice + ", " + maxPrice);
-				} catch (Exception e) {
-					response.sendRedirect(url);
-				}
-				
-				if(d != null && s == null){
-					list = service.filterDPriceZero(list);
-					System.out.println("대실 0원 필터링 후: " + list.size());
-				}
-				list = service.filterByPrice(minPrice, maxPrice, list);
-				System.out.println("가격 정렬 후: " + list.size());
-			}else{
-				if(d != null && s == null){
-					list = service.filterDPriceZero(list);
-					System.out.println("대실 0원 필터링 후: " + list.size());
-				}
-			}
-			
+
 			//놀이시설
 			String[] tmp_tmino = request.getParameterValues("tmino[]");
 			if (tmp_tmino != null) {
@@ -256,26 +220,64 @@
 				System.out.println("상세조건 0원 필터링 후: " + list.size());
 			}
 			
-			//모텔 정렬
-			list = service.filterSPriceZero(list);
-			System.out.println("숙박 0원 필터링 후: " + list.size());
-			if(tmp != null && !tmp.isEmpty()){
-				if(sort == null || sort == "" || sort.equals("SCORE")){
-					list = service.sortMotelScoreDesc(list);
-				}else if(sort.equals("LOWPRICE")){
-					list = service.sortMotelAsc(list);
-				}else{
-					list = service.sortMotelDesc(list);
+			//숙박, 대여 
+			if (reserve != null) {
+				for (String r : reserve) {
+					if (r.equals("d"))
+						d = "d";
+					if (r.equals("s"))
+						s = "s";
 				}
-			}else{
-				if(sort == null || sort == "" || sort.equals("SCORE")){
-					list = service.sortMotelScoreDesc(list);
-				}else if(sort.equals("LOWPRICE")){
+			}
+
+			//가격
+			String min_price = request.getParameter("min_price");
+			String max_price = request.getParameter("max_price");
+			int minPrice = 0, maxPrice = 0;
+			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
+				try {
+					minPrice = Integer.parseInt(min_price);
+					maxPrice = Integer.parseInt(max_price);
+				} catch (Exception e) {
+					response.sendRedirect(url);
+				}
+			}
+
+			//오늘과 내일이 아닌 다른 날짜를 매개변수로 전달 받았을 때
+			if (tmp != null && !tmp.isEmpty()) {
+				tmp = service.addMotelInfo(sort, tmp);
+				tmp = service.filterSPriceZero(tmp);
+
+				if (reserve != null && (d != null && s == null)) {
+					list = service.filterDPriceZero(tmp);
+					System.out.println("대실 0원 필터링 후: " + tmp.size());
+				}
+				if (minPrice != 0 && maxPrice != 0)
+					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
+
+				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+					list = service.sortMotelAsc(tmp);
+				} else {
+					list = service.sortMotelDesc(tmp);
+				}
+			} else {
+				list = service.addMotelInfo(sort, list);
+				list = service.filterSPriceZero(list);
+
+				if (reserve != null && (d != null && s == null)) {
+					list = service.filterDPriceZero(list);
+					System.out.println("대실 0원 필터링 후: " + list.size());
+				}
+				if (minPrice != 0 && maxPrice != 0)
+					list = service.filterByPrice(minPrice, maxPrice, list);
+
+				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
 					list = service.sortMotelAsc(list);
-				}else{
+				} else {
 					list = service.sortMotelDesc(list);
 				}
 			}
+			System.out.println("\n");
 		}
 		%>
 		<form id="product_filter_form" method="post" action="result.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">

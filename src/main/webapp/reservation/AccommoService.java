@@ -8,32 +8,44 @@ public class AccommoService {
 	public AccommoService() {
 		dao = new AccommoDAO();
 	}
+	
+	public ArrayList<AccommoDTO> addMotelInfo (String sort, ArrayList<AccommoDTO> list) {
+		ArrayList<AccommoDTO> result = new ArrayList<>();
+		String whereQuery = "WHERE a.accomm_num IN (";
+		
+		for(int i = 0; i < list.size(); i++) {
+			AccommoDTO dto = list.get(i);
+			whereQuery += dto.getNum();
+			if(i != list.size() - 1)
+				whereQuery += ", ";
+		}
+		whereQuery += ") ";
+		
+		result = dao.addPrice(sort, whereQuery);
+		result = dao.addInfo(result);
+		result = dao.addAccommScore(result);
+		return result;
+	}
 
-	public ArrayList<AccommoDTO> selectAll(String[] area, String sort) {
+	public ArrayList<AccommoDTO> filterByArea(String[] area, String sort) {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
 
-		String innerQuery = "SELECT * FROM accommodation WHERE ";
+		String whereQuery = "WHERE ";
 		for (String a : area) {
-			innerQuery += "address like '%'||'" + a + "'||'%' or ";
+			whereQuery += "address like '%'||'" + a + "'||'%' or ";
 		}
-		innerQuery = innerQuery.substring(0, innerQuery.length() - 4);
+		whereQuery = whereQuery.substring(0, whereQuery.length() - 4);
 
-		ArrayList<MotelDTO> motelList = dao.filterByArea(sort, innerQuery);
-		list = dao.selectAll(motelList);
-		list = dao.getAccommScore(list);
+		list = dao.filterByArea(whereQuery);
 		return list;
 	}
 	
-	public ArrayList<AccommoDTO> selectAllSearch(String keyword, String sort) {
+	public ArrayList<AccommoDTO> filterBySearch(String keyword, String sort) {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
 
-		String innerQuery = "SELECT a.accomm_num FROM accommodation a JOIN accomm_condition ac ON a.accomm_num = ac.accomm_num "
-				+ "JOIN condition c ON ac.condi_num = c.num " + "WHERE a.address like '%" + keyword
-				+ "%' or a.name like '%" + keyword + "%' or c.name like '%" + keyword + "%'";
-
-		ArrayList<MotelDTO> motelList = dao.filterBySearch(sort, innerQuery);
-		list = dao.selectAll(motelList);
-		list = dao.getAccommScore(list);
+		String whereQuery = "WHERE a.address like '%" + keyword + "%' or a.name like '%" + keyword + "%' or c.name like '%" + keyword + "%'";
+		
+		list = dao.filterBySearch(whereQuery);
 		return list;
 	}
 
@@ -122,10 +134,8 @@ public class AccommoService {
 			}
 			whereQuery += ") and accomm_num NOT IN ((select accomm_num from reservation "
 					+ "where to_date(check_in, 'YYYY.MM.DD') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') or "
-					+ "to_date(check_out, 'YYYY.MM.DD') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD'))))A ";
-			
-			ArrayList<MotelDTO> motelList = dao.filterByDate(whereQuery);
-			result = dao.selectAll(motelList);
+					+ "to_date(check_out, 'YYYY.MM.DD') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD')))";
+			result = dao.filterByDate(whereQuery);
 		}
 			return result;
 	}
@@ -160,11 +170,9 @@ public class AccommoService {
 			if (i == tmino.size() - 1)
 				whereQuery = whereQuery.substring(0, whereQuery.length() - 2);
 		}
-		whereQuery += "))A ";
+		whereQuery += ")";
 		
-		ArrayList<MotelDTO> tmp = dao.filterByCondi(whereQuery);
-		result = dao.selectAll(tmp);
-		
+		result = dao.filterByCondi(whereQuery);
 		return result;
 	}
 	
