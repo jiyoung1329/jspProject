@@ -25,25 +25,65 @@ public class AccommoDAO {
 			e.printStackTrace();
 		}
 	}
-
-	public ArrayList<AccommoDTO> selectAll(ArrayList<MotelDTO> motelList) {
-		ArrayList<AccommoDTO> list = new ArrayList<>();
-		String query = "SELECT * FROM accommodation WHERE accomm_num = ?";
+	
+	public ArrayList<AccommoDTO> addAccommScore(ArrayList<AccommoDTO> accommoList) {
+		String query = "SELECT TRUNC(avg(score), 1) score, count(*) cnt FROM review WHERE accomm_num = ?";
 		
 		try {
-			for (MotelDTO motel : motelList) {
+			for (AccommoDTO accommo : accommoList) {
 				ps = conn.prepareStatement(query);
-				ps.setInt(1, motel.getAccommoNum());
+				ps.setInt(1, accommo.getNum());
 				rs = ps.executeQuery();
 
 				if(rs.next()) {
-					AccommoDTO dto = new AccommoDTO(rs.getInt("accomm_num"), rs.getString("name"),
-							rs.getString("address"), rs.getString("thumnail"), rs.getString("tel"),
-							rs.getString("detail_image"));
-					dto.setsPrice(motel.getSprice());
-					dto.setdPrice(motel.getDprice());
-					list.add(dto);
+					accommo.setScore(rs.getDouble("score"));
+					accommo.setReviewCnt(rs.getInt("cnt"));
 				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return accommoList;
+	}
+	
+	public ArrayList<AccommoDTO> addPrice(String sort, String whereQuery) {
+		ArrayList<AccommoDTO> list = new ArrayList<>();
+		String query = "";
+		
+		if(sort == null || sort == "" || sort.equals("SCORE")) {
+			query = "SELECT a.accomm_num, ROUND(AVG(r.s_price), -3) result_s_price, ROUND(AVG(r.d_price), -3) result_d_price "
+					+ "FROM accommodation a JOIN room r ON a.accomm_num = r.accomm_num " + whereQuery
+					+ "GROUP BY a.accomm_num";
+		}else if(sort.equals("LOWPRICE")) {
+			query = "SELECT a.accomm_num, MIN(r.s_price) result_s_price, MIN(r.d_price) result_d_price "
+					+ "FROM accommodation a JOIN room r ON a.accomm_num = r.accomm_num " + whereQuery
+					+ "GROUP BY a.accomm_num";
+		}else {
+			query = "SELECT a.accomm_num, MAX(r.s_price) result_s_price, MAX(r.d_price) result_d_price "
+					+ "FROM accommodation a JOIN room r ON a.accomm_num = r.accomm_num " + whereQuery
+					+ "GROUP BY a.accomm_num";
+		}
+		System.out.println(query);
+		
+		try {
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				AccommoDTO dto = new AccommoDTO();
+				dto.setNum(rs.getInt("accomm_num"));
+				dto.setsPrice(rs.getInt("result_s_price"));
+				dto.setdPrice(rs.getInt("result_d_price"));
+				list.add(dto);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -59,55 +99,80 @@ public class AccommoDAO {
 		}
 		return list;
 	}
-	
-	//거리순 정렬
-	/*
-	 * public ArrayList<AccommoDTO> selectAll(String[] area) { ArrayList<AccommoDTO>
-	 * list = new ArrayList<>();
-	 * 
-	 * String query = "SELECT * FROM accommodation WHERE ";
-	 * 
-	 * for(String a : area) { query += "address like '%'||'" + a + "'||'%' or "; }
-	 * query = query.substring(0, query.length()-4);
-	 * 
-	 * try { ps = conn.prepareStatement(query); rs = ps.executeQuery();
-	 * 
-	 * while (rs.next()) { AccommoDTO dto = new AccommoDTO(rs.getInt("accommo_num"),
-	 * rs.getString("name"), rs.getString("address"), rs.getString("thumnail"),
-	 * rs.getString("tel"), rs.getString("detail_image")); list.add(dto); } } catch
-	 * (SQLException e) { e.printStackTrace(); } finally { try { if(rs != null)
-	 * rs.close(); if(ps != null) ps.close(); } catch (SQLException e) {
-	 * e.printStackTrace(); } } return list; }
-	 */
+
+	public ArrayList<AccommoDTO> addInfo(ArrayList<AccommoDTO> accommoList) {
+		String query = "SELECT * FROM accommodation WHERE accomm_num = ?";
+		
+		try {
+			for (int i = 0; i < accommoList.size(); i++) {
+				AccommoDTO accommo = accommoList.get(i);
+				
+				ps = conn.prepareStatement(query);
+				ps.setInt(1, accommo.getNum());
+				rs = ps.executeQuery();
+
+				if(rs.next()) {
+					accommo.setName(rs.getString("name"));
+					accommo.setAddress(rs.getString("address"));
+					accommo.setThumnail(rs.getString("thumnail"));
+					accommoList.set(i, accommo);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return accommoList;
+	}
 	
 	//인덱스 -> 분리
-	public ArrayList<MotelDTO> filterByArea(String[] area, String sort, String innerQuery) {
-		ArrayList<MotelDTO> list = new ArrayList<>();
-		String query = "";
-		
-		if(sort == null || sort.equals("DISTANCE")) {
-			query = "SELECT B.accomm_num, MIN(B.s_price) as result_s_price, MIN(B.d_price) as result_d_price "
-					+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
-					+ "FROM (" + innerQuery + ")A "
-					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
-		} else if (sort.equals("LOWPRICE")) {
-			query = "SELECT B.accomm_num, MIN(B.s_price) as result_s_price, MIN(B.d_price) as result_d_price "
-					+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
-					+ "FROM (" + innerQuery + ")A "
-					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
-		} else {
-			query = "SELECT B.accomm_num, MAX(B.s_price) as result_s_price, MAX(B.d_price) as result_d_price "
-					+ "FROM (SELECT A.*, room.r_num, room.s_price, room.d_price "
-					+ "FROM (" + innerQuery + ")A "
-					+ "JOIN room ON A.accomm_num = room.accomm_num)B GROUP BY (B.accomm_num)";
-		}
+	public ArrayList<AccommoDTO> filterByArea(String whereQuery) {
+		ArrayList<AccommoDTO> list = new ArrayList<>();
+		String query = "SELECT accomm_num FROM accommodation " + whereQuery;
+		System.out.println(query);
 		
 		try {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
-				MotelDTO dto = new MotelDTO(rs.getInt("accomm_num"), rs.getInt("result_s_price"), rs.getInt("result_d_price"));
+				AccommoDTO dto = new AccommoDTO();
+				dto.setNum(rs.getInt("accomm_num"));
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(ps != null) ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<AccommoDTO> filterByDate(String whereQuery) {
+		ArrayList<AccommoDTO> list = new ArrayList<>();
+		String query = "SELECT accomm_num FROM accommodation " + whereQuery;
+		System.out.println(query);
+		
+		try {
+			ps = conn.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				AccommoDTO dto = new AccommoDTO();
+				dto.setNum(rs.getInt("accomm_num"));
 				list.add(dto);
 			}
 		} catch (SQLException e) {
@@ -123,18 +188,18 @@ public class AccommoDAO {
 		return list;
 	}
 
-	
-	 public ArrayList<MotelDTO> filterByCondi(String whereQuery) {
-		 ArrayList<MotelDTO> list = new ArrayList<>();
+	 public ArrayList<AccommoDTO> filterByCondi(String whereQuery) {
+		 ArrayList<AccommoDTO> list = new ArrayList<>();
 		 String query = "SELECT DISTINCT accomm_num FROM accomm_condition " + whereQuery;
+		 System.out.println(query);
 		 
 		 try {
 				ps = conn.prepareStatement(query);
 				rs = ps.executeQuery();
 				
 				while (rs.next()) {
-					MotelDTO dto = new MotelDTO();
-					dto.setAccommoNum(rs.getInt("accomm_num"));
+					AccommoDTO dto = new AccommoDTO();
+					dto.setNum(rs.getInt("accomm_num"));
 					list.add(dto);
 				}
 			} catch (SQLException e) {
@@ -149,5 +214,33 @@ public class AccommoDAO {
 			}
 			return list;
 	 }
+	 
+	 public ArrayList<AccommoDTO> filterBySearch(String whereQuery) {
+			ArrayList<AccommoDTO> list = new ArrayList<>();
+			String query = "SELECT a.accomm_num FROM accommodation a JOIN accomm_condition ac ON a.accomm_num = ac.accomm_num "
+					+ "JOIN condition c ON ac.condi_num = c.num " + whereQuery;
+			System.out.println(query);
+			
+			try {
+				ps = conn.prepareStatement(query);
+				rs = ps.executeQuery();
+				
+				while (rs.next()) {
+					AccommoDTO dto = new AccommoDTO();
+					dto.setNum(rs.getInt("accomm_num"));
+					list.add(dto);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if(rs != null) rs.close();
+					if(ps != null) ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return list;
+		}
 
 }
