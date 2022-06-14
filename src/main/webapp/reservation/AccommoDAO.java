@@ -59,7 +59,7 @@ public class AccommoDAO {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
 		String query = "";
 		
-		if(sort == null || sort == "" || sort.equals("DISTANCE")) {
+		if(sort == null || sort == "" || sort.equals("SCORE")) {
 			query = "SELECT a.accomm_num, ROUND(AVG(r.s_price), -3) result_s_price, ROUND(AVG(r.d_price), -3) result_d_price "
 					+ "FROM accommodation a JOIN room r ON a.accomm_num = r.accomm_num " + whereQuery
 					+ "GROUP BY a.accomm_num";
@@ -72,6 +72,7 @@ public class AccommoDAO {
 					+ "FROM accommodation a JOIN room r ON a.accomm_num = r.accomm_num " + whereQuery
 					+ "GROUP BY a.accomm_num";
 		}
+		System.out.println(query);
 		
 		try {
 			ps = conn.prepareStatement(query);

@@ -24,6 +24,10 @@ public class AccommoService {
 		result = dao.addPrice(sort, whereQuery);
 		result = dao.addInfo(result);
 		result = dao.addAccommScore(result);
+		
+		for(AccommoDTO dto : result) {
+			System.out.println("숙박 가격: " + dto.getsPrice() + "원, 대실 가격: " + dto.getdPrice());
+		}
 		return result;
 	}
 

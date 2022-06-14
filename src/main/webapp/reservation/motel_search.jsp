@@ -128,25 +128,21 @@
 		<%
 		request.setCharacterEncoding("utf-8");
 		
-		String queryString = "";
-		if(request.getQueryString() != null && !request.getQueryString().equals("")){
-			queryString = java.net.URLDecoder.decode(request.getQueryString(), "UTF-8");
-			queryString = queryString.replace("area", "area[]");
-			System.out.println(queryString);
-		}
-
 		//지역 기본값
 		String[] area = { "강남", "역삼", "삼성", "논현" };
 
 		String[] tmp_area = request.getParameterValues("area");
 		String[] param_area = request.getParameterValues("area[]");
 
-		//매개변수로 전달된 지역이 있다면
-		if (tmp_area != null && tmp_area.length > 0)
+		//매개변수로 전달된 지역이 있다면(area)
+		if (tmp_area != null && tmp_area.length > 0){
+			System.out.println("area param's value: " + Arrays.toString(tmp_area));
 			area = tmp_area;
+		}
 
-		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기
-		if (param_area != null) {
+		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기(area[])
+		if (param_area != null && param_area.length > 0) {
+			System.out.println("area[] param's value: " + Arrays.toString(param_area));
 			String result_arr = null;
 			for (String s : param_area) {
 				result_arr = s;
@@ -155,7 +151,8 @@
 			String[] new_arr = result_arr.split(", ");
 			area = new_arr;
 		}
-		pageContext.setAttribute("area", area);
+		session.setAttribute("area", area);
+		System.out.println("result area: " + Arrays.toString(area));
 
 		String url = "motel_search.jsp?";
 		for (int i = 0; i < area.length; i++) {
@@ -182,6 +179,7 @@
 
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
+		System.out.println("sort: " + sort);
 		pageContext.setAttribute("sort", sort);
 
 		//대실, 숙박
@@ -250,18 +248,20 @@
 				tmp = service.filterSPriceZero(tmp);
 
 				if (reserve != null && (d != null && s == null)) {
-					list = service.filterDPriceZero(tmp);
+					tmp = service.filterDPriceZero(tmp);
 					System.out.println("대실 0원 필터링 후: " + tmp.size());
 				}
 				if (minPrice != 0 && maxPrice != 0)
 					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
 
-				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
-					list = service.sortMotelAsc(tmp);
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					tmp = service.sortMotelScoreDesc(tmp);
+				} else if(sort.equals("LOWPRICE")) {
+					tmp = service.sortMotelAsc(tmp);
 				} else {
-					list = service.sortMotelDesc(tmp);
+					tmp = service.sortMotelDesc(tmp);
 				}
-			} else {
+			} else { 
 				list = service.addMotelInfo(sort, list);
 				list = service.filterSPriceZero(list);
 
@@ -269,10 +269,15 @@
 					list = service.filterDPriceZero(list);
 					System.out.println("대실 0원 필터링 후: " + list.size());
 				}
-				if (minPrice != 0 && maxPrice != 0)
+				if (minPrice != 0 && maxPrice != 0){
 					list = service.filterByPrice(minPrice, maxPrice, list);
+					System.out.println("가격 필터링 후: " + list.size());
+				}
 
-				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+				//왜 가격 & 상세조건 필터링 했을 때 max가 뜨지??
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					list = service.sortMotelScoreDesc(list);
+				} else if(sort.equals("LOWPRICE")) {
 					list = service.sortMotelAsc(list);
 				} else {
 					list = service.sortMotelDesc(list);
@@ -285,7 +290,7 @@
 			<input type="hidden" name="sort" id="sort" value="<%=sort %>">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
-			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])pageContext.getAttribute("area")) %>">
+			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])session.getAttribute("area")) %>">
 	
 			<div class="listpage">
 				<!-- Result Top -->
@@ -796,7 +801,7 @@
 					<h3>상세조건</h3>
 					<div class="btn_wrap">
 						<button type="button"
-							onclick="window.location.href='motel_search.jsp?sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>&amp;<%=queryString %>'">초기화</button>
+							onclick="window.location.href='motel_search.jsp'">초기화</button>
 						<button type="submit">적용</button>
 					</div>
 					<section>
@@ -961,14 +966,14 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null || pageScope.sort == '' }">
-									<button type="button" data-sort="DISTANCE" class="on">
-										<span>거리 순</span>
+								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == '' }">
+									<button type="button" data-sort="SCORE" class="on">
+										<span>평점 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="DISTANCE" class="">
-										<span>거리 순</span>
+									<button type="button" data-sort="SCORE" class="">
+										<span>평점 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
@@ -1122,7 +1127,7 @@
 			</div>
 			<div class="address">${'장소' }</div>
 			<div class="inner_map" id="map">
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ae17142425721dddddcb11cb4cd3474b&libraries=services"></script>
 				<script src="${root }/js/service/kakao.map.api.js"></script>
 			</div>
 			<div class="btn_set">

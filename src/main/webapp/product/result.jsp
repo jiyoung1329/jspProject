@@ -1,4 +1,4 @@
-<%@page import="java.util.HashSet"%>
+ㄴ<%@page import="java.util.HashSet"%>
 <%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
 <%@page import="test.ComparatorAccommo"%>
@@ -255,10 +255,12 @@
 				if (minPrice != 0 && maxPrice != 0)
 					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
 
-				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
-					list = service.sortMotelAsc(tmp);
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					tmp = service.sortMotelScoreDesc(tmp);
+				} else if(sort.equals("LOWPRICE")) {
+					tmp = service.sortMotelAsc(tmp);
 				} else {
-					list = service.sortMotelDesc(tmp);
+					tmp = service.sortMotelDesc(tmp);
 				}
 			} else {
 				list = service.addMotelInfo(sort, list);
@@ -271,7 +273,9 @@
 				if (minPrice != 0 && maxPrice != 0)
 					list = service.filterByPrice(minPrice, maxPrice, list);
 
-				if (sort == null || sort == "" || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					list = service.sortMotelScoreDesc(list);
+				} else if(sort.equals("LOWPRICE")) {
 					list = service.sortMotelAsc(list);
 				} else {
 					list = service.sortMotelDesc(list);
