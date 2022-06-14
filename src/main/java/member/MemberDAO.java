@@ -133,6 +133,25 @@ public class MemberDAO {
 		}
 	}
 	
+	public void delete(String email) {
+		String sql = "DELETE FROM member WHERE email=?";
+		
+		PreparedStatement ps = null;
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, email);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(ps != null) ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	
 }

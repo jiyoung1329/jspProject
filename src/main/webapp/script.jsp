@@ -1,16 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.cookie.js"></script>
+	src="${root }js/library/jquery.cookie.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.lazyload.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/iscroll.js"></script>
+	src="${root }js/library/jquery.lazyload.js"></script>
+<script type="text/javascript" src="${root }js/library/iscroll.js"></script>
 
 <!-- Service -->
-<script type="text/javascript" src="/jspProject/js/service/common.js"></script>
+<script type="text/javascript" src="${root }js/service/common.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/service/geolocation.js"></script>
+	src="${root }js/service/geolocation.js"></script>
 
 <!-- Module -->
 <!-- 
@@ -18,26 +19,26 @@
  -->
 <!-- Page Script -->
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery-ui.min.js"></script>
+	src="${root }js/library/jquery-ui.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.ui.touch-punch.min.js"></script>
+	src="${root }js/library/jquery.ui.touch-punch.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.comiseo.daterangepicker.min.js"></script>
+	src="${root }js/library/jquery.comiseo.daterangepicker.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/swiper.min.js"></script>
+	src="${root }js/library/swiper.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/owl.carousel.min.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/moment.js"></script>
-<script type="text/javascript" src="/jspProject/js/library/vue.min.js"></script>
+	src="${root }js/library/owl.carousel.min.js"></script>
+<script type="text/javascript" src="${root }js/library/moment.js"></script>
+<script type="text/javascript" src="${root }js/library/vue.min.js"></script>
 
-<script type="text/javascript" src="/jspProject/js/service/datepick.js"></script>
+<script type="text/javascript" src="${root }js/service/datepick.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/service/product.detail2.js"></script>
+	src="${root }js/service/product.detail2.js"></script>
 <!-- 
  -->
 <script type="text/javascript"
-	src="/jspProject/js/service/product.async.js"></script>
-<script type="text/javascript" src="/jspProject/js/service/main.js"></script>
+	src="${root }js/service/product.async.js"></script>
+<script type="text/javascript" src="${root }js/service/main.js"></script>
 <!-- Body Spinner -->
 
 <div class="spinner show" style="display: none;">

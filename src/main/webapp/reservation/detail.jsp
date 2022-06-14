@@ -7,7 +7,8 @@
 <%@page import="reservation.MotelDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <%
 SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
 SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd");
@@ -53,16 +54,16 @@ Date now = new Date();
 	type="image/x-icon">
 
 <!-- CSS -->
-<link rel="stylesheet" href="/jspProject/css/common.css">
-<link rel="stylesheet" href="/jspProject/css/owl.carousel.css">
-<link rel="stylesheet" href="/jspProject/css/swiper.css">
-<link rel="stylesheet" href="/jspProject/css/theme_icon.css">
-<link rel="stylesheet" href="/jspProject/css/jquery-ui.css">
-<link rel="stylesheet" href="/jspProject/css/product.css">
-<link rel="stylesheet" href="/jspProject/css/main.css">
+<link rel="stylesheet" href="${root }/css/common.css">
+<link rel="stylesheet" href="${root }/css/owl.carousel.css">
+<link rel="stylesheet" href="${root }/css/swiper.css">
+<link rel="stylesheet" href="${root }/css/theme_icon.css">
+<link rel="stylesheet" href="${root }/css/jquery-ui.css">
+<link rel="stylesheet" href="${root }/css/product.css">
+<link rel="stylesheet" href="${root }/css/main.css">
 <!-- JS -->
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+	src="${root }/js/library/jquery-1.12.4.min.js"></script>
 <!-- <link rel="canonical" href="https://www.goodchoice.kr/product/detail?ano=2954"> -->
 <!-- map -->
 <!-- 
@@ -80,29 +81,6 @@ Date now = new Date();
 	<div class="wrap show">
 
 		<%@ include file="../header.jsp"%>
-		<!-- 
-<script type="application/ld+json">
-{
-    "@context" : "http://schema.org",
-    "@type" : "LocalBusiness",
-    "name" : "강남 648호텔",
-    "image" : "https://image.goodchoice.kr/resize_490x348/adimg_new/2954/331035/75babf67e5aa3987a376fae3f00f88e9.jpg",
-    "telephone" : "050440442432",
-    "address" : {
-        "@type" : "PostalAddress",
-        "streetAddress" : "648-7 ",
-        "addressLocality" : "서울 강남구 강남대로94길 56-4"
-    },
-    "aggregateRating" : {
-        "@type" : "AggregateRating",
-        "bestRating" : "100",
-        "worstRating" : "10",
-        "ratingValue" : "83",
-        "ratingCount" : "3280"
-    } 
-}
-</script>
- -->
 		<!-- Content  -->
 		<div id="content" class="detail  motel_room">
 			<!-- 비제휴점 inert_room 클래스 추가 -->

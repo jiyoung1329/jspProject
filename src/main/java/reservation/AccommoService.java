@@ -8,18 +8,48 @@ public class AccommoService {
 	public AccommoService() {
 		dao = new AccommoDAO();
 	}
+	
+	public ArrayList<AccommoDTO> addMotelInfo (String sort, ArrayList<AccommoDTO> list) {
+		ArrayList<AccommoDTO> result = new ArrayList<>();
+		String whereQuery = "WHERE a.accomm_num IN (";
+		
+		for(int i = 0; i < list.size(); i++) {
+			AccommoDTO dto = list.get(i);
+			whereQuery += dto.getNum();
+			if(i != list.size() - 1)
+				whereQuery += ", ";
+		}
+		whereQuery += ") ";
+		
+		result = dao.addPrice(sort, whereQuery);
+		result = dao.addInfo(result);
+		result = dao.addAccommScore(result);
+		
+		for(AccommoDTO dto : result) {
+			System.out.println("숙박 가격: " + dto.getsPrice() + "원, 대실 가격: " + dto.getdPrice());
+		}
+		return result;
+	}
 
-	public ArrayList<AccommoDTO> selectAll(String[] area, String sort) {
+	public ArrayList<AccommoDTO> filterByArea(String[] area, String sort) {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
 
-		String innerQuery = "SELECT * FROM accommodation WHERE ";
+		String whereQuery = "WHERE ";
 		for (String a : area) {
-			innerQuery += "address like '%'||'" + a + "'||'%' or ";
+			whereQuery += "address like '%'||'" + a + "'||'%' or ";
 		}
-		innerQuery = innerQuery.substring(0, innerQuery.length() - 4);
+		whereQuery = whereQuery.substring(0, whereQuery.length() - 4);
 
-		ArrayList<MotelDTO> motelList = dao.filterByArea(area, sort, innerQuery);
-		list = dao.selectAll(motelList);
+		list = dao.filterByArea(whereQuery);
+		return list;
+	}
+	
+	public ArrayList<AccommoDTO> filterBySearch(String keyword, String sort) {
+		ArrayList<AccommoDTO> list = new ArrayList<>();
+
+		String whereQuery = "WHERE a.address like '%" + keyword + "%' or a.name like '%" + keyword + "%' or c.name like '%" + keyword + "%'";
+		
+		list = dao.filterBySearch(whereQuery);
 		return list;
 	}
 
@@ -55,6 +85,22 @@ public class AccommoService {
 		return list;
 	}
 	
+	public ArrayList<AccommoDTO> sortMotelScoreDesc(ArrayList<AccommoDTO> list) {
+		for (int i = 0; i < list.size(); i++) {
+			int max = i;
+			for (int j = i + 1; j < list.size(); j++) {
+				AccommoDTO dto = list.get(j);
+				if (dto.getScore() > list.get(max).getScore()) {
+					max = j;
+				}
+			}
+			AccommoDTO tmp = list.get(max);
+			list.set(max, list.get(i));
+			list.set(i, tmp);
+		}
+		return list;
+	}
+	
 	public ArrayList<AccommoDTO> filterSPriceZero(ArrayList<AccommoDTO> list) {
 		ArrayList<AccommoDTO> result = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
@@ -77,6 +123,27 @@ public class AccommoService {
 		return result;
 	}
 
+	public ArrayList<AccommoDTO> filterByDate(String start, String end, ArrayList<AccommoDTO> list) {
+		ArrayList<AccommoDTO> result = new ArrayList<>();
+		
+		String whereQuery = "";
+		if(start != null && start != "" && end != null && end != "") {
+			whereQuery = "WHERE accomm_num IN (";
+			
+			for(int i = 0; i < list.size(); i++) {
+				AccommoDTO dto = list.get(i);
+				whereQuery += dto.getNum();
+				if(i != list.size() - 1)
+					whereQuery += ", ";
+			}
+			whereQuery += ") and accomm_num NOT IN ((select accomm_num from reservation "
+					+ "where to_date(check_in, 'YYYY.MM.DD') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') or "
+					+ "to_date(check_out, 'YYYY.MM.DD') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD')))";
+			result = dao.filterByDate(whereQuery);
+		}
+			return result;
+	}
+	
 	public ArrayList<AccommoDTO> filterByPrice(int minPrice, int maxPrice, ArrayList<AccommoDTO> list) {
 		ArrayList<AccommoDTO> result = new ArrayList<>();
 
@@ -109,10 +176,8 @@ public class AccommoService {
 		}
 		whereQuery += ")";
 		
-		ArrayList<MotelDTO> tmp = dao.filterByCondi(whereQuery);
-		result = dao.selectAll(tmp);
-		
+		result = dao.filterByCondi(whereQuery);
 		return result;
 	}
-
+	
 }

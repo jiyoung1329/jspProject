@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <html lang="ko"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,9 +14,19 @@
 
 	<!-- CSS -->
     <title>회원 가입 | 여기어때</title>
-    <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
+    <link rel="stylesheet" href="${root }/css/common.css">
     <link rel="canonical" href="https://www.goodchoice.kr/user/join">
-    <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script><script async="" src="https://www.google-analytics.com/analytics.js"></script><script type="text/javascript" src="/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
+    <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+    <script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/additional-methods.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/jquery.validate.js"></script>
+    <script type="text/javascript" src="${root }/js/library/validation/localization/messages_ko.js"></script>
+    <script type="text/javascript" src="${root }/js/modules/dialogPopup.js"></script>
+    <script type="text/javascript" src="${root }/js/service/join.js"></script>
+    <script type="text/javascript" src="${root }/js/service/phone-verification.js"></script>
+    <script type="text/javascript" src="${root }/js/service/user-validate.js"></script>
+    <script type="text/javascript" src="${root }/js/service/validate.js"></script>
     
     <script>
 var _BASE_URL = 'https://www.goodchoice.kr/';
@@ -96,7 +108,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
                             <ul>
                                 <li><a href="https://www.goodchoice.kr/more/notice">공지사항</a></li>
                                 <li><a href="https://www.goodchoice.kr/more/event">이벤트</a></li>
-                                <!-- <li><a href="https://www.goodchoice.kr/more/project">혁신 프로젝트</a></li> -->
+                                <!-- <li><a href="https://www.goodchoice.kr/more${root }">혁신 프로젝트</a></li> -->
                                 <li><a href="https://www.goodchoice.kr/more/faq">고객문의</a></li>
                                 <li><a href="https://www.goodchoice.kr/my/notiSetting">알림설정</a></li>
                                 <li>
@@ -167,7 +179,9 @@ var _FACEBOOK_APP_ID = '607467975974643';
                 <a href="https://www.goodchoice.kr/more/terms/location" target="_blank">위치기반 서비스 이용약관 동의</a> (선택)
             </p>
 
-            <button type="button" class="btn_link" id="terms_agree_btn" disabled=""><span>다음</span></button>
+            <button type="button" class="btn_link" id="terms_agree_btn" disabled="" 
+            onclick="javascript:location.href='${root }/member/registerEmail.jsp';"><span>다음</span></button>
+           
         </div>
     </section>
 
@@ -175,110 +189,10 @@ var _FACEBOOK_APP_ID = '607467975974643';
 
 </div>
 
-<template id="verification_phone">
-    <div class="fix_title">
-        <strong>휴대폰 본인 확인</strong>
-    </div>
 
-    <p>
-		원활한 서비스 제공을 위해, 휴대폰 번호를 입력해주세요.
-    </p>
 
-    <div class="phone_confirm">
-        <div id="sendCode">
-            <strong>휴대폰 번호</strong>
-            <section>
-                <div class="inp_wrap remove">
-                    <input type="tel" id="phone_number" maxlength="13">
-                    <button type="button" class="btn_checked">확인</button>
-                </div>
-                <button type="button" class="btn_send btn_confirm">인증번호 전송</button> <!-- 활성화 클래스 'active' -->
-            </section>
-        </div>
-        <div id="verificationCode">
-            <strong>인증번호</strong>
-            <section>
-                <div class="inp_wrap remove">
-                    <input type="tel" id="digit" minlength="4" maxlength="4">
-                    <span class="timer">&nbsp;</span>
-                </div>
-                <button type="button" class="btn_ok btn_confirm" data-verification-type="call" data-verification-next="joinTemplate">확인</button>
-            </section>
-        </div>
-        <input type="hidden" id="phone_certification_point" value="SIGINUP" style="display: none;">
-    </div>
-</template>
 
-<template id="joinFormTemplate">
-    <form id="joinForm" action="https://www.goodchoice.kr/user/joinProcess" autocomplete="off" method="post">
-        <input type="hidden" name="yeogi_token" value="fd7de40d3eecbffd9df15b46d3ed54ef">
 
-		<input type="hidden" name="privacy_auxiliary_policy">
-		<input type="hidden" name="location_policy">
-		<input type="hidden" name="marketing_acceptance">
-
-        <div class="fix_title">
-            <h1 class="page_head"><a href="https://www.goodchoice.kr/" title="여기어때">여기어때</a></h1>
-        </div>
-
-        <div class="join">
-            <strong class="sub_title">회원가입</strong>
-            <b>이메일 아이디</b>
-            <div class="inp_type_2 form-errors"><!-- focus / err -->
-                <input type="email" name="uid" id="gcuseremail" placeholder="이메일 주소를 입력해주세요.">
-				<label id="gcuseremail_msg" class="validate_msg_label"></label>
-            </div>
-
-            <b>비밀번호</b>
-            <div class="inp_type_2 form-errors form-password-rule">
-                <input type="password" name="upw" placeholder="비밀번호를 입력해주세요." id="new_pw">
-				<label id="new_pw_msg" class="validate_msg_label"></label>
-            </div>
-
-            <b>비밀번호 확인</b>
-            <div class="inp_type_2 form-errors">
-                <input type="password" name="upw_retry" placeholder="비밀번호를 입력해주세요." id="new_pw_re">
-				<label id="new_pw_re_msg" class="validate_msg_label"></label>
-            </div>
-
-            <b>닉네임</b>
-            <div class="inp_type_2 form-errors btn-add">
-                <input type="text" id="unick" name="unick" required="" class="required" data-msg-required="닉네임을 입력하세요." data-rule-minlength="2" data-rule-spacechar="true" data-rule-specialchar="true">
-                <button type="button" class="btn_etc" onclick="changeNickname();">딴거할래요</button>
-            </div>
-
-            <button type="button" id="joinBtn" class="btn_link gra_left_right_red btn_user_submit"><span>가입하기</span></button>
-        </div>
-    </form>
-</template>
-
-<template id="nicknameFormTemplate">
-    <form id="nicknameForm" action="https://www.goodchoice.kr/user/nicknameProcess" autocomplete="off" method="post">
-        <input type="hidden" name="yeogi_token" value="fd7de40d3eecbffd9df15b46d3ed54ef">
-        <div class="fix_title">
-            <h1 class="page_head"><a href="https://www.goodchoice.kr/" title="여기어때">여기어때</a></h1>
-        </div>
-
-        <div class="join">
-            <strong class="sub_title">닉네임 설정</strong>
-            <div class="inp_type_2 form-errors btn-add">
-                <input type="text" id="unick" name="unick" required="" class="required" data-msg-required="닉네임을 입력하세요." data-rule-minlength="2" data-rule-spacechar="true" data-rule-specialchar="true">
-                <button type="button" class="btn_etc" onclick="changeNickname();">딴거할래요</button>
-            </div>
-
-            <button type="submit" class="btn_link gra_left_right_red"><span>가입하기</span></button>
-            <!-- <div class="layer_fix_footer">
-                    <p>
-                        <a href="http://www.withinnovation.co.kr/" target="_blank">회사소개</a>|
-                        <a href="https://www.goodchoice.kr/more/terms">이용약관</a>|
-                        <a href="https://www.goodchoice.kr/more/terms/privacy">개인정보처리방침</a>|
-                        <a href="https://www.goodchoice.kr/more/terms/teenager">청소년보호정책</a>
-                    </p>
-                    <p class="copyright">Copyright WITHINOVATION Corp. All rights reserved.</p>
-                </div> -->
-        </div>
-    </form>
-</template>
 
 
 <style>

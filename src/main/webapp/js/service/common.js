@@ -465,6 +465,7 @@ function srch_open(){
 	var timerId = 0;
 	var win_w = $(window).width();
 	var mask_element = '<div class="srch_mask" onclick="srch_close();">&nbsp;</div>';
+	var root = "/test";
 
 	$('.pc .recommend_srch').append(mask_element);
 	$('.pc .srch_mask').addClass('on');
@@ -587,7 +588,7 @@ function srch_open(){
 	$('#keyword').keydown(function (key) {
 		if(key.keyCode == 13){
 			if ($(this).val().length > 0)
-				window.location.href = "/product/result?keyword="+ encodeURI($(this).val());
+				window.location.href = root + "/product/result.jsp?keyword="+ encodeURI($(this).val());
 			else
 				alert_Msg('검색어가 없습니다.  <br>검색어를 입력하세요.');
 		}
@@ -658,7 +659,7 @@ function srch_result_open(){ // 검색결과 진입시 노출바
 		$('#keyword').keydown(function (key) {
 			if(key.keyCode == 13){
 				if ($(this).val().length > 0)
-					window.location.href = "/product/result?keyword="+encodeURI($(this).val());
+					window.location.href = root + "/product/result.jsp?keyword="+encodeURI($(this).val());
 				else
 					alert_Msg('검색어가 없습니다.  <br>검색어를 입력하세요.');
 			}

@@ -334,7 +334,8 @@ header,.roll{position:relative;background:#f7323f}
 	header section .btn_menu{display:none}
 	.pc header section .btn_srch{position:absolute;border:none;text-indent:-9999px;top:22px;right:396px;z-index:10;width:30px;height:30px;background:url('//image.goodchoice.kr/images/web_v3/ico_srch_2.png') 50% 50% no-repeat;background-size:24px auto}
 	.pc .scroll section .btn_srch{position:absolute;border:none;text-indent:-9999px;top:22px;right:396px;z-index:10;width:30px;height:30px;background:url('//image.goodchoice.kr/images/web_v3/ico_srch.png') 50% 50% no-repeat;background-size:24px auto}
-	header section .btn_srch.on{}
+	header section .btn_srch.on{
+	}
 	.pc .gnb_pc{display:inline-block;position:absolute;top:27px;right:31px}
 	.gnb_pc {width:auto;text-align:right}
 	.gnb_pc li{display:inline-block;position:relative;min-width:53px;min-height:35px;margin-left:30px;vertical-align:top}

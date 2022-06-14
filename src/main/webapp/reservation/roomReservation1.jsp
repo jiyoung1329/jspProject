@@ -9,6 +9,8 @@
 <%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,10 +23,10 @@
 <meta name="description"
 	content="전국 호텔, 펜션, 모텔부터 워터파크, 놀이공원, 아쿠아리움까지 최저가 할인 예약">
 
-<link rel="preload" href="/jspProject/css/common.css" as="style">
-<link rel="stylesheet" href="/jspProject/css/common.css">
-<link rel="stylesheet" href="/jspProject/css/reservation.css">
-<link rel="stylesheet" href="/jspProject/css/owl.carousel.css">
+<link rel="preload" href="${root }/css/common.css" as="style">
+<link rel="stylesheet" href="${root }/css/common.css">
+<link rel="stylesheet" href="${root }/css/reservation.css">
+<link rel="stylesheet" href="${root }/css/owl.carousel.css">
 <link rel="shortcut icon"
 	href="https://image.goodchoice.kr/images/web_v3/favicon_170822.ico"
 	type="image/x-icon">
@@ -35,11 +37,11 @@
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+	src="${root }/js/library/jquery-1.12.4.min.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery.cookie.js"></script>
+	src="${root }/js/library/jquery.cookie.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/service/reservation.js"></script>
+	src="${root }/js/service/reservation.js"></script>
 <%@ include file="reservationStyle.jsp"%>
 </head>
 <%
@@ -48,8 +50,11 @@ SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 DecimalFormat df = new DecimalFormat("###,###");
 
 request.setCharacterEncoding("utf-8");
-// 	String email = (String) session.getAttribute("email");
-String email = "test@naver.com";
+String email = (String) session.getAttribute("email");
+	if (email.isEmpty()){
+		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='../member/login.jsp'</script>");
+	}
+// String email = "test@naver.com";
 
 int price = Integer.parseInt(request.getParameter("price"));
 int accomNum = Integer.parseInt(request.getParameter("accomNum"));

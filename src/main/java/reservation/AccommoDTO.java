@@ -9,6 +9,8 @@ public class AccommoDTO {
 	private String detailImage;
 	private int sPrice;
 	private int dPrice;
+	private double score;
+	private int reviewCnt;
 
 	public AccommoDTO() {
 
@@ -21,6 +23,19 @@ public class AccommoDTO {
 		this.thumnail = thumnail;
 		this.tel = tel;
 		this.detailImage = detailImage;
+	}
+
+	public AccommoDTO(int num, String name, String address, String thumnail, String tel, String detailImage, int sPrice,
+			int dPrice, double score) {
+		this.num = num;
+		this.name = name;
+		this.address = address;
+		this.thumnail = thumnail;
+		this.tel = tel;
+		this.detailImage = detailImage;
+		this.sPrice = sPrice;
+		this.dPrice = dPrice;
+		this.score = score;
 	}
 
 	public int getNum() {
@@ -87,4 +102,20 @@ public class AccommoDTO {
 		this.dPrice = dPrice;
 	}
 
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	public int getReviewCnt() {
+		return reviewCnt;
+	}
+
+	public void setReviewCnt(int reviewCnt) {
+		this.reviewCnt = reviewCnt;
+	}
+	
 }

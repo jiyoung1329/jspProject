@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:url var="root" value="/" />
 <header data-v-7b4768e4="" data-v-924c7d26="">
 	<section data-v-7b4768e4="">
 		<h1 data-v-7b4768e4="">
-			<a href="/jspProject/index.jsp" title="여기어때" data-v-7b4768e4="">여기어때</a>
+			<a href="${root }/index.jsp" title="여기어때" data-v-7b4768e4="">여기어때</a>
 		</h1>
 		<button type="button" class="btn_menu nav_open" data-v-7b4768e4="">메뉴</button>
 		<button type="button" class="btn_srch srch_open" data-v-7b4768e4=""
@@ -11,7 +13,7 @@
 		<ul class="gnb_pc" data-v-7b4768e4="">
 			<li data-v-7b4768e4=""><a
 				href="#" data-v-7b4768e4="">내주변</a></li>
-			<li data-v-7b4768e4=""><a href="/jspProject/member/myReservation.jsp" class=""
+			<li data-v-7b4768e4=""><a href="${root }/member/myReservation.jsp" class=""
 				data-v-7b4768e4=""> 예약내역 </a></li>
 			<li class="over" data-v-7b4768e4=""><button type="button"
 					data-v-7b4768e4="">
@@ -19,26 +21,26 @@
 				</button>
 				<ul class="list_03" data-v-7b4768e4="">
 					<li data-v-7b4768e4=""><a
-						href="/jspProject/board/notification.jsp" data-v-7b4768e4="">공지사항</a></li>
+						href="${root }/board/notification.jsp" data-v-7b4768e4="">공지사항</a></li>
 					<li data-v-7b4768e4=""><a
-						href="/jspProject/board/event.jsp" data-v-7b4768e4="">이벤트</a></li>
+						href="${root }/board/event.jsp" data-v-7b4768e4="">이벤트</a></li>
 					<li data-v-7b4768e4=""><a
-						href="/jspProject/board/inquiry.jsp" data-v-7b4768e4="">1:1
+						href="${root }/board/inquiry.jsp" data-v-7b4768e4="">1:1
 							문의</a></li>
 				</ul></li>
 			<li class="over pic" data-v-7b4768e4=""><a
-				href="/jspProject/member/myPage.jsp" data-v-7b4768e4=""><img
+				href="${root }/member/myPage.jsp" data-v-7b4768e4=""><img
 					src="https://image.goodchoice.kr/profile/ico/ico_24.png" alt=""
 					data-v-7b4768e4=""></a>
 				<ul class="list_04" style="display: none" data-v-7b4768e4="">
 					<li data-v-7b4768e4=""><b data-v-7b4768e4="">충렬탑협잡꾼</b></li>
 					<li data-v-7b4768e4=""><a
-						href="/jspProject/member/myPage.jsp" data-v-7b4768e4="">내정보</a></li>
+						href="${root }/member/myPage.jsp" data-v-7b4768e4="">내정보</a></li>
 					<li data-v-7b4768e4=""><a
-						href="/jspProject/member/myPoint.jsp"
+						href="${root }/member/myPoint.jsp"
 						data-point="<?php echo $myPopInfo['point']?>" data-v-7b4768e4="">포인트
 					</a></li>
-					<li data-v-7b4768e4=""><a href="/jspProject/member/myReservation.jsp" class=""
+					<li data-v-7b4768e4=""><a href="${root }/member/myReservation.jsp" class=""
 						data-v-7b4768e4=""> 예약내역 </a></li>
 					<li data-v-7b4768e4=""><button type="button"
 							class="pop_logout_open" data-v-7b4768e4="">로그아웃</button></li>

@@ -63,6 +63,8 @@ CREATE TABLE inquiry (
     CONSTRAINT inquiry_pk PRIMARY KEY (num),
     CONSTRAINT inquiry_fk FOREIGN KEY (user_email) REFERENCES member
 );
+alter table inquiry modify answer default null;
+
 
 CREATE TABLE condition (
 	num	number(2) NOT NULL,
@@ -120,4 +122,6 @@ CREATE TABLE review_image (
     CONSTRAINT review_image_pk PRIMARY KEY (num),
     CONSTRAINT review_image_fk FOREIGN KEY (review_num) REFERENCES review
 );
+
+create sequence inquiry_seq start with 1 increment by 1;
 

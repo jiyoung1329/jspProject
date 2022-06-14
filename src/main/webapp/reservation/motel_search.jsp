@@ -1,6 +1,7 @@
-<%@page import="reservation.AccommoService"%>
 <%@page import="reservation.AccommoDTO"%>
-<%@page import="reservation.AccommoDAO"%>
+<%@page import="reservation.AccommoService"%>
+<%@page import="java.net.URI"%>
+<%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -124,20 +125,22 @@
 
 		<%
 		request.setCharacterEncoding("utf-8");
-
+		
 		//지역 기본값
 		String[] area = { "강남", "역삼", "삼성", "논현" };
 
 		String[] tmp_area = request.getParameterValues("area");
 		String[] param_area = request.getParameterValues("area[]");
 
-		//매개변수로 전달된 지역이 있다면
-		if (tmp_area != null && tmp_area.length > 0) {
+		//매개변수로 전달된 지역이 있다면(area)
+		if (tmp_area != null && tmp_area.length > 0){
+			System.out.println("area param's value: " + Arrays.toString(tmp_area));
 			area = tmp_area;
 		}
 
-		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기
-		if (param_area != null) {
+		//거리순, 낮은 가격 순, 높은 가격 순 버튼 클릭 당시 설정된 지역 전달받기(area[])
+		if (param_area != null && param_area.length > 0) {
+			System.out.println("area[] param's value: " + Arrays.toString(param_area));
 			String result_arr = null;
 			for (String s : param_area) {
 				result_arr = s;
@@ -146,7 +149,8 @@
 			String[] new_arr = result_arr.split(", ");
 			area = new_arr;
 		}
-		pageContext.setAttribute("area", area);
+		session.setAttribute("area", area);
+		System.out.println("result area: " + Arrays.toString(area));
 
 		String url = "motel_search.jsp?";
 		for (int i = 0; i < area.length; i++) {
@@ -171,61 +175,38 @@
 		String tmp_sel_date = request.getParameter("sel_date");
 		String tmp_sel_date2 = request.getParameter("sel_date2");
 
-		//매개변수로 전달된 날짜가 있다면
-		if (tmp_sel_date != null && tmp_sel_date != "" && tmp_sel_date2 != null && tmp_sel_date2 != "") {
-			sel_date = tmp_sel_date;
-			sel_date2 = tmp_sel_date2;
-		}
-
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
+		System.out.println("sort: " + sort);
 		pageContext.setAttribute("sort", sort);
-		
+
 		//대실, 숙박
 		String[] reserve = request.getParameterValues("reserve[]");
 		String d = null, s = null;
 
+		System.out.println("service: " + new AccommoService());
 		AccommoService service = new AccommoService();
+		System.out.println("service: " + service);
 
 		//지역에 속한 모텔 불러오기
-		ArrayList<AccommoDTO> list = service.selectAll(area, sort);
+		ArrayList<AccommoDTO> list = service.filterByArea(area, sort);
+		System.out.println("숙박 0원 필터링 전: " + list.size());
 
 		//필터링
 		if (!list.isEmpty()) {
-			if (reserve != null) {
-				for (String r : reserve) {
-					if (r.equals("d"))
-						d = "d";
-					if (r.equals("s"))
-						s = "s";
-				}
+			ArrayList<AccommoDTO> tmp = null;
+
+			//날짜 필터링
+			if ((tmp_sel_date != null && tmp_sel_date2 != null) && (!tmp_sel_date.equals(sel_date) || !tmp_sel_date2.equals(sel_date2))) {
+				tmp = list;
+				sel_date = tmp_sel_date;
+				sel_date2 = tmp_sel_date2;
+				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
+				tmp = service.filterByDate(sel_date, sel_date2, tmp);
+				System.out.println("날짜 필터링 후: " + tmp.size());
 			}
-			
-			String min_price = request.getParameter("min_price");
-			String max_price = request.getParameter("max_price");
-			
-			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
-				int minPrice = 0, maxPrice = 0;
-				try {
-					minPrice = Integer.parseInt(min_price);
-					maxPrice = Integer.parseInt(max_price);
-				} catch (Exception e) {
-					out.print("<script>location.href='" + url + "';</script>");
-				}
-				
-				list = service.filterSPriceZero(list);
-				if(d != null && s == null){
-					list = service.filterDPriceZero(list);
-				}
-				list = service.filterByPrice(minPrice, maxPrice, list);
-			}else{
-				list = service.filterSPriceZero(list);
-				if(d != null && s == null){
-					list = service.filterDPriceZero(list);
-				}
-			}
-			
-			//놀이시설
+
+			//놀이시설 필터링
 			String[] tmp_tmino = request.getParameterValues("tmino[]");
 			if (tmp_tmino != null) {
 				//중복 제거
@@ -235,21 +216,81 @@
 						tmino.add(t);
 				}
 				list = service.filterByCondi(tmino, list);
+				System.out.println("상세조건 0원 필터링 후: " + list.size());
 			}
 
-			//모텔 정렬
-			if (sort == null || sort.equals("DISTANCE") || sort.equals("LOWPRICE")) {
-				list = service.sortMotelAsc(list);
-			} else {
-				list = service.sortMotelDesc(list);
+			//숙박, 대여 
+			if (reserve != null) {
+				for (String r : reserve) {
+					if (r.equals("d"))
+						d = "d";
+					if (r.equals("s"))
+						s = "s";
+				}
 			}
+
+			//가격
+			String min_price = request.getParameter("min_price");
+			String max_price = request.getParameter("max_price");
+			int minPrice = 0, maxPrice = 0;
+			if (min_price != null && min_price != "" && max_price != null && max_price != "") {
+				try {
+					minPrice = Integer.parseInt(min_price);
+					maxPrice = Integer.parseInt(max_price);
+				} catch (Exception e) {
+					response.sendRedirect(url);
+				}
+			}
+
+			//오늘과 내일이 아닌 다른 날짜를 매개변수로 전달 받았을 때
+			if (tmp != null && !tmp.isEmpty()) {
+				tmp = service.addMotelInfo(sort, tmp);
+				tmp = service.filterSPriceZero(tmp);
+
+				if (reserve != null && (d != null && s == null)) {
+					tmp = service.filterDPriceZero(tmp);
+					System.out.println("대실 0원 필터링 후: " + tmp.size());
+				}
+				if (minPrice != 0 && maxPrice != 0)
+					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
+
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					tmp = service.sortMotelScoreDesc(tmp);
+				} else if(sort.equals("LOWPRICE")) {
+					tmp = service.sortMotelAsc(tmp);
+				} else {
+					tmp = service.sortMotelDesc(tmp);
+				}
+			} else { 
+				list = service.addMotelInfo(sort, list);
+				list = service.filterSPriceZero(list);
+
+				if (reserve != null && (d != null && s == null)) {
+					list = service.filterDPriceZero(list);
+					System.out.println("대실 0원 필터링 후: " + list.size());
+				}
+				if (minPrice != 0 && maxPrice != 0){
+					list = service.filterByPrice(minPrice, maxPrice, list);
+					System.out.println("가격 필터링 후: " + list.size());
+				}
+
+				//왜 가격 & 상세조건 필터링 했을 때 max가 뜨지??
+				if (sort == null || sort == "" || sort.equals("SCORE")) {
+					list = service.sortMotelScoreDesc(list);
+				} else if(sort.equals("LOWPRICE")) {
+					list = service.sortMotelAsc(list);
+				} else {
+					list = service.sortMotelDesc(list);
+				}
+			}
+			System.out.println("\n");
 		}
 		%>
 		<form id="product_filter_form" method="post" action="motel_search.jsp" data-sel_date="<%=sel_date%>" data-sel_date2="<%=sel_date2%>">
 			<input type="hidden" name="sort" id="sort" value="<%=sort %>">
 			<input type="hidden" name="sel_date" id="sel_date" value="<%=sel_date%>">
 			<input type="hidden" name="sel_date2" id="sel_date2" value="<%=sel_date2%>">
-			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])pageContext.getAttribute("area")) %>">
+			<input type="hidden" name="area[]" value="<%=Arrays.toString((String[])session.getAttribute("area")) %>">
 	
 			<div class="listpage">
 				<!-- Result Top -->
@@ -760,7 +801,7 @@
 					<h3>상세조건</h3>
 					<div class="btn_wrap">
 						<button type="button"
-							onclick="window.location.href='motel_search.jsp?sel_date=<%=sel_date %>&amp;sel_date2=<%=sel_date2 %>'">초기화</button>
+							onclick="window.location.href='motel_search.jsp'">초기화</button>
 						<button type="submit">적용</button>
 					</div>
 					<section>
@@ -925,14 +966,14 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'DISTANCE' || pageScope.sort == null }">
-									<button type="button" data-sort="DISTANCE" class="on">
-										<span>거리 순</span>
+								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == '' }">
+									<button type="button" data-sort="SCORE" class="on">
+										<span>평점 순</span>
 									</button>
 								</c:when>
 								<c:otherwise>
-									<button type="button" data-sort="DISTANCE" class="">
-										<span>거리 순</span>
+									<button type="button" data-sort="SCORE" class="">
+										<span>평점 순</span>
 									</button>
 								</c:otherwise>
 							</c:choose>
@@ -975,8 +1016,8 @@
 						if(!list.isEmpty()){
 						for(AccommoDTO dto : list) {
 						%>
-						<li class="list_4 adcno1"><a
-							href="detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
+						<li class="list_4 adcno1">
+						<a href="detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
 							data-ano="63624" data-adcno="1" data-alat="37.49722015035"
 							data-alng="127.02931626635" data-distance="7.635"
 							data-affiliate="1">
@@ -991,7 +1032,7 @@
 
 										<strong><%=dto.getName() %></strong>
 										<p class="score">
-											<span><em>9.6</em>&nbsp;최고에요</span>&nbsp;(1519)
+											<span><em><%=dto.getScore() %></em></span>&nbsp;(<%=dto.getReviewCnt() %>)
 										</p>
 										<p><%=dto.getAddress() %></p>
 										<p class="txt_opt">예약취소가능</p>
@@ -1000,87 +1041,48 @@
 										</div>
 									</div>
 									<div class="price">
-										<div class="map_html">
-											<p>
-												<%if(dto.getdPrice() != 0){ %>
-													대실&nbsp;
-													<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
-												<%} else {%>
-													대실 <b>숙소에 문의</b>
-												<%} %>
-											</p>
+                              <div class="map_html">
+                              <%if(reserve == null || d != null){ %>
+                                 <p>
+                                    <%if(dto.getdPrice() != 0){ %>
+                                       대실&nbsp;
+                                       <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                    <%} else {%>
+                                       대실 <b>숙소에 문의</b>
+                                    <%} %>
+                                 </p>
+                              <%} %>
 
-											<p>
-												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
-											</p>
-										</div>
-										
-											<p>
-											<%if(dto.getdPrice() != 0){ %>
-												대실&nbsp;
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
-											<%} else {%>
-												대실 <b>숙소에 문의</b>
-											<%} %>
-											</p>
-										
-											<p>
-												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
-											</p>
-									</div>
+                              <%if(reserve == null || s != null){ %>
+                                 <p>
+                                    숙박&nbsp; 
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                 </p>
+                              <%} %>
+                              </div>
+                              
+                              <%if(reserve == null || d != null){ %>
+                                 <p>
+                                 <%if(dto.getdPrice() != 0){ %>
+                                    대실&nbsp;
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                 <%} else {%>
+                                    대실 <b>숙소에 문의</b>
+                                 <%} %>
+                                 </p>
+                              <%} %>
+                              
+                              <%if(reserve == null || s != null){ %>
+                                 <p>
+                                    숙박&nbsp; 
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                 </p>
+                              <%} %>
+                           </div>
 								</div>
 						</a></li>
-						<%-- <li class="list_4 adcno1"><a
-							href="https://www.goodchoice.kr/product/detail?ano=46430&amp;adcno=1&amp;sel_date=2022-06-06&amp;sel_date2=2022-06-07"
-							data-ano="46430" data-adcno="1" data-alat="37.5055137703"
-							data-alng="127.026066813" data-distance="7.297"
-							data-affiliate="1">
-								<p class="pic">
-									<img class="lazy"
-										data-original=<%=dto.getThumnail() %>
-										src="//image.goodchoice.kr/resize_1000X500x0/adimg_new/46430/112191/ff049bbf65a102f4f1bb4b9ab865270d.jpg"
-										alt="<%=dto.getName() %>" style="margin-left: -90px;">
-								</p>
-								<div class="stage">
-									<div class="name">
-
-										<strong><%=dto.getName() %></strong>
-										<p class="score">
-											<span><em>9.2</em>&nbsp;추천해요</span>&nbsp;(2014)
-										</p>
-										<p><%=dto.getAddress() %></p>
-										<div class="txt_evt">
-											<span>베이커리 및 커피 제공</span>
-										</div>
-									</div>
-									<div class="price">
-										<div class="map_html">
-											<p>
-												대실&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
-											</p>
-											<p>
-												숙박&nbsp;<span class="build_badge"
-													style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b><%=dto.getdPrice() %>원</b>
-											</p>
-										</div>
-										<p>
-											<em>50,000</em>대실&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);"><%=dto.getdPrice() %>원</b>
-										</p>
-										<p>
-											<em>80,000</em>숙박&nbsp;<span class="build_badge"
-												style="color: rgba(255, 255, 255, 1); background-color: rgba(248, 113, 111, 1);">예약특가</span>&nbsp;<b
-												style="color: rgba(255, 92, 92, 1);"><%=dto.getsPrice() %>원</b>
-										</p>
-									</div>
-								</div>
-						</a></li> --%>
 						<%
-							}
+						}
 						}else{%>
 							<div class="result_empty">
 								<b>현재 조건에 맞는 숙소가 없습니다.</b> 지역을 변경하거나<br>일정, 상세조건을 재설정해 보세요.
@@ -1125,8 +1127,8 @@
 			</div>
 			<div class="address">${'장소' }</div>
 			<div class="inner_map" id="map">
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e1fae452addc2120d0ac60da77a010d8&libraries=services,clusterer,drawing"></script>
-				<script src="${root }/js/service/search_motel.js"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ae17142425721dddddcb11cb4cd3474b&libraries=services"></script>
+				<script src="${root }/js/service/kakao.map.api.js"></script>
 			</div>
 			<div class="btn_set">
 				<button class="gra_left_right_red">설정 완료</button>
@@ -1169,8 +1171,9 @@
 	<script type="text/javascript" src="${root }/js/library/iscroll.js"></script>
 
 	<!-- Service -->
+	<!-- ?rand=1653988749 -->
 	<script type="text/javascript"
-		src="${root }/js/service/common.js?rand=1653988749"></script>
+		src="${root }/js/service/common.js"></script>
 	<script type="text/javascript"
 		src="${root }/js/service/geolocation.js?rand=1653988749"></script>
 
@@ -1190,8 +1193,8 @@
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/datepick.js?rand=1653988749"></script>
 	<script type="text/javascript" src="${root }/js/library/vue.min.js"></script>
-	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f6ffb505bb11d7cc3584d443ce35f704"></script>
+	<!-- 내 코드 -->
+
 	<script charset="UTF-8"
 		src="https://t1.daumcdn.net/mapjsapi/js/main/4.4.3/kakao.js"></script>
 	<script type="text/javascript"
@@ -1200,6 +1203,8 @@
 		src="https://www.goodchoice.kr/js/service/product.search.js?rand=1653988749"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/product.list.js?rand=1653988749"></script>
+	<%-- <script type="text/javascript"
+		src="${root }/js/service/kakao.map.api.js"></script> --%>
 
 	<!-- Body Spinner -->
 	<div class="spinner show" style="display: none;">
