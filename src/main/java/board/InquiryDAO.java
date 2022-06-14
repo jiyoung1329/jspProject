@@ -42,26 +42,20 @@ public class InquiryDAO {
 		// num, user_email, category, type, phone, email, content, (answer = default null)
 		String query = "insert into inquiry (num, user_email, category, type, phone, email, content) " +  
 						"values(inquiry_seq.nextval, ?, ?, ?, ?, ?, ?)";
-		System.out.println(query);
 		try {
 			ps = conn.prepareStatement(query);
-			System.out.println(ps);
-			System.out.println(inquiry.getUser_email() +  " " +   inquiry.getCategory() + " " + inquiry.getType() + " " + inquiry.getPhone() + " " + inquiry.getEmail() + " " + inquiry.getContent());
 			ps.setString(1, inquiry.getUser_email());
 			ps.setString(2, inquiry.getCategory());
 			ps.setString(3, inquiry.getType());
 			ps.setString(4, inquiry.getPhone());
 			ps.setString(5, inquiry.getEmail());
 			ps.setString(6, inquiry.getContent());
-			System.out.print("ready insert complete");
-			int re = ps.executeUpdate();
-			System.out.println("re : " + re);
-//			return;
+			ps.executeUpdate();
+			return;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
-			System.out.print("insert complete");
-//			exit();
+			exit();
 		}
 	}
 	
@@ -75,7 +69,8 @@ public class InquiryDAO {
 			while (rs.next()) {
 				// num, user_email, category, type, phone, email, content, (answer = default null)
 				InquiryDTO inquiry = new InquiryDTO(rs.getInt("num"), rs.getString("user_email"), rs.getString("category"), rs.getString("type"),
-													rs.getString("phone"), rs.getString("email"), rs.getString("content"), rs.getString("answer"));
+													rs.getString("phone"), rs.getString("email"), rs.getString("content"), rs.getString("answer"),
+													rs.getString("create_date"), rs.getInt("is_answer"));
 				inquiries.add(inquiry);
 			}
 		} catch(Exception e) {

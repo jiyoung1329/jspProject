@@ -1,3 +1,9 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="reservation.MyReserveDTO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="reservation.ReservationDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -25,6 +31,26 @@
 	<style data-vue-ssr-id="7e56e4e3:0 a4416d6a:0 34c88125:0 6dddd935:0 879b8502:0 edcdab14:0 62376f3c:0 e11ef8c8:0 b13ffd10:0" > 부분
 	 --%>
 </head>
+<%
+	String email = "test@naver.com";
+	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd");
+	SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");
+	ReservationDAO reserveDao = new ReservationDAO();
+	ArrayList<MyReserveDTO> reservations = reserveDao.selectAllReservation(email);
+	
+// 	System.out.println(reservations);
+	
+	// 다시 예약 날짜
+	SimpleDateFormat setFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(new Date());
+	cal.add(Calendar.DATE, 1);
+	String sel_date = setFormat2.format(new Date());
+	String sel_date2 = setFormat2.format(cal.getTime()); 
+	
+%>
+
+
 <body class="mobile">
 	<script>var deviceWidth=window.innerWidth;document.body.className=deviceWidth>1023?"pc":"mobile"</script>
 	<div class="wrap show" >
@@ -37,7 +63,7 @@
 			</div>
 		</div>
 		<!-- //Sub Top -->
-		
+		<!-- Content -->
 		<div id="content" class="sub_wrap my_wrap" >
 			<!-- nav bar -->
 			<p class="sub_title" >예약 내역</p>
@@ -48,91 +74,111 @@
 					<li><a class="" href="myPage.jsp">내 정보 관리</a></li>
 				</ul>
 			</nav>
+			<!-- algin-rt -->
 			<div class="align_rt" >
 				<div class="reserve_list" >
 					<section >
 						<h3 data-v-50bfe504="">예약 내역</h3>
 						<ul class="list_wrap" ></ul>
 					</section>
-					<section class="list_cancel" >
-						<h3 data-v-50bfe504="">이용 내역</h3>
+					<section class="list_cancel" style="padding-top: 0">
 						<ul class="list_wrap" >
+							<% for (MyReserveDTO reservation: reservations){ 
+								Date checkin = getFormat.parse(reservation.getCheckIn().substring(0, 10));
+								Date checkout = getFormat.parse(reservation.getCheckOut().substring(0, 10));
+								long diff = (checkout.getTime() - checkin.getTime()) / (24*60*60*1000);
+// 								System.out.println("checkin: " + checkin + ", checkout: " + checkout + ", diff: " + diff);
+								%>
+								
 							<li class="reservation-detail" >
-								<button type="button" data-dono="88579763" data-target-list="usedList" class="btn_del" >삭제</button>
+								<!-- 폼전송시 전달되는 data target element -->
+								<form class="reserve-form" action="reservationDetail.jsp?num=<%=reservation.getNum() %>" method="post">
+									<div class="mypageForm__form-inputs-wrap" aria-hidden="true" style="display:none;">
+										<input type="text" name="num" aria-hidden="true" style="display:none;" value="<%=reservation.getNum() %>">
+										<input type="text" name="checkin" aria-hidden="true" style="display:none;" value="<%=reservation.getCheckIn() %>">
+										<input type="text" name="checkout" aria-hidden="true" style="display:none;"value="<%=reservation.getCheckOut() %>">
+										<input type="text" name="isReserve" aria-hidden="true" style="display:none;"value="<%=reservation.getIsReserve() %>">
+										<input type="text" name="price" aria-hidden="true" style="display:none;"value="<%=reservation.getPrice() %>">
+										<input type="text" name="userName" aria-hidden="true" style="display:none;"value="<%=reservation.getUserName() %>">
+										<input type="text" name="userPhone" aria-hidden="true" style="display:none;"value="<%=reservation.getUserPhone() %>">
+										<input type="text" name="accomName" aria-hidden="true" style="display:none;"value="<%=reservation.getAccomName() %>">
+										<input type="text" name="accomThumnail" aria-hidden="true" style="display:none;"value="<%=reservation.getAccomThumnail() %>">
+										<input type="text" name="roomName" aria-hidden="true" style="display:none;"value="<%=reservation.getRoomName() %>">
+										<input type="text" name="reviewNum" aria-hidden="true" style="display:none;"value="<%=reservation.getReviewNum() %>">
+									</div>
+								</form>
+								
+								<button type="button" data-dono="88579763" data-target-list="usedList" class="btn_del" onclick="modal(this)">삭제</button>
 								<p class="pic" >
-									<img loading="lazy" src="https://image.goodchoice.kr/resize_354x184/adimg_new/65307/310601/e44a12bb10029f5d5055fb15f76e9964.jpg" alt="제주 오케이" class="align" >
+									<img loading="lazy" src="<%=reservation.getAccomThumnail() %>" alt="<%=reservation.getAccomName() %>" class="align" >
 								</p>
-								<a href="/reservation-detail/88579763" class="product-title" >\
-									<i class="bg_w" >이용완료</i>
-									<strong >제주 오케이</strong>
-									<span>03.25 금 - 03.26 토 • 1박</span>
+								<a href="#" class="product-title" onclick="sendInfo(this);">
+									<% if (reservation.getIsReserve() == 1) { %>
+										<i class="bg_w" >이용완료</i>
+									<% } else { %>
+										<i class="bg_w" >이용 전</i>
+									<% } %>
+									
+									<strong ><%=reservation.getAccomName() %></strong>
+									<span class="reservation-date">
+										<%=setFormat.format(checkin) %> - <%=setFormat.format(checkout) %> • 
+										<% if (diff == 0){ %>
+											대실
+										<% }else{ %> 
+											<%=diff %>박
+										<% } %>
+									  </span>
 									<b>예약 상세 &gt;</b>
 								</a>
-								<p class="btn_re" >
-									<a href="https://www.goodchoice.kr/product/detail?ano=65307&amp;adcno=1&amp;sel_date=2022-06-03&amp;sel_date2=2022-06-03" > 다시 예약 </a>
-								</p>
 							</li>
-							<li class="reservation-detail" >
-								<button type="button" data-dono="20543883" data-target-list="usedList" class="btn_del" >삭제</button>
-								<p class="pic" >
-									<img loading="lazy" src="https://image.goodchoice.kr/resize_354x184/adimg_new/50583/8071/c515dfdd7777b40acef505660e91f060.jpg" alt="남포 ATTO" class="align" >
-								</p>
-								<a href="/reservation-detail/20543883" class="product-title" >
-								<i class="bg_w" data-v-7a3075bf="">이용완료</i>
-								<strong >남포 ATTO</strong> 
-								<span>08.12 일 - 08.12 일 • 대실</span>
-								<b >예약 상세 &gt;</b>
-								</a>
-								<p class="btn_re" >
-									<a href="https://www.goodchoice.kr/product/detail?ano=50583&amp;adcno=1&amp;sel_date=2022-06-03&amp;sel_date2=2022-06-03" >다시 예약</a>
-								</p>
-							</li>
-						</ul>
-					</section>
-										
-					<section class="list_cancel" >
-						<h3>취소 내역</h3>
-						<ul class="list_wrap" >
-							<li class="reservation-detail" >
-								<button type="button" data-dono="67227302" data-target-list="canceledList" class="btn_del" >삭제</button>
-								<p class="pic" >
-									<img loading="lazy" src="https://image.goodchoice.kr/resize_354x184/adimg_new/4681/341879/5d62eb4e1a4c2e0e7d7042117ce88870.jpg" alt="신도림 NO.25" class="align" >
-								</p>
-								<a href="/reservation-detail/67227302" class="product-title" >
-									<i class="bg_w" data-v-7a3075bf="">예약취소</i>
-									<strong >신도림 NO.25</strong>
-									<span >06.08 화 - 06.09 수 • 1박</span>
-									<b >예약 상세 &gt;</b>
-								</a>
-								<p class="btn_re" >
-									<a href="https://www.goodchoice.kr/product/detail?ano=4681&amp;adcno=1&amp;sel_date=2022-06-03&amp;sel_date2=2022-06-03" > 다시 예약 </a>
-								</p>
-							</li>
+							<%} %>
 							
-							<li class="reservation-detail" >
-								<button type="button" class="btn_del" >삭제</button>
-								<p class="pic" >
-									<img loading="lazy" src="https://image.goodchoice.kr/resize_354x184/adimg_new/4282/25871/2a3b647763038cae61c24867290d512e.jpg" alt="동성로 갤러리-1호점" class="align" >
-								</p>
-								<a href="/reservation-detail/52968342" class="product-title" >
-									<i class="bg_w">예약취소</i>
-									<strong >동성로 갤러리-1호점</strong>
-									<span>10.08 목 - 10.08 목 • 대실</span>
-									<b >예약 상세 &gt;</b>
-								</a>
-								<p class="btn_re" >
-									<a href="https://www.goodchoice.kr/product/detail?ano=4282&amp;adcno=1&amp;sel_date=2022-06-03&amp;sel_date2=2022-06-03" > 다시 예약 </a>
-								</p>
-							</li>
 						</ul>
 					</section>
 				</div>
 			</div>
+			<!-- //algin-rt -->
 		</div>
+		<!-- //Content --> 
+		<%@ include file="../footer.jsp" %>
 				
-	<%@ include file="../footer.jsp" %>
-	</div> 
+	</div>
+	<div id="modal" class="layer popup_cont pop_twobtn" data-v-1a29c47e="" style>
+		<div class="text" data-v-1a29c47e="">예약 내역에서 삭제하시겠습니까?</div> 
+		<div class="btn_wrap" data-v-1a29c47e="">
+			<button data-v-1a29c47e="" onclick="cancelModal()">취소</button>
+			<a href="" id="delete_button"><button class="col_mint" data-v-1a29c47e="">삭제</button></a>
+		</div>
+	</div>
 	<button onclick="moveTop();" class="btn_go_top"  style="display: none;">상단으로</button> 
+	
 	<%@ include file="../script.jsp" %>
+	<script>
+		function sendInfo(obj){
+			var form = obj.parentNode.firstChild.nextElementSibling;
+			form.submit();
+		}
+		
+		
+		function modal(obj){
+			console.log(obj)
+			var modal = document.querySelector("#modal");
+			var content = document.querySelector("body")
+			var num = obj.parentNode.firstChild.nextElementSibling.querySelector("input").value;
+			// form에서 num 값 들고와서 삭제버튼의 href에 경로 지정
+			var delete_button = document.querySelector("#delete_button")
+			delete_button.href = "reservationDelete.jsp?num=" + num;
+			modal.style.display = "block";
+			
+		}
+		function cancelModal(){
+			var modal = document.querySelector("#modal");
+			console.log(modal.style);
+			modal.style.display = "";
+			
+		}
+		
+		
+	</script>
 </body>
 </html>

@@ -4,7 +4,6 @@
     pageEncoding="UTF-8"%>
 
 <%
-	System.out.println("inquiryService");
 	request.setCharacterEncoding("utf-8");
 	
 	String user_email = (String) session.getAttribute("email");

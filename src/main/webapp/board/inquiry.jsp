@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,11 +22,15 @@
     <script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
     
 </head>
+
+<jsp:useBean id="inquiryDao" class="board.InquiryDAO" />
+<c:set var="inquires" value="${inquiryDao.selectAll(user_email='test@naver.com') }" />
+
 <body class="pc">
 
 <!-- Wrap -->
 <div class="wrap show">
-<%@ include file="../ex_header.jsp" %>
+<%@ include file="../header.jsp" %>
 
 	<!-- Sub Top -->
 	<div class="sub_top_wrap">
@@ -68,20 +73,22 @@
 				<div class="tab_each" style="display:block">
 			
 					<ul class="show_list open_list" id="inquiry_list">
-						<li onclick="">
-							<a href="https://www.goodchoice.kr/more/inquiry#inquiry_list" class="list_que"><!-- 답변완료/ NEW 버튼 2벌임 -->
-								<p><b>이용문의</b>
-									문의는 없습니다. 테스트 용입니다.<b class="reply_chk">문의 등록</b>
-								</p>
-								<span>작성일 2022. 06. 02</span>
-							</a>
-				
-							<div class="list_ans">
-								<b class="title">문의</b>
-								<div>문의는 없습니다. 테스트 용이니 곧 바로 삭제하겟습니다</div>
-							</div>
-				
-						</li>
+						<c:forEach var="inquiry" items="${inquires }" >
+							<li onclick="">
+								<a href="https://www.goodchoice.kr/more/inquiry#inquiry_list" class="list_que"><!-- 답변완료/ NEW 버튼 2벌임 -->
+									<p><b>이용문의</b>
+										${inquiry.getContent() }<b class="reply_chk">문의 등록</b>
+									</p>
+									<span>작성일 ${inquiry.getCreate_date() }</span>
+								</a>
+					
+								<div class="list_ans">
+									<b class="title">문의</b>
+									<div>${inquiry.getContent() }</div>
+								</div>
+							</li>
+						</c:forEach>
+						
 					</ul>
 				</div>
 				<!-- //문의 리스트 -->
@@ -160,7 +167,7 @@
 		<!-- //align_rt -->
 	</div>
 	<!-- //Content  -->
-<%@ include file="../ex_footer.jsp" %>
+<%@ include file="../footer.jsp" %>
 
 </div>
 
