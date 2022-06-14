@@ -28,12 +28,8 @@
     <script type="text/javascript" src="/Project/js/service/user-validate.js"></script>
     <script type="text/javascript" src="/Project/js/service/validate.js"></script>
     <script type="text/javascript" src="/Project/js/service/login.js"></script>
-    <script type="text/javascript" src="/Project/js/service/register.js"></script>
     
-    <style>
-    	#id_msg{font-size:13px; color:red; position:relative; top:-10px; left: 10px;}
     
-    </style>
     <script>
 var _BASE_URL = 'https://www.goodchoice.kr/';
 var _MOBILE = 'W';
@@ -144,13 +140,13 @@ var _FACEBOOK_APP_ID = '607467975974643';
     <!-- 로그인 pop_layer_w('pop_login') -->
 <div class="layer_fix layer_unfix pop_login pop_mem_reserve new-style-form">
     <section>
-        <form id="loginForm" action="/Project/member/registerSendMail.jsp" autocomplete="off" method="post" novalidate="novalidate">
+        <form id="loginForm" action="/Project/member/pwSendMail.jsp" autocomplete="off" method="post" novalidate="novalidate">
             <input type="hidden" name="returnUrl" value="">
             <input type="hidden" name="yeogi_token" value="8c1ed6e1cf02fe6eba7ebf5a8b561e35">
 
-            <strong class="sub_title">이메일 인증</strong>
+            <strong class="sub_title">비밀번호 찾기</strong>
             <p class="txt_top">
-                이메일 주소를 입력해 주세요.
+                회원가입 시 등록한 이메일 주소를 입력해 주세요.
             </p>
 
             <div class="pop_login_errors">
@@ -160,23 +156,10 @@ var _FACEBOOK_APP_ID = '607467975974643';
            
 			
             <div class="inp_type_1 ico_email form-errors"><!-- focus / err -->
-                <input type="text" name="email" placeholder="이메일 주소" id ="mail"required="" class="required"
-                 value="" data-msg-required="이메일 주소를 확인해 주세요." onchange="idCheck()">
-            </div><span id="id_msg"></span>
+                <input type="text" name="email" placeholder="이메일 주소" required="" class="required" value="" data-msg-required="이메일 주소를 확인해 주세요.">
+            <button type="button" class="reset_val">초기화</button></div>
 
-            <button type="submit" data-js-validate-email="" id="mail_btn" class="btn_link gra_left_right_red" disabled="true"><span>확인</span></button>
-            <script>
-            	$(function(){
-            		
-            		$("#mail").on('input',function()){
-            			if($("#mail").val()=='')
-            				$("#mail_btn").attr("disabled",true);
-            			else
-            				$("#mail_btn").attr("disabled",false);
-            		});
-            	})
-            </script>
-                
+            <button type="submit" data-js-validate-email="" class="btn_link gra_left_right_red" ><span>확인</span></button>
             <!-- <div class="layer_fix_footer">
                 <p>
                     <a href="http://www.withinnovation.co.kr/" target="_blank">회사소개</a>|
