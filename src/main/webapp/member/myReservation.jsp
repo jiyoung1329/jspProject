@@ -1,3 +1,4 @@
+<%@page import="java.util.Calendar"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="reservation.MyReserveDTO"%>
@@ -32,12 +33,21 @@
 </head>
 <%
 	String email = "test@naver.com";
-	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd E HH:mm");
+	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd");
 	SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");
 	ReservationDAO reserveDao = new ReservationDAO();
 	ArrayList<MyReserveDTO> reservations = reserveDao.selectAllReservation(email);
 	
-	System.out.println(reservations);
+// 	System.out.println(reservations);
+	
+	// 다시 예약 날짜
+	SimpleDateFormat setFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(new Date());
+	cal.add(Calendar.DATE, 1);
+	String sel_date = setFormat2.format(new Date());
+	String sel_date2 = setFormat2.format(cal.getTime()); 
+	
 %>
 
 
@@ -74,9 +84,11 @@
 					<section class="list_cancel" style="padding-top: 0">
 						<ul class="list_wrap" >
 							<% for (MyReserveDTO reservation: reservations){ 
-								Date checkin = getFormat.parse(reservation.getCheckIn());
-								Date checkout = getFormat.parse(reservation.getCheckOut());
-								long diff = (checkout.getTime() - checkin.getTime()) / (24*60*60*1000);%>
+								Date checkin = getFormat.parse(reservation.getCheckIn().substring(0, 10));
+								Date checkout = getFormat.parse(reservation.getCheckOut().substring(0, 10));
+								long diff = (checkout.getTime() - checkin.getTime()) / (24*60*60*1000);
+// 								System.out.println("checkin: " + checkin + ", checkout: " + checkout + ", diff: " + diff);
+								%>
 								
 							<li class="reservation-detail" >
 								<!-- 폼전송시 전달되는 data target element -->
@@ -92,6 +104,7 @@
 										<input type="text" name="accomName" aria-hidden="true" style="display:none;"value="<%=reservation.getAccomName() %>">
 										<input type="text" name="accomThumnail" aria-hidden="true" style="display:none;"value="<%=reservation.getAccomThumnail() %>">
 										<input type="text" name="roomName" aria-hidden="true" style="display:none;"value="<%=reservation.getRoomName() %>">
+										<input type="text" name="reviewNum" aria-hidden="true" style="display:none;"value="<%=reservation.getReviewNum() %>">
 									</div>
 								</form>
 								
@@ -117,9 +130,6 @@
 									  </span>
 									<b>예약 상세 &gt;</b>
 								</a>
-								<p class="btn_re" >
-									<a href="#"> 다시 예약 </a>
-								</p>
 							</li>
 							<%} %>
 							

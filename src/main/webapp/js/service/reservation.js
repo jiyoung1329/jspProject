@@ -246,32 +246,47 @@ $(function(){
 
         $(".owl-carousel button.item").removeClass("enable");	//초기화
         $item_obj = $(this).parent();
-
-        var use_stime = setDate($item_obj.find('.item').attr("data-time"));
-        var use_etime = setDate($item_obj.next().find('.item').attr("data-time"));
+		console.log($item_obj.find('.item').attr('data-time'))
+        var use_stime = $item_obj.find('.item').attr("data-time");
+        var use_etime = $item_obj.next().find('.item').attr("data-time");
 		console.log("use_stime: " + use_stime + ", use_etime: " + use_etime);
-		console.log(typeof use_stime)
 
         var $button_length = $('.owl-carousel button.item').length;
         var $current_index = $('.owl-carousel button.item').index($(this));
-
+		
         // 이용시간 활성화
 //        for(var i=0;i<Number($('input[name=dayuse_time]').val());i++){
         for(var i=0;i<(max_use_time * 2);i++){
-            if(i==0)use_stime = setDate($item_obj.find('.item').attr("data-time"));
+            if(i==0)use_stime = $item_obj.find('.item').attr("data-time");
             if ($current_index + i >= $button_length - 1) continue;
 
             $item_obj.find('.item').addClass('enable');
 
-            use_etime = setDate($item_obj.find('.item').attr("data-time"));
-			console.log("use_stime: " + use_stime + ", use_etime: " + use_etime);
+            use_etime = $item_obj.find('.item').attr("data-time");
             $item_obj = $item_obj.next();
         }
-
+		console.log("use_stime: " + use_stime + ", use_etime: " + use_etime);
+	
+        var use_time = Number($(".owl-carousel button.enable").length)
+        console.log("use_time : " + use_time);
+		// input에 이용시간 삽입
+		$('.checkin')[0].value = use_stime;
+		$('.checkin')[1].value = use_stime;
+		console.log(use_time + " " + (max_use_time * 2))
+		if (use_time >= (max_use_time * 2)){
+			$('.checkout')[0].value = use_etime;
+			$('.checkout')[1].value = use_etime;
+		} else {
+			$('.checkout')[0].value = $(".item.disable")[0].innerText;
+			$('.checkout')[1].value = $(".item.disable")[0].innerText;
+			
+		}
+		
+		
+		// alert time 설정
 //        $('.use_time').text(use_stime+":00 - "+use_etime+":00");
         $('.title rol').eq(0).text('');
         $('.title rol').eq(1).text('이용');
-        var use_time = Number($(".owl-carousel button.enable").length)
         var tmp = use_time / 2;
         var alert_use_time;
         alert_use_time = (Math.floor(tmp) > 0) ? (Math.floor(tmp) + "시간") : ""
@@ -282,7 +297,7 @@ $(function(){
 //        $('.dayuse').text(($(".owl-carousel button.enable").length)/2);
 //        if(Number($(".owl-carousel button.enable").length) < Number($('input[name=dayuse_time]').val())){
         if(Number($(".owl-carousel button.enable").length) < max_use_time * 2){
-            alert_Msg(use_stime+"에 입실하시면<br>"+(alert_use_time)+" 이용하실 수 있습니다.");
+            alert_Msg(setDate(use_stime)+"에 입실하시면<br>"+(alert_use_time)+" 이용하실 수 있습니다.");
         }
 
         //var last_chkin_date = new Date($('#checkin_date').val());
@@ -366,8 +381,8 @@ $(function(){
 // Main ---------------------------------------------------------------------------------------------------------------E
 function setDate(date){
 	console.log(date)
-	var hour = date.substring(11, 13);
-	var minute = date.substring(14, 16);
+	var hour = date.substring(0, 2);
+	var minute = date.substring(3, 5);
 	if (minute.charAt(0) == '0') {
 		return (hour + "시"); 
 		

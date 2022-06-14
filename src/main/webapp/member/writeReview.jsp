@@ -1,3 +1,5 @@
+<%@page import="reservation.ReservationDTO"%>
+<%@page import="reservation.ReservationDAO"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -7,54 +9,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta http-equiv="Content-Type">
-	<!-- <meta name="csrf-name" content="<?php echo $csrf_name; ?>" /> -->
-	<meta name="description" content="전국 호텔, 펜션, 모텔부터 워터파크, 놀이공원, 아쿠아리움까지 최저가 할인 예약">
-	
-	<link rel="preload" href="/jspProject/css/common.css" as="style">
-	<link rel="stylesheet" href="/jspProject/css/common.css">
-	<link rel="stylesheet" href="/jspProject/css/my2.css">
-	<link rel="shortcut icon" href="https://image.goodchoice.kr/images/web_v3/favicon_170822.ico" type="image/x-icon">
-	
-	<!-- CSS -->
-	<title>취향대로 머물다 여기어때</title>
-	<script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
-	<script type="text/javascript" src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
-	<script type="text/javascript" src="/jspProject/js/library/jquery.cookie.js"></script>
-	<!-- vuejs 스타일 시트 써야하는데 너무 긺 - 이 코드 없으면 mobile에서 다시예약버튼이 이상하게 보임 -->
-	<%--
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type">
+<!-- <meta name="csrf-name" content="<?php echo $csrf_name; ?>" /> -->
+<meta name="description"
+	content="전국 호텔, 펜션, 모텔부터 워터파크, 놀이공원, 아쿠아리움까지 최저가 할인 예약">
+
+<link rel="preload" href="/jspProject/css/common.css" as="style">
+<link rel="stylesheet" href="/jspProject/css/common.css">
+<link rel="stylesheet" href="/jspProject/css/my2.css">
+<link rel="stylesheet" href="/jspProject/css/more.css">
+<link rel="shortcut icon"
+	href="https://image.goodchoice.kr/images/web_v3/favicon_170822.ico"
+	type="image/x-icon">
+
+<!-- CSS -->
+<title>취향대로 머물다 여기어때</title>
+<script type="text/javascript" async=""
+	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"
+	src="/jspProject/js/library/jquery.cookie.js"></script>
+<!-- vuejs 스타일 시트 써야하는데 너무 긺 - 이 코드 없으면 mobile에서 다시예약버튼이 이상하게 보임 -->
+<%--
 	<style data-vue-ssr-id="7e56e4e3:0 a4416d6a:0 34c88125:0 6dddd935:0 879b8502:0 edcdab14:0 62376f3c:0 e11ef8c8:0 b13ffd10:0" > 부분
 	 --%>
-	 <%@ include file="reservationDetailHead.jsp" %>
+<%@ include file="../member/reservationDetailHead.jsp"%>
 </head>
 <%
-	request.setCharacterEncoding("utf-8");
-	SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd E HH:mm");
-	SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");
-	DecimalFormat df = new DecimalFormat("###,###");
-	
-	int num = Integer.parseInt(request.getParameter("num"));
-	String checkin = request.getParameter("checkin");
-	String checkout = request.getParameter("checkout");
-	
-	Date checkinDate = getFormat.parse(checkin);
-	Date checkoutDate = getFormat.parse(checkout);
-	long diff = (checkoutDate.getTime() - checkinDate.getTime()) / (24*60*60*1000);
-	
-	int isReserve = Integer.parseInt(request.getParameter("isReserve"));
-	int price = Integer.parseInt(request.getParameter("price"));
-	String userName = request.getParameter("userName");
-	String userPhone = request.getParameter("userPhone");
-	String accomName = request.getParameter("accomName");
-	String accomThumnail = request.getParameter("accomThumnail");
-	String roomName = request.getParameter("roomName");
-	int reviewNum = Integer.parseInt(request.getParameter("reviewNum"));
-	
-	System.out.println("accomName: " + accomName);
+request.setCharacterEncoding("utf-8");
+String userNickname = "등적색핵탄두";
+
+SimpleDateFormat getFormat = new SimpleDateFormat("yyyy.MM.dd E HH:mm");
+SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd E");
+DecimalFormat df = new DecimalFormat("###,###");
+
+String reNum = request.getParameter("reserve");
+ReservationDAO reserveDao = new ReservationDAO();
+ReservationDTO reservation = reserveDao.selectReservation(reNum);
+
+Date checkinDate = getFormat.parse(reservation.getCheckIn());
+Date checkoutDate = getFormat.parse(reservation.getCheckOut());
+long diff = (checkoutDate.getTime() - checkinDate.getTime()) / (24 * 60 * 60 * 1000);
 %>
+<style>
+.star{
+    position: relative;
+    font-size: 2rem;
+    color: #FFA726;
+}
+    
+.star input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+    
+.star span{
+    width: 0;
+    position: absolute; 
+    left: 0;
+    color: #FFA726;
+    overflow: hidden;
+    pointer-events: none;
+}
+</style>
 <body class="mobile">
 	<script>var deviceWidth=window.innerWidth;document.body.className=deviceWidth>1023?"pc":"mobile"</script>
 	<div id="__nuxt">
@@ -90,66 +116,67 @@
 								<div data-v-4c4f460e="" class="align_rt">
 									<div data-v-4c4f460e="" class="reserve_detail">
 										<!---->
-										<div data-v-4c4f460e="" class="info"
-											style="background-image: url(&quot;<%=accomThumnail %>&quot;);">
+										<div data-v-4c4f460e="" class="info">
 											<div data-v-4c4f460e="">
-											<% if (isReserve == 1) { %>
-												<i data-v-4c4f460e="" class="">이용완료</i>
-											<% } else { %>
-												<i data-v-4c4f460e="" class="">이용 전</i>
-											<% } %>
-												<strong data-v-4c4f460e=""><%=accomName %></strong>
-												
-												<span data-v-4c4f460e=""><%=roomName %> •
-												<% if (diff == 0){ %>
-													대실
-												<% } else{ %>
-													<%=diff %>박
-												<%} %> 
-												</span>
+
+												<strong style="padding-bottom: 20px;" data-v-4c4f460e="">리뷰
+													작성</strong> <span data-v-4c4f460e=""><b
+													style="padding-bottom: 20px;"><%=reservation.getAccommName()%></b><br>
+													<small><%=reservation.getRoomName()%> • 
+													<% if (diff == 0) {%>
+													대실 
+													<%} else {%> 
+													<%=diff%>박 
+													<%}%></small> </span>
 											</div>
 										</div>
+										<div class="inquiry" style="background-color: #fff;">
 										<section data-v-4c4f460e="">
-											<div data-v-4c4f460e="">
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">체크인</strong><%=checkin %>
-												</p>
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">체크아웃</strong><%=checkout %>
-												</p>
+											<!-- 리뷰 작성 -->
+											<div class="tab_each">
+												<form name="inq-form" method="post"
+													action="writeReviewService.jsp">
+													<input type="text" name="num" aria-hidden="true" style="display:none;" value="<%=reservation.getNum() %>">
+													<input type="text" name="nickname" aria-hidden="true" style="display:none;" value="<%="ggggg" %>">
+													<input type="text" name="accomm_num" aria-hidden="true" style="display:none;" value="<%=reservation.getAccommNum() %>">
+													<input type="text" name="room_name" aria-hidden="true" style="display:none;" value="<%=reservation.getRoomName() %>">
+													<section class="info_wrap" style="margin-bottom: 20px;">
+											            <p class="m-0 pl-1" style="color: #6C757D;">평점</p>
+											            <span class="star">
+											                ☆☆☆☆☆
+											                <span>★★★★★</span>
+											                <input type="range" oninput="drawStar(this)" id="rate" name="rate" value="0" step="1" min="0" max="10">
+											            </span>
+											            <span id="star-rate" style="font-size: 1.5rem; color: #FFCC1C;" >0.0</span><span> / 10.0</span>
+											        </section> 
+													<section class="info_wrap" style="margin-bottom: 20px;">
+														<div class="title">
+															<b>제목</b>
+															<p class="inp_wrap">
+																<input data-email-validate="" class="js-email-string"
+																	name="title" placeholder="제목을 입력해주세요">
+															</p>
+														</div>
+													</section>
+
+													<section class="text_wrap" >
+														<b style="margin:0;">리뷰내용</b>
+														<div>
+<!-- 															<ul class="placeholder_txt"> -->
+<!-- 																<li></li> -->
+<!-- 															</ul> -->
+															<textarea name="content" id="questionTextarea" placeholder="리뷰를 작성해주세요(수정 불가)"></textarea>
+														</div>
+													</section>
+													<section class="btn_wrap ">
+														<button onclick="check()" class="btn_red_fill" type="button" onclick="validation()">작성 완료</button>
+														<button onclick="history.back(-1);" data-v-4c4f460e="" type="button" style="width:144px; height:48px;">취소</button>
+													</section>
+												</form>
 											</div>
-											<div data-v-4c4f460e="">
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">예약번호</strong><%=num %>
-												</p>
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">예약자 이름</strong><%=userName %>
-												</p>
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">휴대전화</strong><%=userPhone %>
-												</p>
-											</div>
-											<div data-v-4c4f460e="" class="total"
-												style="border-bottom: none;">
-												<p data-v-4c4f460e="">결제정보</p>
-												<p data-v-4c4f460e="">
-													<strong data-v-4c4f460e="">총 결제금액 </strong> <b
-														data-v-4c4f460e=""><%=df.format(price) %>원</b>
-												</p>
-											</div>
+											<!-- //문의 작성 -->
 										</section>
-										<a data-v-4c4f460e="" href="#" class="btn_call">전화문의하기</a>
-										<section data-v-4c4f460e="">
-											<!---->
-											<p data-v-4c4f460e="">
-												<% if (isReserve == 1 && reviewNum == 0){ %>
-												<a href="writeReview.jsp?reserve=<%=num %>">
-												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">리뷰작성</button>
-												</a>
-												<%} %>
-												<button data-v-4c4f460e="" type="button">삭제</button>
-											</p>
-										</section>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -166,4 +193,44 @@
 
 
 </body>
+<script>
+$(document).ready(function () {
+    var stars = document.getElementsByClassName("star")
+    for (var i=0; i<stars.length; i++){
+        review_rate = stars.item(i).getAttribute('value')
+        stars.item(i).querySelector("span").style.width = `${review_rate * 10}%`;
+    }
+});
+
+const drawStar = (target) => {
+	console.log(target.value)
+    document.querySelector('.star span').style.width = (Number(target.value) * 9.2) + "%";
+    document.querySelector('#star-rate').innerText = Number(target.value).toFixed(1)
+    
+    }
+    
+function check(){
+	// score
+	if ($("#rate").val() == 0){
+		alert('평점을 입력해주세요');
+		return;
+		
+	}
+	// title
+	console.log($('.js-email-string'))
+	var title = $('.js-email-string').val();
+	console.log(title);
+	if (!title){
+		alert('제목을 입력해주세요.');
+		return;
+	}
+	// content 
+	if (!$('#questionTextarea').val()){
+		alert('문의 내용을 작성해주세요');
+		return;
+	}
+	document.forms[0].submit();
+}
+
+</script>
 </html>

@@ -11,7 +11,7 @@
 <%
 SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
 SimpleDateFormat setFormat = new SimpleDateFormat("MM.dd");
-SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 DecimalFormat decFormat = new DecimalFormat("###,###");
 
@@ -31,6 +31,7 @@ MotelDAO motelDao = new MotelDAO();
 DetailDTO detail = motelDao.selectMotel(num);
 System.out.println(detail.getRooms());
 
+System.out.println("reviews: " + detail.getReviews());
 float avgReview = 0;
 if (detail.getReviews().size() > 0) {
 	avgReview = (float) detail.getSumReview() / detail.getReviews().size();
@@ -38,15 +39,7 @@ if (detail.getReviews().size() > 0) {
 
 // 대실 시간 체크
 Date now = new Date();
-// 1. 대실 끝시간 체크
-int end;
-try {
-	end = Integer.parseInt(request.getParameter("endTime").substring(0, 2));
 
-} catch (Exception e) {
-	end = 0;
-}
-Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 %>
 
 <!DOCTYPE html>
@@ -162,21 +155,13 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 						<h2><%=detail.getName()%></h2>
 						<div class="score_cnt">
 							<span><%=avgReview%></span>
-							<%
-							if (avgReview > 9.5) {
-							%>
+							<% if (avgReview > 9.5) {%>
 							최고에요
-							<%
-							} else if (9.0 <= avgReview && avgReview <= 9.5) {
-							%>
+							<%} else if (9.0 <= avgReview && avgReview <= 9.5) {%>
 							추천해요
-							<%
-							} else {
-							%>
+							<%} else {%>
 							만족해요
-							<%
-							}
-							%>
+							<%}%>
 
 							<b id="review_cnt">&nbsp;리뷰 <em><%=detail.getReviews().size()%></em>개
 							</b>
@@ -227,6 +212,20 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 					<!-- 방정보 -->
 					<%
 					for (RoomDTO room : detail.getRooms()) {
+						// 1. 대실 끝시간 체크
+						
+						int end;
+						try {
+							end = Integer.parseInt(room.getEndTime().substring(0, 2));
+							
+						} catch (Exception e) {
+							end = 0;
+						}
+						
+						Date endTime = timeFormat.parse(originSelDate + " " + Integer.toString(end) + ":00");
+						
+// 						System.out.println("end: " + originSelDate + " " + Integer.toString(end) + ":00");
+// 						System.out.println("now: " + now + ", endTime" + endTime);
 					%>
 					<div class="room">
 						<!-- 282 x 169 -->
@@ -252,7 +251,7 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 							<%-- 숙소가격이 0일때는 문의, 아니면 대실예약가능 --%>
 							<%-- 현재시간이 대실 마감시간을 넘었을때에도 숙박에 문의 --%>
 							<%
-							if (room.getdPrice() == 0 || now.after(endTime)) {
+							if (room.getdPrice() == 0 || end == 0 || now.after(endTime) ) {
 							%>
 							<div class="half none">
 								<div class="price">
@@ -388,7 +387,11 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 				<div class="score_top">
 					<strong>만족해요</strong>
 					<div class="score_wrap">
-						<div class="score_star star_40"></div>
+						<% // 평점 리뷰 style
+							int star = (int) Math.floor((avgReview * 10) / 2);
+							star -= star % 5;
+						%>
+						<div class="score_star star_<%=star %>"></div>
 						<div class="num"><%=avgReview%></div>
 					</div>
 					<p>
@@ -396,7 +399,10 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 					</p>
 				</div>
 				<ul>
-					<% for (ReviewDTO review: detail.getReviews()){ %>
+					<% for (ReviewDTO review: detail.getReviews()){ 
+							star = (int) Math.floor((review.getScore() * 10) / 2);	
+							star -= star%5;
+					%>
 					<li>
 						<div class="guest">
 							<p class="pic">
@@ -405,7 +411,7 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 							</p>
 							<strong><%=review.getTitle() %></strong>
 							<div class="score_wrap_sm">
-								<div class="score_star star_50"></div>
+								<div class="score_star star_<%=star %>"></div>
 								<div class="num"><%=review.getScore() %></div>
 							</div>
 							<div class="name">
@@ -418,63 +424,17 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 						</div>
 					</li>
 					<%} %>
-					<li>
-						<div class="guest">
-							<p class="pic">
-								<img src="//image.goodchoice.kr/profile/ico/ico_23.png"
-									alt="만족한방언">
-							</p>
-							<strong>조금만 더 신경 써 주세요.</strong>
-							<div class="score_wrap_sm">
-								<div class="score_star star_05"></div>
-								<div class="num">1.0</div>
-							</div>
-							<div class="name">
-								<b>더블 디럭스 (랜덤배정) 객실 이용 · </b>만족한방언
-							</div>
-							<div class="txt">에어컨 안나옴 물 온수 안나옴</div>
-							<span class="date">11일 전</span>
-						</div>
-					</li>
-					<li>
-						<div class="guest">
-							<p class="pic">
-								<img src="//image.goodchoice.kr/profile/ico/ico_25.png"
-									alt="수박색정신">
-							</p>
-							<strong>여기만한 곳은 어디에도 없을 거예요.</strong>
-							<div class="score_wrap_sm">
-								<div class="score_star star_50"></div>
-								<div class="num">10.0</div>
-							</div>
-							<div class="name">
-								<b>스파 디럭스(648호텔 패키지24시간 사용) 객실 이용 · </b>수박색정신
-							</div>
-							<div class="txt">처음 이용해봣는데,다른곳과달리 무인기계(?)로예약확인하고,키가나와서
-								신기햇어요ㅎㅎ</div>
-							<div class="gallery_re">
-								<div class="swiper-container swiper-type-3">
-									<ul class="swiper-wrapper">
-										<li class="swiper-slide"><img
-											src="//image.goodchoice.kr/talk/epilogue/7336142/6274683c4dab5.jpg"
-											alt="여기만한 곳은 어디에도 없을 거예요."></li>
-									</ul>
-									<div class="swiper-button-next"></div>
-									<div class="swiper-button-prev"></div>
-								</div>
-							</div>
-							<span class="date">28일 전</span>
-						</div>
-						<div id="pagination">
-							<div class="paging">
-								<button class="on">1</button>
-								<button>2</button>
-								<button>3</button>
-								<button>4</button>
-								<button>5</button>
-								<button class="next">다음</button>
-							</div>
-						</div>
+					</ul>
+<!-- 					<div id="pagination"> -->
+<!-- 						<div class="paging"> -->
+<!-- 							<button class="on">1</button> -->
+<!-- 							<button>2</button> -->
+<!-- 							<button>3</button> -->
+<!-- 							<button>4</button> -->
+<!-- 							<button>5</button> -->
+<!-- 							<button class="next">다음</button> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 			</article>
 			<!-- //리뷰 -->
 
@@ -690,7 +650,7 @@ Date endTime = timeFormat.parse(Integer.toString(end) + ":00");
 		var form = document.createElement("form");
 		form.setAttribute("charset", "UTF-8");
 		form.setAttribute("method", "Post"); //Post 방식
-		form.setAttribute("action", "roomReservation3.jsp"); //요청 보낼 주소
+		form.setAttribute("action", "roomReservation1.jsp"); //요청 보낼 주소
 
 		var inputs = obj.previousElementSibling.children;
 		console.log(inputs);

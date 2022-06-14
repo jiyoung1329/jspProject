@@ -67,11 +67,13 @@ public class ReservationDAO {
 	public ArrayList<MyReserveDTO> selectAllReservation(String email) {
 		ArrayList<MyReserveDTO> reservations = new ArrayList<MyReserveDTO>();
 		
-		String query = "select m.name as member_name, m.phone as member_phone, a.name as accom_name, a.thumnail as accom_thumnail, "
-				+ "r.name as room_name, re.num as reserve_num, re.check_in as checkin, re.check_out as checkout, re.is_reserve as is_reserve, re.price as price "
-				+ "from reservation re join member m on re.user_email = ? "
-				+ "join accommodation a on re.accomm_num = a.accomm_num "
-				+ "join room r on re.room_num = r.r_num order by re.num desc";
+		String query = "select m.name as member_name, m.phone as member_phone, a.name as accom_name, a.thumnail as accom_thumnail, r.name as room_name,"
+				+ " re.num as reserve_num, re.check_in as checkin, re.check_out as checkout, re.is_reserve as is_reserve, re.price as price, rev.num as review_num"
+				+ " from reservation re join member m on re.user_email =?"
+				+ " join accommodation a on re.accomm_num = a.accomm_num"
+				+ " join room r on re.room_num = r.r_num"
+				+ " left join review rev on rev.reservation_num = re.num"
+				+ " order by re.is_reserve desc, re.num desc";
 		
 //		System.out.println(query);
 		try {
@@ -92,6 +94,7 @@ public class ReservationDAO {
 				dto.setAccomName(rs.getString("accom_name"));
 				dto.setAccomThumnail(rs.getString("accom_thumnail"));
 				dto.setRoomName(rs.getString("room_name"));
+				dto.setReviewNum(rs.getInt("review_num"));
 				
 				reservations.add(dto);
 			}
@@ -106,6 +109,39 @@ public class ReservationDAO {
 		
 	}
 	
+	// 예약 내역 불러오기 1개 - 리뷰작성 때 필요
+	public ReservationDTO selectReservation(String reNum) {
+		String query = "select a.name, r.name as room_name, re.* from reservation re"
+				+ " join accommodation a on re.accomm_num=a.accomm_num"
+				+ " join room r on r.r_num=re.room_num"
+				+ " where num=?";
+		try {
+			ps = conn.prepareStatement(query);
+			ps.setString(1, reNum);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				//  num, user_email, name, accomm_num, room_num, check_in, check_out, price
+				// is_reserve, visit_method
+				ReservationDTO dto = new ReservationDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserEmail(rs.getString("user_email"));
+				dto.setAccommNum(rs.getInt("accomm_num"));
+				dto.setAccommName(rs.getString("name"));
+				dto.setRoomNum(rs.getInt("room_num"));
+				dto.setRoomName(rs.getString("room_name"));
+				dto.setCheckIn(rs.getString("check_in"));
+				dto.setCheckOut(rs.getString("check_out"));
+				dto.setPrice(rs.getInt("price"));
+				dto.setVisitMethod(rs.getString("visit_method"));
+				return dto;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {exit();}
+		
+		return null;
+	}
 	
 	// 예약 내역 삭제
 	public void deleteReservation(String num) {

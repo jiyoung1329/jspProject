@@ -27,7 +27,7 @@
 							문의</a></li>
 				</ul></li>
 			<li class="over pic" data-v-7b4768e4=""><a
-				href="https://www.goodchoice.kr/my/mypage" data-v-7b4768e4=""><img
+				href="/jspProject/member/myPage.jsp" data-v-7b4768e4=""><img
 					src="https://image.goodchoice.kr/profile/ico/ico_24.png" alt=""
 					data-v-7b4768e4=""></a>
 				<ul class="list_04" style="display: none" data-v-7b4768e4="">

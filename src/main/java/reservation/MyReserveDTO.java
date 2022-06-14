@@ -13,11 +13,12 @@ public class MyReserveDTO {
 	private String accomName;
 	private String accomThumnail;
 	private String roomName;
+	private int reviewNum;
 	
 	public MyReserveDTO() {}
 
 	public MyReserveDTO(int num, String checkIn, String checkOut, int isReserve, int price, String userName,
-			String userPhone, String accomName, String accomThumnail, String roomName) {
+			String userPhone, String accomName, String accomThumnail, String roomName, int reviewNum) {
 		super();
 		this.num = num;
 		this.checkIn = checkIn;
@@ -29,6 +30,7 @@ public class MyReserveDTO {
 		this.accomName = accomName;
 		this.accomThumnail = accomThumnail;
 		this.roomName = roomName;
+		this.reviewNum = reviewNum;
 	}
 
 	public int getNum() {
@@ -110,7 +112,16 @@ public class MyReserveDTO {
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
+
+	public int getReviewNum() {
+		return reviewNum;
+	}
+
+	public void setReviewNum(int reviewNum) {
+		this.reviewNum = reviewNum;
+	}
+
 	
-	
+		
 
 }

@@ -54,9 +54,8 @@ public class MotelDAO {
 				+ " where a.accomm_num=?";
 		
 		// 리뷰정보 : 제목, 평점, 방이름, 유저닉네임, 내용, 작성시간
-		String reviewQuery = "select r.title, r.score, r.room_name, m.nickname, r.content, r.create_date"
-				+ " from review r join accommodation a on r.num=a.accomm_num"
-				+ " join member m on r.email=m.email"
+		String reviewQuery = "select r.title, r.score, r.room_name, r.nickname, r.content, r.create_date"
+				+ " from review r join accommodation a on r.accomm_num=a.accomm_num"
 				+ " where a.accomm_num=?";
 		
 		// 방정보: 싹다 -> 예약여부까지 확인해볼까..?
@@ -85,8 +84,13 @@ public class MotelDAO {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				// r.title, r.score, r.room_name, m.nickname, r.content, r.create_date
-				ReviewDTO review = new ReviewDTO(rs.getString("title"), rs.getInt("score"), rs.getString("room_name"), 
-												 rs.getString("nickname"), rs.getString("content"), rs.getString("create_date"));
+				ReviewDTO review = new ReviewDTO();
+				review.setTitle(rs.getString("title"));
+				review.setScore(rs.getInt("score")); 
+				review.setRoomName(rs.getString("room_name"));
+				review.setUserNickname(rs.getString("nickname"));
+				review.setContent(rs.getString("content"));
+				review.setCreateDate(rs.getString("create_date"));
 				dto.addReviews(review);
 			}
 			
@@ -110,5 +114,25 @@ public class MotelDAO {
 		return dto;
 		
 	}
+	
+	public void insertReview(ReviewDTO dto) {
+		String query = "insert into review values(review_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			ps = conn.prepareStatement(query);
+			ps.setString(1, dto.getUserNickname());
+			ps.setInt(2, dto.getAccommNum());
+			ps.setInt(3, dto.getScore());
+			ps.setString(4, dto.getRoomName());
+			ps.setString(5, dto.getTitle());
+			ps.setString(6, dto.getContent());
+			ps.setString(7, dto.getCreateDate());
+			ps.setInt(8, dto.getReservationNum());
+			
+			ps.executeUpdate();
+			
+		} catch(Exception e) {e.printStackTrace();}
+		finally {exit();}
+	}
+	
 	
 }

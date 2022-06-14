@@ -1,3 +1,12 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.lang.reflect.Array"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.logging.SimpleFormatter"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="member.MemberDTO"%>
+<%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,15 +35,89 @@
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script type="text/javascript"
+	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+<script type="text/javascript"
 	src="/jspProject/js/library/jquery.cookie.js"></script>
 <script type="text/javascript"
-	src="/jspProject/js/library/jquery-1.12.4.min.js"></script>
+	src="/jspProject/js/service/reservation.js"></script>
 <%@ include file="reservationStyle.jsp"%>
 </head>
 <%
- // 대실시간 : 숙박으로 넘어왔는지 대실로 넘어왔는지 체크하고 대실로 넘어왔으면 시간 체크칸 활성화
- // 대실시간 : 현재시간 이후로 30분 단위로 보여주기, 총 이용가능시간... 잘받아야할텐데...
- // ㅇ
+SimpleDateFormat getFormat = new SimpleDateFormat("yyyy-MM-dd");
+SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+DecimalFormat df = new DecimalFormat("###,###");
+
+request.setCharacterEncoding("utf-8");
+// 	String email = (String) session.getAttribute("email");
+String email = "test@naver.com";
+
+int price = Integer.parseInt(request.getParameter("price"));
+int accomNum = Integer.parseInt(request.getParameter("accomNum"));
+String accomName = request.getParameter("accomName");
+int rNum = Integer.parseInt(request.getParameter("roomNum"));
+String roomName = request.getParameter("roomName");
+String selDate = request.getParameter("selDate");
+
+
+// startTime
+Date selDate11 = getFormat.parse(selDate);
+System.out.println("now: " + new Date() + ", selDate: " + selDate11);
+System.out.println((new Date()).before(selDate11));
+String start;
+String now = format.format(new Date());
+// 만약 현재날짜가 selDate보다 이전일때
+if ((new Date()).before(selDate11)){
+	start = "11:00";
+// 만약 현재날짜가 selDate랑 같을떄
+} else {
+	int tmp = now.charAt(3) - '0';
+	if (tmp < 3){
+		start = now.substring(0, 2) + ":30";
+	} else {
+		String hour = Integer.toString(Integer.parseInt(now.substring(0, 2)) + 1);
+		start = hour + ":00";
+	}
+}
+
+// endTime
+int end;
+try {
+	end = Integer.parseInt(request.getParameter("endTime").substring(0, 2));
+
+} catch (Exception e) {
+	end = 0;
+}
+System.out.println("now: " + now + ", startTime: " + start + ", endTime: " + Integer.toString(end) + ":00");
+
+// 시간 구하기
+Calendar cal = Calendar.getInstance();
+Date endTime = format.parse(Integer.toString(end-1) + ":30");
+Date startTime = format.parse(start);
+cal.setTime(startTime);
+int idx=0;
+ArrayList<String> times = new ArrayList<String>();
+while((cal.getTime()).before(endTime)){
+	cal.add(Calendar.MINUTE, 30);
+	times.add(format.format(cal.getTime()));
+}
+
+// useTime
+int useTime;
+String tmpTime = request.getParameter("useTime").substring(3, 5);
+if (!Character.isDigit(tmpTime.charAt(tmpTime.length() - 1))) {
+	try {
+		useTime = tmpTime.charAt(0) - '0';
+	} catch (Exception e) {
+		useTime = 0;
+	}
+} else {
+	useTime = Integer.parseInt(tmpTime);
+}
+System.out.println("endTime: " + endTime);
+System.out.println("useTime: " + useTime);
+
+MemberDAO memberDao = new MemberDAO();
+MemberDTO member = memberDao.selectEmail(email);
 %>
 
 <body class="mobile">
@@ -43,6 +126,7 @@
 		document.body.className = deviceWidth > 1023 ? "pc" : "mobile"
 	</script>
 	<div id="__nuxt">
+		<div id="nuxt-progress" style="width: 100%;"></div>
 		<div id="__layout">
 			<div data-v-924c7d26="" data-v-38903b51="">
 				<div class="wrap show" data-v-924c7d26="">
@@ -54,16 +138,17 @@
 								<div class="right" data-v-33033856="" data-v-f785cca6="">
 									<section class="info" data-v-33033856="">
 										<p class="name" data-v-33033856="">
-											<strong data-v-33033856="">숙소이름</strong>명동 뉴서울호텔
+											<strong data-v-33033856="">숙소이름</strong><%=accomName%>
 										</p>
 										<p data-v-33033856="">
-											<strong data-v-33033856="">객실타입/기간</strong>스탠다드 트윈 / 대실
+											<strong data-v-33033856="">객실타입/기간</strong><%=roomName%>
+											/ 숙박
 										</p>
 									</section>
 									<section class="total_price_pc" data-v-33033856="">
 										<p data-v-33033856="">
 											<strong data-v-33033856=""><b data-v-33033856="">총
-													결제 금액</b>(VAT포함)</strong> <span class="in_price" data-v-33033856="">45,000원</span>
+													결제 금액</b>(VAT포함)</strong> <span class="in_price" data-v-33033856=""><%=df.format(price)%>원</span>
 										</p>
 										<ul data-v-33033856="">
 											<li data-v-33033856="">해당 객실가는 세금, 봉사료가 포함된 금액입니다</li>
@@ -72,8 +157,19 @@
 											</li>
 										</ul>
 									</section>
-									<button type="button" class="btn_pay gra_left_right_red"
-										data-v-33033856="">결제하기</button>
+									<div class="reserve_info mypageForm__form-inputs-wrap"
+										aria-hidden="true" style="display: none;">
+										<input type="text" name="price" aria-hidden="true"style="display: none;" value="<%=price%>">
+										<input type="text" name="accomNum" aria-hidden="true" style="display: none;" value="<%=accomNum%>"> 
+										<input type="text" name="roomNum" aria-hidden="true" style="display: none;" value="<%=rNum%>"> 
+										<input type="text" name="selDate" aria-hidden="true" style="display: none;" value="<%=selDate%>"> 
+										<input type="text" name="selDate2" aria-hidden="true" style="display: none;" value="<%=selDate%>">
+										<input class="checkin" type="text" name="checkin" aria-hidden="true" style="display:none;"value="">
+										<input class="checkout" type="text" name="checkout" aria-hidden="true" style="display:none;"value="<%=Integer.toString(end) + ":00" %>">
+										<input class="visit_input" type="text" name="visit" aria-hidden="true" style="display: none;" value="">
+									</div>
+									<button onclick="payment_confirm(this)" type="button"
+										class="btn_pay gra_left_right_red" data-v-33033856="">결제하기</button>
 								</div>
 								<!-- //pc버전 오른쪽 결제 정보 -->
 
@@ -82,36 +178,28 @@
 										data-v-f785cca6="">
 										<h3 style="margin-top: 0" data-v-b5c15754="">이용 정보</h3>
 										<div class="title" data-v-b5c15754="">
-											<strong data-v-b5c15754=""> 이용시간<em class="use_time"
-												data-v-b5c15754=""></em> <span data-v-b5c15754="">최대<b
-													class="dayuse" data-v-b5c15754="">5</b> 시간 이용가능
-											</span>
-											</strong>
+											<strong data-v-b5c15754=""> 이용시간 <em
+												class="use_time" data-v-b5c15754=""></em> <span
+												data-v-b5c15754=""> 최대<b class="dayuse"
+													data-v-b5c15754=""><%=useTime %></b> 시간 이용가능
+											</span></strong>
 										</div>
 										<div id="usetime" class="owl-carousel owl-loaded owl-drag"
 											data-v-b5c15754="">
 											<div class="owl-stage-outer">
 												<div class="owl-stage"
-													style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 338px; padding-left: 16px; padding-right: 16px;">
+													style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1568px; padding-left: 16px; padding-right: 16px;">
+													<% for (String time: times){ %>
 													<div class="owl-item active"
-														style="width: 74.4px; margin-right: 2px;">
-														<button data-v-b5c15754="" data-time="2022-06-03T20:30:00"
-															class="item">20:30</button>
+														style="width: 64.75px; margin-right: 2px;">
+														<button data-v-b5c15754="" data-time="<%=time %>"
+															class="item"><%=time %></button>
 													</div>
-													<div class="owl-item active"
-														style="width: 74.4px; margin-right: 2px;">
-														<button data-v-b5c15754="" data-time="2022-06-03T21:00:00"
-															class="item">21:00</button>
-													</div>
-													<div class="owl-item active"
-														style="width: 74.4px; margin-right: 2px;">
-														<button data-v-b5c15754="" data-time="2022-06-03T21:30:00"
-															class="item">21:30</button>
-													</div>
-													<div class="owl-item active"
-														style="width: 74.4px; margin-right: 2px;">
-														<button data-v-b5c15754="" data-time="2022-06-03T22:00:00"
-															disabled="disabled" class="item disable">22:00</button>
+													<%} %>
+													<div class="owl-item"
+														style="width: 64.75px; margin-right: 2px;">
+														<button data-v-b5c15754="" data-time="<%=Integer.toString(end) + ":00" %>"
+															disabled="disabled" class="item disable"><%=Integer.toString(end) + ":00" %></button>
 													</div>
 												</div>
 											</div>
@@ -119,8 +207,14 @@
 												<div class="owl-prev">prev</div>
 												<div class="owl-next">next</div>
 											</div>
-											<div class="owl-dots disabled">
+											<div class="owl-dots">
 												<div class="owl-dot active">
+													<span></span>
+												</div>
+												<div class="owl-dot">
+													<span></span>
+												</div>
+												<div class="owl-dot">
 													<span></span>
 												</div>
 											</div>
@@ -132,8 +226,8 @@
 											<strong data-v-35b6e85e="">예약자 이름</strong>
 											<p class="inp_wrap remove" data-v-35b6e85e="">
 												<input type="text" name="userName"
-													placeholder="체크인시 필요한 정보입니다." maxlength="20" value="김지영"
-													data-v-35b6e85e="">
+													placeholder="체크인시 필요한 정보입니다." maxlength="20"
+													value="<%=member.getName()%>" data-v-35b6e85e="">
 											</p>
 											<p data-show="name" class="alert_txt"
 												style="visibility: hidden" data-v-35b6e85e="">한글, 영문,
@@ -143,8 +237,9 @@
 												<div class="phone_confirm" data-v-bf7fb84e="">
 													<div class="input-box" data-v-bf7fb84e="">
 														<input type="tel" name="userPhone"
-															placeholder="체크인시 필요한 정보입니다." maxlength="13" value=""
-															class="input" data-v-bf7fb84e="">
+															placeholder="체크인시 필요한 정보입니다." maxlength="13"
+															value="<%=member.getPhone()%>" class="input"
+															data-v-bf7fb84e="" disabled>
 														<div data-v-bf7fb84e="" class="cancel-icn-touch">
 															<svg data-v-bf7fb84e="" height="20" width="20"
 																xmlns="http://www.w3.org/2000/svg" class="cancel-icn">
@@ -155,48 +250,31 @@
 													</div>
 												</div>
 											</div>
-											<div class="visit" data-v-35b6e85e="" style="margin-top: 30px;">
+											<div class="visit" data-v-35b6e85e=""
+												style="margin-top: 30px;">
 												<strong data-v-35b6e85e="">방문 방법</strong>
 												<div data-v-35b6e85e="">
-													<button data-method="WALK" class="walk" data-v-35b6e85e="">
+													<button onclick="visit(this)" data-method="WALK"
+														class="walk" data-v-35b6e85e="">
 														<span data-v-35b6e85e="">도보</span>
 													</button>
-													<button data-method="CAR" class="car" data-v-35b6e85e="">
+													<button onclick="visit(this)" data-method="CAR" class="car"
+														data-v-35b6e85e="">
 														<span data-v-35b6e85e="">차량</span>
 													</button>
 												</div>
 												<div id="parking_comment" class="txt"
-													style="visibility: visible;" data-v-35b6e85e="">
+													style="visibility: hidden;" data-v-35b6e85e="">
 													<span data-v-35b6e85e="">주차장 만차 시 주차가 어려울 수 있어요</span>
 												</div>
 											</div>
 										</section>
 									</div>
-									<section class="price_wrap" data-v-3ce5aaac=""
-										data-v-f785cca6="">
-										<h3 data-v-3ce5aaac="">할인 수단 선택</h3>
-										<div class="product-amount" data-v-3ce5aaac="">
-											<strong data-v-3ce5aaac="">구매총액</strong><b data-v-3ce5aaac="">45,000원</b>
-										</div>
-										<!-- 포인트 사용 -->
-										<div class="discount-container" data-v-3ce5aaac="">
-											<div class="discount-header" data-v-3ce5aaac="">
-												<button class="discount-method-button" data-v-3ce5aaac="">포인트
-													사용 0P</button>
-												<div class="discount-point-amount" data-v-3ce5aaac="">
-													<div class="value-total" data-v-3ce5aaac="">
-														<input type="text" value="0" class="point-input"
-															data-v-3ce5aaac=""><span data-v-3ce5aaac="">P</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</section>
 									<!-- 모바일 버전 결제 정보 -->
 									<section class="price_wrap total_price" data-v-f785cca6="">
 										<p data-v-f785cca6="">
 											<strong data-v-f785cca6=""><b data-v-f785cca6="">총
-													결제 금액</b>(VAT포함)</strong> <span class="in_price_app" data-v-f785cca6="">45,000원</span>
+													결제 금액</b>(VAT포함)</strong> <span class="in_price_app" data-v-f785cca6=""><%=df.format(price)%>원</span>
 										</p>
 										<ul data-v-f785cca6="">
 											<li data-v-f785cca6="">해당 객실가는 세금, 봉사료가 포함된 금액입니다</li>
@@ -205,72 +283,19 @@
 											</li>
 										</ul>
 									</section>
-									<div class="reserve2_info mypageForm__form-inputs-wrap" aria-hidden="true" style="display:none;">
-										<input type="text" name="price" aria-hidden="true" style="display:none;"value="<%=room.getdPrice() %>">
-										<input type="text" name="accomNum" aria-hidden="true" style="display:none;"value="<%=room.getAccommNum() %>">
-										<input type="text" name="accomName" aria-hidden="true" style="display:none;"value="<%=detail.getName() %>">
-										<input type="text" name="roomNum" aria-hidden="true" style="display:none;"value="<%=room.getrNum() %>">
-										<input type="text" name="roomName" aria-hidden="true" style="display:none;"value="<%=room.getName() %>">
-										<input type="text" name="checkin" aria-hidden="true" style="display:none;"value="<%=originSelDate %>">
-										<input" type="text" name="checkout" aria-hidden="true" style="display:none;"value="<%=originSelDate2 %>">
+									<div class="reserve_info mypageForm__form-inputs-wrap"
+										aria-hidden="true" style="display: none;">
+										<input type="text" name="price" aria-hidden="true"style="display: none;" value="<%=price%>">
+										<input type="text" name="accomNum" aria-hidden="true" style="display: none;" value="<%=accomNum%>"> 
+										<input type="text" name="roomNum" aria-hidden="true" style="display: none;" value="<%=rNum%>"> 
+										<input type="text" name="selDate" aria-hidden="true" style="display: none;" value="<%=selDate%>"> 
+										<input type="text" name="selDate2" aria-hidden="true" style="display: none;" value="<%=selDate %>">
+										<input class="checkin" type="text" name="checkin" aria-hidden="true" style="display:none;"value="">
+										<input class="checkout" type="text" name="checkout" aria-hidden="true" style="display:none;"value="<%=Integer.toString(end) + ":00" %>">
+										<input class="visit_input" type="text" name="visit" aria-hidden="true" style="display: none;" value="">
 									</div>
-									<button type="button" class="btn_pay gra_left_right_red"
-										data-v-f785cca6="">결제하기</button>
-								</div>
-							</div>
-						</div>
-						<!-- 결제 버튼 눌렀을때 뜨는 modal창 -->
-						<div id="pay_background" data-v-f785cca6="">
-							<div id="pay_box" data-v-f785cca6="">
-								<a href="#" data-v-f785cca6="">X</a>
-								<iframe id="pay_frame"
-									style="position: relative; background: #fff; overflow: auto;"
-									data-v-f785cca6=""></iframe>
-							</div>
-						</div>
-						<div data-v-6de7d288="" data-v-f785cca6="">
-							<div data-v-6de7d288="" class="layer pop_title reserve_chk">
-								<strong data-v-6de7d288="">예약내역 확인</strong>
-								<div data-v-6de7d288="" class="content">
-									<div data-v-6de7d288="">
-										<p data-v-6de7d288="" class="name ellip">명동 뉴서울호텔</p>
-										<p data-v-6de7d288="" class="name">스탠다드 트윈/대실</p>
-										<ul data-v-6de7d288="" id="refund_policy">
-											<li data-v-6de7d288="" class="dot_txt"><b
-												data-v-6de7d288="" style="color: red;">취소 및 환불이 불가</b>합니다.</li>
-											<li data-v-6de7d288="" class="dot_txt">예약 후 15분 이내
-												고객행복센터로 취소 요청 시 100% 환불 가능합니다.</li>
-										</ul>
-									</div>
-								</div>
-								<div data-v-6de7d288="" class="btn">
-									<button data-v-6de7d288="" onclick="close_layer();">취소</button>
-									<button data-v-6de7d288="">동의 후 결제</button>
-								</div>
-							</div>
-							<div data-v-6de7d288="" class="layer pop_title pop_price">
-								<strong data-v-6de7d288="">구매 총액</strong>
-								<div data-v-6de7d288="" class="content">
-									<div data-v-6de7d288="">
-										<div data-v-6de7d288="" class="iscroll_price">
-											<ul data-v-6de7d288="" class="scroller"></ul>
-										</div>
-										<p data-v-6de7d288=""></p>
-									</div>
-								</div>
-								<div data-v-6de7d288="" class="btn btn_center">
-									<button data-v-6de7d288="" onclick="close_layer();">확인</button>
-								</div>
-							</div>
-							<div data-v-6de7d288="" class="business_pop">
-								<div data-v-6de7d288="" class="list">
-									<h4 data-v-6de7d288="">숙박서비스 제공업체 리스트</h4>
-									<button data-v-6de7d288="" onclick="list_close();"
-										class="btn_close">닫기</button>
-									<div data-v-6de7d288="">
-										<ul data-v-6de7d288="" id="ajax_ad_list"></ul>
-										<div data-v-6de7d288="" id="pagination"></div>
-									</div>
+									<button onclick="payment_confirm(this)" type="button"
+										class="btn_pay gra_left_right_red" data-v-f785cca6="">결제하기</button>
 								</div>
 							</div>
 						</div>
@@ -282,6 +307,22 @@
 				</div>
 				<button onclick="moveTop();" class="btn_go_top" data-v-924c7d26=""
 					style="display: none;">상단으로</button>
+				<div style="display: none" data-v-924c7d26="">
+					<span itemscope="itemscope"
+						itemtype="http://schema.org/Organization" data-v-924c7d26=""><link
+							itemprop="url" href="https://www.goodchoice.kr"
+							data-v-924c7d26=""> <a itemprop="sameAs"
+						href="https://www.facebook.com/goodchoiceofficial"
+						data-v-924c7d26=""></a> <a itemprop="sameAs"
+						href="https://play.google.com/store/apps/details?id=kr.goodchoice.abouthere"
+						data-v-924c7d26=""></a> <a itemprop="sameAs"
+						href="https://itunes.apple.com/kr/app/id884043462"
+						data-v-924c7d26=""></a> <a itemprop="sameAs"
+						href="https://post.naver.com/withinnovation" data-v-924c7d26=""></a>
+						<a itemprop="sameAs"
+						href="https://www.youtube.com/channel/UCLI1HOVJdhWdVl9pT__g2Zw"
+						data-v-924c7d26=""></a></span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -289,4 +330,102 @@
 
 	<%@ include file="../script.jsp"%>
 </body>
+<script>
+	function visit(obj) {
+		var msg = document.querySelector("#parking_comment");
+		var visit_input = document.querySelectorAll(".visit_input");
+		if (obj.className == "walk") {
+			var walk = obj;
+			var car = obj.nextElementSibling;
+			walk.className = "walk on";
+			car.className = "car";
+			msg.style.visibility = "hidden";
+			for (var i = 0; i < visit_input.length; i++) {
+				visit_input[i].value = "도보";
+			}
+		} else {
+			var car = obj;
+			var walk = obj.previousElementSibling;
+			walk.className = "walk";
+			car.className = "car on";
+			msg.style.visibility = "visible";
+			for (var i = 0; i < visit_input.length; i++) {
+				visit_input[i].value = "차량";
+			}
+		}
+
+	}
+	function payment_confirm(obj) {
+		//var regName =  /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+		var regName = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|\*]+$/;
+		var regPhone = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
+		var buyer = $('input[name=userName]');
+		var buyer_phone = $('input[name=userPhone]');
+		var login_on = $('#order_form input[name=uno]').val() ? true : false;
+		var parkingChk = $('.visit .parking_type_btn.on').hasClass('on');
+		var adcno = $('#order_form input[name=adcno]').val();
+		//var parkingUse = $('input[name=park_access]').val();
+
+		/*if(Number($('.select_type_1').val()) == 5) {
+		    alert_Msg('휴대폰 결제는 점검중입니다. <br>다른 결제수단을 이용해 주세요.');
+		    return false;
+		}*/
+		if (!buyer.val()) {
+			alert_Msg('예약자 이름을 입력해주세요.');
+			return false;
+		}
+		if (regName.test(buyer.val()) == false) {
+			alert_Msg('예약자 이름은 한글,영문,숫자만 입력이 가능합니다.');
+			return false;
+		}
+		if (Number(buyer.val().length) > 20) {
+			$('.inp_info_02 .from_name').show();
+			alert_Msg('예약자 이름은 20자 이하로 입력해주세요.');
+			return false;
+		}
+		if (!buyer_phone.val()) {
+			alert_Msg('휴대폰 번호를 입력해 주세요.');
+			return false;
+		}
+
+		if ($('#order_form').find('input[name=checkin_type]').val() == 1) {
+			if ($('input[name=dayuse_select]').val() == "N") {
+				alert_Msg('이용시간을 선택해주세요.');
+				return false;
+			}
+		}
+		console.log("checkin value: " + $('.checkin')[0].value)
+		if ($('.checkin')[0].value == "") {
+			alert_Msg('대실 시간을 선택해주세요');
+			return false;
+		}
+
+		if ($('.visit_input')[0].value == "") {
+			alert_Msg('방문 방법을 선택해주세요');
+			return false;
+		}
+		
+		reserve(obj);
+	}
+	function reserve(obj) {
+		var form = document.createElement("form");
+		form.setAttribute("charset", "UTF-8");
+		form.setAttribute("method", "Post"); //Post 방식
+		form.setAttribute("action", "reserveService1.jsp"); //요청 보낼 주소
+
+		var inputs = obj.previousElementSibling.children;
+		console.log(inputs);
+		for (var i = 0; i < inputs.length; i++) {
+
+			var hiddenField = document.createElement("input");
+			hiddenField.setAttribute("type", "hidden");
+			hiddenField.setAttribute("name", inputs[i].name);
+			hiddenField.setAttribute("value", inputs[i].value);
+			form.appendChild(hiddenField);
+		}
+		document.body.appendChild(form);
+		console.log(form)
+		form.submit();
+	}
+</script>
 </html>

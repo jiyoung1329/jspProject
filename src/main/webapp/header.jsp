@@ -22,7 +22,7 @@
             <!-- 로그인 전 -->
 <!--             <li><a href = "member/login.jsp">로그인</a></li> -->
 <!-- 로그인 후 -->
-                <li class="over pic"><a href="https://www.goodchoice.kr/my/mypage"><img src="https://image.goodchoice.kr/profile/ico/ico_21.png" alt=""></a>
+                <li class="over pic"><a href="/jspProject/member/myPage.jsp"><img src="https://image.goodchoice.kr/profile/ico/ico_21.png" alt=""></a>
                     <ul class="list_04" style="display:none">
                         <li><b>GC1501958406</b></li>
                         <li><a href="/jspProject/member/myPage.jsp">내정보</a></li>
