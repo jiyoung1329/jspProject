@@ -1,5 +1,72 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="member.MemberDTO"%>
+<%@page import="member.MemberDAO"%>
+<%@page import="util.SMTPAuthenticatior"%>
+<%@page import="javax.mail.Transport"%>
+<%@page import="javax.mail.Message"%>
+<%@page import="javax.mail.Address"%>
+<%@page import="javax.mail.internet.InternetAddress"%>
+<%@page import="javax.mail.internet.MimeMessage"%>
+<%@page import="javax.mail.Session"%>
+<%@page import="javax.mail.Authenticator"%>
+<%@page import="java.util.Properties"%>
+
+<%
+request.setCharacterEncoding("utf-8");
+
+String from = "kmje2275@naver.com";
+String subject = "test";
+String email = request.getParameter("email");
+
+MemberDAO memberDao =  new MemberDAO();
+MemberDTO member = memberDao.selectEmail(email);
+
+String to = request.getParameter("email");
+String content = email +" 님의 비밀번호는 "+ member.getPw() + " 입니다";
+// 입력값 받음
+
+Properties p = new Properties(); // 정보를 담을 객체
+
+p.put("mail.smtp.host","smtp.naver.com"); // 네이버 SMTP
+
+p.put("mail.smtp.port", "465");
+p.put("mail.smtp.starttls.enable", "true");
+p.put("mail.smtp.auth", "true");
+p.put("mail.smtp.debug", "true");
+p.put("mail.smtp.socketFactory.port", "465");
+p.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+p.put("mail.smtp.socketFactory.fallback", "false");
+// SMTP 서버에 접속하기 위한 정보들
+
+try{
+    Authenticator auth = new SMTPAuthenticatior();
+    Session ses = Session.getInstance(p, auth);
+    
+    ses.setDebug(true);
+    
+    MimeMessage msg = new MimeMessage(ses); // 메일의 내용을 담을 객체
+    msg.setSubject(subject); // 제목
+    
+    Address fromAddr = new InternetAddress(from);
+    msg.setFrom(fromAddr); // 보내는 사람
+    
+    Address toAddr = new InternetAddress(to);
+    msg.addRecipient(Message.RecipientType.TO, toAddr); // 받는 사람
+    
+    msg.setContent(content, "text/html;charset=UTF-8"); // 내용과 인코딩
+    
+    Transport.send(msg); // 전송
+} catch(Exception e){
+    e.printStackTrace();
+    out.println("<script>alert('Send Mail Failed..');history.back();</script>");
+    // 오류 발생시 뒤로 돌아가도록
+    return;
+}
+
+// out.println("<script>alert('Send Mail Success!!');location.href='/Project/member/sendEmailpop.jsp';</script>");
+// 성공 시
+%>
 <html lang="ko"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,20 +78,10 @@
     <link rel="shortcut icon" href="//image.goodchoice.kr/images/web_v3/favicon_170822.ico" type="image/x-icon">
 
 	<!-- CSS -->
-    <title>회원 가입 | 여기어때</title>
-    <link rel="stylesheet" href="/Project/css/common.css">
-    <link rel="canonical" href="https://www.goodchoice.kr/user/join">
-    <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
-    <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-    <script type="text/javascript" src="/Project/js/library/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/additional-methods.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/jquery.validate.js"></script>
-    <script type="text/javascript" src="/Project/js/library/validation/localization/messages_ko.js"></script>
-    <script type="text/javascript" src="/Project/js/modules/dialogPopup.js"></script>
-    <script type="text/javascript" src="/Project/js/service/join.js"></script>
-    <script type="text/javascript" src="/Project/js/service/phone-verification.js"></script>
-    <script type="text/javascript" src="/Project/js/service/user-validate.js"></script>
-    <script type="text/javascript" src="/Project/js/service/validate.js"></script>
+    <title>여기어때</title>
+    <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1654558361">
+    <link rel="canonical" href="https://www.goodchoice.kr/">
+    <script type="text/javascript" async="" src="https://www.googleadservices.com/pagead/conversion_async.js"></script><script async="" src="https://www.google-analytics.com/analytics.js"></script><script type="text/javascript" src="/js/library/jquery-1.12.4.min.js"></script>
     
     <script>
 var _BASE_URL = 'https://www.goodchoice.kr/';
@@ -33,14 +90,16 @@ var _KAKAOTALK_APP_KEY = 'f6ffb505bb11d7cc3584d443ce35f704';
 var _FACEBOOK_APP_ID = '607467975974643';
 </script>
     <script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d    =d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
-<meta http-equiv="origin-trial" content="Azy2GzGQxPvGmQwVDdEL1jRuKSXIdSSASA06JCA6PCeaVHpFYf8Rw5/q+9adc9CrBTxfCeUwxkuDM4PWEmdqywwAAACKeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZWFkc2VydmljZXMuY29tOjQ0MyIsImZlYXR1cmUiOiJQcml2YWN5U2FuZGJveEFkc0FQSXMiLCJleHBpcnkiOjE2NjEyOTkxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="https://www.googleadservices.com/pagead/conversion/964418007/?random=1654257528061&amp;cv=9&amp;fst=1654257528061&amp;num=1&amp;label=6YMHCM_i81wQ17PvywM&amp;bg=ffffff&amp;hl=en&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;eid=375603260&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_his=5&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;sendb=1&amp;ig=1&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2Fjoin&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2Flogin&amp;tiba=%ED%9A%8C%EC%9B%90%20%EA%B0%80%EC%9E%85%20%7C%20%EC%97%AC%EA%B8%B0%EC%96%B4%EB%95%8C&amp;hn=www.googleadservices.com&amp;rfmt=3&amp;fmt=4"></script><meta http-equiv="origin-trial" content="A9wkrvp9y21k30U9lU7MJMjBj4USjLrGwV+Z8zO3J3ZBH139DOnCv3XLK2Ii40S94HG1SZ/Zeg2GSHOD3wlWngYAAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/802163829/?random=1654257528110&amp;cv=9&amp;fst=1654257528110&amp;num=1&amp;bg=ffffff&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;eid=376635471&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_his=5&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;gtm=2oa610&amp;sendb=1&amp;ig=1&amp;data=event%3Dgtag.config&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2Fjoin&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2Flogin&amp;tiba=%ED%9A%8C%EC%9B%90%20%EA%B0%80%EC%9E%85%20%7C%20%EC%97%AC%EA%B8%B0%EC%96%B4%EB%95%8C&amp;hn=www.googleadservices.com&amp;async=1&amp;rfmt=3&amp;fmt=4"></script></head>
+<meta http-equiv="origin-trial" content="Azy2GzGQxPvGmQwVDdEL1jRuKSXIdSSASA06JCA6PCeaVHpFYf8Rw5/q+9adc9CrBTxfCeUwxkuDM4PWEmdqywwAAACKeyJvcmlnaW4iOiJodHRwczovL2dvb2dsZWFkc2VydmljZXMuY29tOjQ0MyIsImZlYXR1cmUiOiJQcml2YWN5U2FuZGJveEFkc0FQSXMiLCJleHBpcnkiOjE2NjEyOTkxOTksImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="https://www.googleadservices.com/pagead/conversion/964418007/?random=1654856849668&amp;cv=9&amp;fst=1654856849668&amp;num=1&amp;label=6YMHCM_i81wQ17PvywM&amp;bg=ffffff&amp;hl=en&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;eid=375603260&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;sendb=1&amp;ig=1&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2FselectConfirmProcess&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2FselectConfirm&amp;tiba=WARNNING%20PAGE%20-%20kmje22**%40naver.com%20%EC%9C%BC%EB%A1%9C%20%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8%20%EC%9E%AC%EC%84%A4%EC%A0%95%20%EC%9D%B4%EB%A9%94%EC%9D%BC%EC%9D%84%20%EB%B0%9C%EC%86%A1%ED%95%98%EC%98%80%EC%8A%B5%EB%8B%88%EB%8B%A4.%20%7C%20%EC%97%AC&amp;hn=www.googleadservices.com&amp;rfmt=3&amp;fmt=4"></script><meta http-equiv="origin-trial" content="A9wkrvp9y21k30U9lU7MJMjBj4USjLrGwV+Z8zO3J3ZBH139DOnCv3XLK2Ii40S94HG1SZ/Zeg2GSHOD3wlWngYAAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjYxMjk5MTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/802163829/?random=1654856849707&amp;cv=9&amp;fst=1654856849707&amp;num=1&amp;bg=ffffff&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;u_h=1080&amp;u_w=1920&amp;u_ah=1040&amp;u_aw=1920&amp;u_cd=24&amp;u_his=7&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;gtm=2oa680&amp;sendb=1&amp;ig=1&amp;data=event%3Dgtag.config&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2FselectConfirmProcess&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fuser%2FselectConfirm&amp;tiba=WARNNING%20PAGE%20-%20kmje22**%40naver.com%20%EC%9C%BC%EB%A1%9C%20%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8%20%EC%9E%AC%EC%84%A4%EC%A0%95%20%EC%9D%B4%EB%A9%94%EC%9D%BC%EC%9D%84%20%EB%B0%9C%EC%86%A1%ED%95%98%EC%98%80%EC%8A%B5%EB%8B%88%EB%8B%A4.%20%7C%20%EC%97%AC&amp;hn=www.googleadservices.com&amp;async=1&amp;rfmt=3&amp;fmt=4"></script></head>
 <body class="pc">
 
 <!-- Wrap -->
 <div class="wrap show">
 
     <!-- Header -->
-    <%@ include file="../header.jsp" %>
+     <%@ include file="/header.jsp" %>
+    
+
     <!-- Bg Dimm -->
     <div class="bg_dimm" onclick="close_layer();">&nbsp;</div>
     <div class="bg_dimm_prevent">&nbsp;</div>
@@ -54,7 +113,7 @@ var _FACEBOOK_APP_ID = '607467975974643';
                     <ul></ul>
                 </div>
                 <!-- 연관검색어 -->
-                <div class="chain" style="display: none;">
+                <div class="chain">
                     <ul></ul>
                 </div>
             </div>
@@ -129,81 +188,15 @@ var _FACEBOOK_APP_ID = '607467975974643';
     </div>
     <!-- //Mobile Menu -->
 
-    <!-- Custom Style -->
-<style type="text/css">
-	.validate_msg_label{
-		margin-top:20px;
-		display:inline-block;
-		font-size: 13px;
-		color:red;
-	}
-	.inp_type_2{
-		padding: 0 10px;
-	}
-</style>
-
-<div class="layer_fix pop_login pop_mem_reserve">
-    <section>
-        <div class="fix_title">
-            <strong>여기어때 약관 동의</strong>
-        </div>
-
-        <div class="terms_agree">
-            <p class="all_check">
-                <label><input type="checkbox" id="checkAll" class="inp_chk_02 chk_default">전체 동의</label>
-            </p>
-            <p>
-                <input type="checkbox" id="terms" value="N" class="inp_chk_02 chk_default terms_checkbox" require="">
-                <a href="https://www.goodchoice.kr/more/terms/terms" target="_blank">이용약관 동의</a> <span>(필수)</span>
-            </p>
-			<p>
-				<input type="checkbox" id="teenager" value="N" class="inp_chk_02 chk_default terms_checkbox" require="">
-				<a href="https://www.goodchoice.kr/more/over14yearsOldAgree " id="fourteen" target="_blank">만 14세 이상 확인 </a><span> (필수)</span>
-			</p>
-            <p>
-                <input type="checkbox" id="privacy" value="N" class="inp_chk_02 chk_default terms_checkbox" require="">
-                <a href="https://www.goodchoice.kr/more/privacyRequire" target="_blank">개인정보 수집 및 이용 동의 </a><span> (필수)</span>
-            </p>
-			<p>
-				<input type="checkbox" id="privacy_auxiliary_policy" value="N" class="inp_chk_02 chk_default terms_checkbox">
-				<a href="https://www.goodchoice.kr/more/privacySelect" target="_blank">개인정보 수집 및 이용 동의</a> (선택)
-			</p>
-            <p>
-				<input type="checkbox" id="marketing" value="N" class="inp_chk_02 chk_default terms_checkbox">
-				<a href="http://api3.goodchoice.kr/more/marketingAgree" target="_blank">마케팅 알림 수신동의</a> (선택)
-			</p>
-            <p>
-                <input type="checkbox" id="location" value="N" class="inp_chk_02 chk_default terms_checkbox">
-                <a href="https://www.goodchoice.kr/more/terms/location" target="_blank">위치기반 서비스 이용약관 동의</a> (선택)
-            </p>
-
-            <button type="button" class="btn_link" id="terms_agree_btn" disabled="" 
-            onclick="javascript:location.href='/Project/member/registerEmail.jsp';"><span>다음</span></button>
-           
-        </div>
-    </section>
-
-
-
+    <!-- 에러페이지 -->
+<div class="error_page">
+        <p><br><%=email%> 으로 비밀번호를 발송하였습니다.</p>
+    <a href="/Project/index.jsp" class="btn_link gra_left_right_red">HOME</a>
 </div>
-
-
-
-
-
-
-
-<style>
-    /* layer_unfix 존재시 footer 숨김 */
-    .mobile_appdown,
-    header,
-    footer{display:none !important}
-</style>
 
     <!-- Footer -->
     <%@ include file="../footer.jsp" %>
-   
-
+    
 </div>
 
 <!-- 상단으로 -->
@@ -213,5 +206,3 @@ var _FACEBOOK_APP_ID = '607467975974643';
 
 <!-- Script -->
 <%@ include file="../script.jsp" %>
-
-</body></html>
