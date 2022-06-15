@@ -93,7 +93,7 @@
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-<script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery-1.12.4.min.js"></script>
 <script>
 	var _BASE_URL = 'https://www.goodchoice.kr/';
 	var _MOBILE = 'W';
@@ -177,7 +177,6 @@
 
 		//모텔 정렬 기준(거리순, 낮은 가격순, 높은 가격순)
 		String sort = request.getParameter("sort");
-		System.out.println("sort: " + sort);
 		pageContext.setAttribute("sort", sort);
 
 		//대실, 숙박
@@ -190,20 +189,19 @@
 
 		//지역에 속한 모텔 불러오기
 		ArrayList<AccommoDTO> list = service.filterByArea(area, sort);
-		System.out.println("숙박 0원 필터링 전: " + list.size());
+		System.out.println("숙박 0원 필터링 전: " + list.size() + "개");
 
 		//필터링
 		if (!list.isEmpty()) {
 			ArrayList<AccommoDTO> tmp = null;
 
-			//날짜 필터링
 			if ((tmp_sel_date != null && tmp_sel_date2 != null) && (!tmp_sel_date.equals(sel_date) || !tmp_sel_date2.equals(sel_date2))) {
 				tmp = list;
 				sel_date = tmp_sel_date;
 				sel_date2 = tmp_sel_date2;
 				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
-				System.out.println("날짜 필터링 후: " + tmp.size());
+				System.out.println("날짜 필터링 후: " + tmp.size() + "개");
 			}
 
 			//놀이시설 필터링
@@ -216,7 +214,7 @@
 						tmino.add(t);
 				}
 				list = service.filterByCondi(tmino, list);
-				System.out.println("상세조건 0원 필터링 후: " + list.size());
+				System.out.println("상세조건 0원 필터링 후: " + list.size() + "개");
 			}
 
 			//숙박, 대여 
@@ -242,6 +240,7 @@
 				}
 			}
 
+			System.out.println("정렬 기준: " + sort);
 			//오늘과 내일이 아닌 다른 날짜를 매개변수로 전달 받았을 때
 			if (tmp != null && !tmp.isEmpty()) {
 				tmp = service.addMotelInfo(sort, tmp);
@@ -249,17 +248,17 @@
 
 				if (reserve != null && (d != null && s == null)) {
 					tmp = service.filterDPriceZero(tmp);
-					System.out.println("대실 0원 필터링 후: " + tmp.size());
+					System.out.println("대실 0원 필터링 후: " + tmp.size() + "개");
 				}
 				if (minPrice != 0 && maxPrice != 0)
 					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
 
 				if (sort == null || sort == "" || sort.equals("SCORE")) {
-					tmp = service.sortMotelScoreDesc(tmp);
+					list = service.sortMotelScoreDesc(tmp);
 				} else if(sort.equals("LOWPRICE")) {
-					tmp = service.sortMotelAsc(tmp);
+					list = service.sortMotelAsc(tmp);
 				} else {
-					tmp = service.sortMotelDesc(tmp);
+					list = service.sortMotelDesc(tmp);
 				}
 			} else { 
 				list = service.addMotelInfo(sort, list);
@@ -267,14 +266,13 @@
 
 				if (reserve != null && (d != null && s == null)) {
 					list = service.filterDPriceZero(list);
-					System.out.println("대실 0원 필터링 후: " + list.size());
+					System.out.println("대실 0원 필터링 후: " + list.size() + "개");
 				}
 				if (minPrice != 0 && maxPrice != 0){
 					list = service.filterByPrice(minPrice, maxPrice, list);
-					System.out.println("가격 필터링 후: " + list.size());
+					System.out.printf("%d만원 ~ %d만원 가격 필터링 후: %d개", minPrice, maxPrice, list.size());
 				}
 
-				//왜 가격 & 상세조건 필터링 했을 때 max가 뜨지??
 				if (sort == null || sort == "" || sort.equals("SCORE")) {
 					list = service.sortMotelScoreDesc(list);
 				} else if(sort.equals("LOWPRICE")) {
@@ -966,7 +964,7 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == '' }">
+								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == 'null' || pageScope.sort == '' }">
 									<button type="button" data-sort="SCORE" class="on">
 										<span>평점 순</span>
 									</button>
@@ -1165,34 +1163,33 @@
 
 	<!-- Script -->
 	<!-- Library -->
-	<script type="text/javascript" src="${root }/js/library/jquery.cookie.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery.cookie.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.lazyload.js?rand=1653988749"></script>
-	<script type="text/javascript" src="${root }/js/library/iscroll.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.lazyload.js?rand=1653988749"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/iscroll.js"></script>
 
 	<!-- Service -->
-	<!-- ?rand=1653988749 -->
 	<script type="text/javascript"
-		src="${root }/js/service/common.js"></script>
+		src="https://www.goodchoice.kr/js/service/common.js?rand=1653988749"></script>
 	<script type="text/javascript"
-		src="${root }/js/service/geolocation.js?rand=1653988749"></script>
+		src="https://www.goodchoice.kr/js/service/geolocation.js?rand=1653988749"></script>
 
 	<!-- Module -->
 	<script type="text/javascript"
-		src="${root }/js/modules/dialogPopup.js?rand=1653988749"></script>
+		src="https://www.goodchoice.kr/js/modules/dialogPopup.js?rand=1653988749"></script>
 
 	<!-- Page Script -->
-	<script type="text/javascript" src="${root }/js/library/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery-ui.min.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.ui.touch-punch.min.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.comiseo.daterangepicker.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/swiper.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/owl.carousel.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/moment.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.comiseo.daterangepicker.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/swiper.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/owl.carousel.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/moment.js"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/datepick.js?rand=1653988749"></script>
-	<script type="text/javascript" src="${root }/js/library/vue.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/vue.min.js"></script>
 	<!-- 내 코드 -->
 
 	<script charset="UTF-8"
