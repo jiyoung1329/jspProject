@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="reservation.AccommoDTO"%>
 <%@page import="reservation.AccommoService"%>
 <%@page import="java.net.URI"%>
@@ -124,6 +125,8 @@
 		<%@include file="../header.jsp"%>
 
 		<%
+		DecimalFormat decFormat = new DecimalFormat("###,###");
+		
 		request.setCharacterEncoding("utf-8");
 		
 		//지역 기본값
@@ -1000,7 +1003,7 @@
 								</c:otherwise>
 							</c:choose>
 							</div>
-							<button type="button" class="btn_map" onclick="pop_map_pc();">지도</button>
+							<button type="button" class="btn_map" onclick="pop_map_pc_mine();">지도</button>
 						</div>
 					</div>
 
@@ -1044,7 +1047,7 @@
                                  <p>
                                     <%if(dto.getdPrice() != 0){ %>
                                        대실&nbsp;
-                                       <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                       <b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
                                     <%} else {%>
                                        대실 <b>숙소에 문의</b>
                                     <%} %>
@@ -1054,7 +1057,7 @@
                               <%if(reserve == null || s != null){ %>
                                  <p>
                                     숙박&nbsp; 
-                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getsPrice()) %>원</b>
                                  </p>
                               <%} %>
                               </div>
@@ -1063,7 +1066,7 @@
                                  <p>
                                  <%if(dto.getdPrice() != 0){ %>
                                     대실&nbsp;
-                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
                                  <%} else {%>
                                     대실 <b>숙소에 문의</b>
                                  <%} %>
@@ -1073,7 +1076,7 @@
                               <%if(reserve == null || s != null){ %>
                                  <p>
                                     숙박&nbsp; 
-                                    <b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+                                    <b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getsPrice()) %>원</b>
                                  </p>
                               <%} %>
                            </div>
