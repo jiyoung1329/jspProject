@@ -37,7 +37,7 @@ public class MotelDAO {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public DetailDTO selectMotel(String accomNum) {
+	public DetailDTO selectMotel(String accomNum, String selDate, String selDate2) {
 		DetailDTO dto = new DetailDTO();
 		ArrayList<String> themes = dto.getThemes();
 		ArrayList<ReviewDTO> reviews = dto.getReviews();
@@ -59,8 +59,17 @@ public class MotelDAO {
 				+ " where a.accomm_num=? order by r.num desc";
 		
 		// 방정보: 싹다 -> 예약여부까지 확인해볼까..?
-		String roomQuery = "select r.* from room r join accommodation a on r.accomm_num=a.accomm_num where r.accomm_num=?";
-		
+		String roomQuery = "select ro.*, b.check_reserve from room ro join accommodation a on ro.accomm_num=a.accomm_num"
+				+ " join(select r.r_num, count(is_reserve) as check_reserve from room r"
+				+ " left join (select room_num, is_reserve from reservation re"
+				+ " where is_reserve =0 and"
+				+ " (to_date(check_in, 'YYYY.MM.DD DY HH24:MI ') between TO_DATE(?, 'yyyy-MM-dd') and to_date(?, 'yyyy-MM-dd')"
+				+ " or to_date(check_out, 'YYYY.MM.DD DY HH24:MI') between TO_DATE(?, 'yyyy-MM-dd') and to_date(?, 'yyyy-MM-dd')))a"
+				+ " on r.r_num = room_num"
+				+ " group by r.r_num)b"
+				+ " on b.r_num = ro.r_num"
+				+ " where ro.accomm_num=?";
+		System.out.println(roomQuery);
 		try {
 			ps = conn.prepareStatement(accomQuery);
 			ps.setString(1, accomNum);
@@ -95,12 +104,16 @@ public class MotelDAO {
 			}
 			
 			ps = conn.prepareStatement(roomQuery);
-			ps.setString(1, accomNum);
+			ps.setString(1, selDate);
+			ps.setString(2, selDate2);
+			ps.setString(3, selDate);
+			ps.setString(4, selDate2);
+			ps.setString(5, accomNum);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				RoomDTO room = new RoomDTO(rs.getInt("r_num"),rs.getInt("accomm_num") , rs.getString("name"), rs.getString("image"), rs.getInt("s_price"),
 										   rs.getString("check_in"), rs.getString("check_out"), rs.getInt("d_price"), rs.getString("end_time"),
-										   rs.getString("use_time"));
+										   rs.getString("use_time"), rs.getInt("check_reserve"));
 				dto.addRooms(room);
 				
 			}

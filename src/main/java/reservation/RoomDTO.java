@@ -11,11 +11,12 @@ public class RoomDTO {
 	private int dPrice;
 	private String endTime;
 	private String useTime;
+	private int checkReserve;
 	
 	public RoomDTO() {}
 
 	public RoomDTO(int rNum, int accommNum, String name, String image, int sPrice, String checkIn, String checkOut,
-			int dPrice, String endTime, String useTime) {
+			int dPrice, String endTime, String useTime, int checkReserve) {
 		super();
 		this.rNum = rNum;
 		this.accommNum = accommNum;
@@ -27,6 +28,7 @@ public class RoomDTO {
 		this.dPrice = dPrice;
 		this.endTime = endTime;
 		this.useTime = useTime;
+		this.checkReserve = checkReserve;
 	}
 
 	public int getrNum() {
@@ -109,7 +111,14 @@ public class RoomDTO {
 		this.useTime = useTime;
 	}
 
-	
+	public int getCheckReserve() {
+		return checkReserve;
+	}
+
+	public void setCheckReserve(int checkReserve) {
+		this.checkReserve = checkReserve;
+	}
+
 	
 	
 

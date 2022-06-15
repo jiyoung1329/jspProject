@@ -29,7 +29,7 @@ String selDate = setFormat.format(date1);
 String selDate2 = setFormat.format(date2);
 
 MotelDAO motelDao = new MotelDAO();
-DetailDTO detail = motelDao.selectMotel(num);
+DetailDTO detail = motelDao.selectMotel(num, originSelDate, originSelDate2);
 System.out.println(detail.getRooms());
 
 // System.out.println("reviews: " + detail.getReviews());
@@ -307,8 +307,12 @@ $(document).ready(function(){
 									<input type="text" name="useTime" aria-hidden="true"
 										style="display: none;" value="<%=room.getUseTime()%>">
 								</div>
+								<% if (room.getCheckReserve() > 0){ %>
+								<button type="button" class="" style="color: #000">예약 완료</button>
+								<%} else { %>
 								<button onclick="reserve1(this);" type="button"
 									class="gra_left_right_red" style="">대실 예약</button>
+								<% } %>
 							</div>
 							<%
 							}
@@ -371,8 +375,12 @@ $(document).ready(function(){
 									<input type="text" name="checkout" aria-hidden="true"
 										style="display: none;" value="<%=room.getCheckOut()%>">
 								</div>
+								<% if (room.getCheckReserve() > 0){ %>
+								<button type="button" class="" style="color: #000">예약 완료</button>
+								<%} else { %>
 								<button onclick="reserve2(this);" type="button"
 									class="gra_left_right_red" style="">숙박 예약</button>
+								<% } %>
 							</div>
 							<%
 							}
