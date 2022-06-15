@@ -73,7 +73,7 @@ public class ReservationDAO {
 				+ " join accommodation a on re.accomm_num = a.accomm_num"
 				+ " join room r on re.room_num = r.r_num"
 				+ " left join review rev on rev.reservation_num = re.num"
-				+ " where re.user_email=? order by re.is_reserve desc, re.num desc";
+				+ " where re.user_email=? order by re.is_reserve, re.num desc";
 		
 //		System.out.println(query);
 		try {
@@ -141,6 +141,21 @@ public class ReservationDAO {
 		} finally {exit();}
 		
 		return null;
+	}
+	
+	// 이용완료 확정
+	public void confirmUse(String num) {
+		String query = "update reservation set is_reserve=1 where num=?";
+		try {
+			ps = conn.prepareStatement(query);
+			ps.setString(1, num);
+			ps.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			exit();
+		}
 	}
 	
 	// 예약 내역 삭제

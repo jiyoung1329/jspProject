@@ -9,7 +9,7 @@
     session.setAttribute("nickname", kakaonickname);
     session.setAttribute("name", kakaonickname);
     session.setAttribute("email", kakaoe_mail);
-	response.sendRedirect("${root }/index.jsp");
+	response.sendRedirect("../index.jsp");
 
 	
 %>

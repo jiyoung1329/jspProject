@@ -166,7 +166,7 @@ Kakao.Auth.createLoginButton({
           
  
           window.location.replace("http://" + window.location.hostname + ( (location.port==""||location.port==undefined)?"":":" + location.port) 
-        		  + "/Project/member/kakaoLoginService.jsp?kakaonickname="+kakaonickname+"&kakaoe_mail="+kakaoe_mail+"&id="+id);
+        		  + "/jspProject/member/kakaoLoginService.jsp?kakaonickname="+kakaonickname+"&kakaoe_mail="+kakaoe_mail+"&id="+id);
       
                    }
                  })

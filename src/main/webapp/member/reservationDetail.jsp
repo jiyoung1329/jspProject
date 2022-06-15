@@ -148,6 +148,10 @@
 												<a href="writeReview.jsp?reserve=<%=num %>">
 												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">리뷰작성</button>
 												</a>
+												<%}else{ %>
+												<a href="confirmUseService.jsp?num=<%=num %>">
+												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">이용확정</button>
+												</a>
 												<%} %>
 												<button data-v-4c4f460e="" type="button">삭제</button>
 											</p>
