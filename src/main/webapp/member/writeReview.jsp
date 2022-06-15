@@ -45,7 +45,7 @@
 <%
 request.setCharacterEncoding("utf-8");
 String userNickname = (String) session.getAttribute("nickname");
-if (userNickname.isEmpty()){
+if (userNickname == null){
 	out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
 }
 // String userNickname = "등적색핵탄두";

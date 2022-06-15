@@ -56,7 +56,7 @@ public class MotelDAO {
 		// 리뷰정보 : 제목, 평점, 방이름, 유저닉네임, 내용, 작성시간
 		String reviewQuery = "select r.title, r.score, r.room_name, r.nickname, r.content, r.create_date"
 				+ " from review r join accommodation a on r.accomm_num=a.accomm_num"
-				+ " where a.accomm_num=?";
+				+ " where a.accomm_num=? order by r.num desc";
 		
 		// 방정보: 싹다 -> 예약여부까지 확인해볼까..?
 		String roomQuery = "select r.* from room r join accommodation a on r.accomm_num=a.accomm_num where r.accomm_num=?";

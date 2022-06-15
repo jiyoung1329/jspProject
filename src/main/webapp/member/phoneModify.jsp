@@ -5,7 +5,7 @@
 <%
 	request.setCharacterEncoding("utf-8");
 	String email = (String) session.getAttribute("email");
-	if (email.isEmpty()){
+	if (email == null){
 		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
 	}	
 // 	String email = "test@naver.com";

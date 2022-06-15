@@ -144,13 +144,13 @@
 										<section data-v-4c4f460e="">
 											<!---->
 											<p data-v-4c4f460e="">
-												<% if (isReserve == 1 && reviewNum == 0){ %>
-												<a href="writeReview.jsp?reserve=<%=num %>">
-												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">리뷰작성</button>
-												</a>
-												<%}else{ %>
+												<% if (isReserve == 0){ %>
 												<a href="confirmUseService.jsp?num=<%=num %>">
 												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">이용확정</button>
+												</a>
+												<%}else if (reviewNum == 0){ %>
+												<a href="writeReview.jsp?reserve=<%=num %>">
+												<button data-v-4c4f460e="" type="button" style="background-color:#E61C51; color: #fafafa;">리뷰작성</button>
 												</a>
 												<%} %>
 												<button data-v-4c4f460e="" type="button">삭제</button>

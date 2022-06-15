@@ -45,21 +45,7 @@
 <!-- Wrap -->
 <div class="wrap main_wrap show">
     <%@ include file="header.jsp" %>
-    <!-- 추천검색어 -->
-    <div class="recommend_srch">
-        <div class="scroll_srch">
-            <div class="scroller">
-                <div class="default" style="display:block">
-                    <strong>추천 검색어</strong>
-                    <ul></ul>
-                </div>
-                <!-- 연관검색어 -->
-                <div class="chain" style="display: none;">
-                    <ul></ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 	<!-- Content  -->
 
 	<div id="content">

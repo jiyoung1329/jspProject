@@ -61,10 +61,12 @@ public class InquiryDAO {
 	
 	public ArrayList<InquiryDTO> selectAll(String user_email) {
 		ArrayList<InquiryDTO> inquiries = new ArrayList<InquiryDTO>();
-		String query = "select * from inquiry where user_email=?";
+		System.out.println("user_email: " + user_email);
+		String query = "select * from inquiry where user_email=? order by num desc";
 		try {
 			ps = conn.prepareStatement(query);
 			ps.setString(1, user_email);
+			
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				// num, user_email, category, type, phone, email, content, (answer = default null)

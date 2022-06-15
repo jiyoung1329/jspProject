@@ -23,7 +23,7 @@
             </li>
             <!-- 로그인 전 -->
             <% if ((String) session.getAttribute("email") == null){ %>
-            <li><a href = "member/login.jsp">로그인</a></li>
+            <li><a href = "${root}/member/login.jsp">로그인</a></li>
 
 			<!-- 로그인 후 -->
 			<% }else { %>
@@ -54,18 +54,18 @@
 
     <!-- 추천검색어 -->
     <div class="recommend_srch">
-        <div class="scroll_srch">
-            <div class="scroller">
-                <div class="default" style="display:block">
-                    <strong>추천 검색어</strong>
-                    <ul></ul>
-                </div>
-                <!-- 연관검색어 -->
-                <div class="chain" style="display: none;">
-                    <ul></ul>
-                </div>
-            </div>
-        </div>
+<!--         <div class="scroll_srch"> -->
+<!--             <div class="scroller"> -->
+<!--                 <div class="default" style="display:block"> -->
+<!--                     <strong>추천 검색어</strong> -->
+<!--                     <ul></ul> -->
+<!--                 </div> -->
+<!--                 연관검색어 -->
+<!--                 <div class="chain" style="display: none;"> -->
+<!--                     <ul></ul> -->
+<!--                 </div> -->
+<!--             </div> -->
+<!--         </div> -->
     </div>
 
     <!-- Mobile Menu -->

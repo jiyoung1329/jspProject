@@ -29,7 +29,7 @@
 <jsp:useBean id="inquiryDao" class="board.InquiryDAO" />
 <%
 	String email = (String) session.getAttribute("email");
-	if (email.isEmpty()){
+	if (email == null){
 		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='../member/login.jsp'</script>");
 	}
 	
@@ -83,21 +83,21 @@
 				<div class="tab_each" style="display:block">
 			
 					<ul class="show_list open_list" id="inquiry_list">
-						<c:forEach var="inquiry" items="${inquires }" >
+						<% for (InquiryDTO inquiry: inquires){ %>
 							<li onclick="">
 								<a href="https://www.goodchoice.kr/more/inquiry#inquiry_list" class="list_que"><!-- 답변완료/ NEW 버튼 2벌임 -->
 									<p><b>이용문의</b>
-										${inquiry.getContent() }<b class="reply_chk">문의 등록</b>
+										<%= inquiry.getContent() %>&nbsp;&nbsp;<b class="reply_chk">문의 등록</b>
 									</p>
-									<span>작성일 ${inquiry.getCreate_date() }</span>
+									<span>작성일 <%=inquiry.getCreate_date() %></span>
 								</a>
 					
 								<div class="list_ans">
 									<b class="title">문의</b>
-									<div>${inquiry.getContent() }</div>
+									<div style="margin-top: 10px;"><%= inquiry.getContent() %></div>
 								</div>
 							</li>
-						</c:forEach>
+						<%} %>
 						
 					</ul>
 				</div>

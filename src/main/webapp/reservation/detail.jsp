@@ -32,7 +32,7 @@ MotelDAO motelDao = new MotelDAO();
 DetailDTO detail = motelDao.selectMotel(num);
 System.out.println(detail.getRooms());
 
-System.out.println("reviews: " + detail.getReviews());
+// System.out.println("reviews: " + detail.getReviews());
 float avgReview = 0;
 if (detail.getReviews().size() > 0) {
 	avgReview = (float) detail.getSumReview() / detail.getReviews().size();
@@ -690,7 +690,7 @@ $(document).ready(function(){
 						int star = (int) Math.floor((avgReview * 10) / 2);
 						star -= star % 5;
 						%>
-						<div class="score_star star_<%=star%>"></div>
+						<div class="score_star star_<%=String.format("%02d", star) %>"></div>
 						<div class="num"><%=avgReview%></div>
 					</div>
 					<p>
@@ -700,8 +700,11 @@ $(document).ready(function(){
 				<ul>
 					<%
 					for (ReviewDTO review : detail.getReviews()) {
-						star = (int) Math.floor((review.getScore() * 10) / 2);
-						star -= star % 5;
+						int reviewStar = (int) Math.floor((review.getScore() * 10) / 2);
+						System.out.println("reviewScore: " + review.getScore());
+						System.out.println("reviewStar1: " + reviewStar);
+						reviewStar -= reviewStar % 5;
+						System.out.println("reviewStar2: " + reviewStar + "\n");
 					%>
 					<li>
 						<div class="guest">
@@ -711,7 +714,7 @@ $(document).ready(function(){
 							</p>
 							<strong><%=review.getTitle()%></strong>
 							<div class="score_wrap_sm">
-								<div class="score_star star_<%=star%>"></div>
+								<div class="score_star star_<%=String.format("%02d", reviewStar) %>"></div>
 								<div class="num"><%=review.getScore()%></div>
 							</div>
 							<div class="name">
