@@ -2,10 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:url var="root" value="/" />
+<script>
+$('#detail_kakao_map').on('click', function(){
+	console.log("detail");
+	map.relayout();
+})
+</script>
+
 <!-- 숙소정보 -->
 <article class="detail_info">
 	<!-- 기본 정보 -->
-	<button type="button" id="default_info_tab" class="category on"><span>기본 정보</span></button>
+	<button type="button" id="default_info_tab" class="category on" onclick="map.relayout()"><span>기본 정보</span></button>
 	<section class="default_info" style="display: block;">
 		<h3>혜택안내</h3>
 		<ul>
@@ -86,7 +93,7 @@
 			<li><br></li>
 			<li>#코로나로인하여 펜트하우스A,펜트하우스B,펜트하우스648 객실은 인원이 변동될수 있습니다</li>
 		</ul>
-		<div class="map" id="detail_kakao_map" stlye="width:100%; height: 160px;">
+		<div class="map" id="detail_kakao_map" style="width:100%; height: 160px;">
 		
 		</div>		
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=512a8a42d9c7729fc5822863ba18e896"></script>
