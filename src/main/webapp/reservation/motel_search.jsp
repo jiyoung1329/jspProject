@@ -1,3 +1,5 @@
+<%@page import="reservation.AccommoDTO"%>
+<%@page import="reservation.AccommoService"%>
 <%@page import="java.net.URI"%>
 <%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.util.HashSet"%>
@@ -91,7 +93,7 @@
 <script type="text/javascript" async=""
 	src="https://www.googleadservices.com/pagead/conversion_async.js"></script>
 <script async="" src="https://www.google-analytics.com/analytics.js"></script>
-<script type="text/javascript" src="${root }/js/library/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery-1.12.4.min.js"></script>
 <script>
 	var _BASE_URL = 'https://www.goodchoice.kr/';
 	var _MOBILE = 'W';
@@ -962,7 +964,7 @@
 						<div class="pc">
 							<div class="btn_wrap width_3">
 							<c:choose>
-								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == '' }">
+								<c:when test="${pageScope.sort == 'SCORE' || pageScope.sort == null || pageScope.sort == 'null' || pageScope.sort == '' }">
 									<button type="button" data-sort="SCORE" class="on">
 										<span>평점 순</span>
 									</button>
@@ -1161,34 +1163,33 @@
 
 	<!-- Script -->
 	<!-- Library -->
-	<script type="text/javascript" src="${root }/js/library/jquery.cookie.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery.cookie.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.lazyload.js?rand=1653988749"></script>
-	<script type="text/javascript" src="${root }/js/library/iscroll.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.lazyload.js?rand=1653988749"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/iscroll.js"></script>
 
 	<!-- Service -->
-	<!-- ?rand=1653988749 -->
 	<script type="text/javascript"
-		src="${root }/js/service/common.js"></script>
+		src="https://www.goodchoice.kr/js/service/common.js?rand=1653988749"></script>
 	<script type="text/javascript"
-		src="${root }/js/service/geolocation.js?rand=1653988749"></script>
+		src="https://www.goodchoice.kr/js/service/geolocation.js?rand=1653988749"></script>
 
 	<!-- Module -->
 	<script type="text/javascript"
-		src="${root }/js/modules/dialogPopup.js?rand=1653988749"></script>
+		src="https://www.goodchoice.kr/js/modules/dialogPopup.js?rand=1653988749"></script>
 
 	<!-- Page Script -->
-	<script type="text/javascript" src="${root }/js/library/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/jquery-ui.min.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.ui.touch-punch.min.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript"
-		src="${root }/js/library/jquery.comiseo.daterangepicker.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/swiper.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/owl.carousel.min.js"></script>
-	<script type="text/javascript" src="${root }/js/library/moment.js"></script>
+		src="https://www.goodchoice.kr/js/library/jquery.comiseo.daterangepicker.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/swiper.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/owl.carousel.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/moment.js"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/datepick.js?rand=1653988749"></script>
-	<script type="text/javascript" src="${root }/js/library/vue.min.js"></script>
+	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/vue.min.js"></script>
 	<!-- 내 코드 -->
 
 	<script charset="UTF-8"
