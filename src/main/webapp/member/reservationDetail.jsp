@@ -83,8 +83,8 @@
 									<nav>
 										<ul>
 											<li><a class="" href="myPoint.jsp">포인트</a></li>
-											<li><a class="" href="myReservation.jsp">예약 내역</a></li>
-											<li><a class="active" href="myPage.jsp">내 정보 관리</a></li>
+											<li><a class="active" href="myReservation.jsp">예약 내역</a></li>
+											<li><a class="" href="myPage.jsp">내 정보 관리</a></li>
 										</ul>
 									</nav>
 								</div>

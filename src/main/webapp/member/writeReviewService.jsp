@@ -32,5 +32,9 @@
 
 <script>
 alert("리뷰 작성이 완료되었습니다.");
-location.href("myReservation.jsp");
+
 </script>
+
+<%
+response.sendRedirect("myReservation.jsp");
+%>
