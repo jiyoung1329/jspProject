@@ -86,7 +86,7 @@
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css?rand=1653988749">
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/common.css"> 
 <link rel="stylesheet" href="https://www.goodchoice.kr/common.css?rand=1653988749"> 
-<link rel="canonical" href="https://www.goodchoice.kr/product/home/7052">
+<link rel="canonical"  href="https://www.goodchoice.kr/product/home/7052">
 <link rel="stylesheet" href="https://www.goodchoice.kr/owl.carousel.css">
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/jquery-ui.css?rand=1653988749">
 <link rel="stylesheet" href="https://www.goodchoice.kr/css/product.css?rand=1653988749">
@@ -111,7 +111,7 @@
 <script
 	src="https://googleads.g.doubleclick.net/pagead/viewthroughconversion/802163829/?random=1654487871646&amp;cv=9&amp;fst=1654487871646&amp;num=1&amp;bg=ffffff&amp;guid=ON&amp;resp=GooglemKTybQhCsO&amp;u_h=864&amp;u_w=1536&amp;u_ah=824&amp;u_aw=1536&amp;u_cd=24&amp;u_his=4&amp;u_tz=540&amp;u_java=false&amp;u_nplug=5&amp;u_nmime=2&amp;gtm=2oa610&amp;sendb=1&amp;ig=1&amp;data=event%3Dgtag.config&amp;frm=0&amp;url=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fsearch%2F1%2F7052&amp;ref=https%3A%2F%2Fwww.goodchoice.kr%2Fproduct%2Fhome%2F1&amp;tiba=%EB%AA%A8%ED%85%94%20%3E%20%EC%84%9C%EC%9A%B8%20%3E%20%EA%B0%95%EB%82%A8%2F%EC%97%AD%EC%82%BC%2F%EC%82%BC%EC%84%B1%2F%EB%85%BC%ED%98%84%20%7C%20%EC%97%AC%EA%B8%B0%EC%96%B4%EB%95%8C&amp;hn=www.googleadservices.com&amp;async=1&amp;rfmt=3&amp;fmt=4"></script>
 <style>
-	#layout_middle { margin-top: -400px; margin-left: 250px; }
+	#layout_middle { margin-top: -400px; margin-left: 18%; }
 	#poduct_list_area { min-height: 1400px; } 
 	.result_empty { height: 1400px; }
 </style>
@@ -192,7 +192,7 @@
 
 		//지역에 속한 모텔 불러오기
 		ArrayList<AccommoDTO> list = service.filterByArea(area, sort);
-		System.out.println("숙박 0원 필터링 전: " + list.size() + "개");
+		System.out.println("지역 필터링 후: " + list.size() + "개");
 
 		//필터링
 		if (!list.isEmpty()) {
@@ -204,23 +204,32 @@
 				sel_date2 = tmp_sel_date2;
 				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
-				System.out.println("날짜 필터링 후: " + tmp.size() + "개");
-			} else {
-				list = service.filterByDate(sel_date, sel_date2, list);
-				System.out.println("날짜 필터링 후: " + list.size() + "개");
-			}
+				System.out.println("날짜 필터링 후 [ 1 ]: " + tmp.size() + "개");
+			}else {
+	            list = service.filterByDate(sel_date, sel_date2, list);
+	            System.out.println("날짜 필터링 후 [ 2 ]: " + list.size() + "개");
+	         }
 
 			//놀이시설 필터링
 			String[] tmp_tmino = request.getParameterValues("tmino[]");
+			ArrayList<String> tmino = null;
+			
 			if (tmp_tmino != null) {
 				//중복 제거
-				ArrayList<String> tmino = new ArrayList<>();
+				tmino = new ArrayList<>();
 				for (String t : tmp_tmino) {
 					if (!tmino.contains(t) && !t.equals("on"))
 						tmino.add(t);
 				}
-				list = service.filterByCondi(tmino, list);
-				System.out.println("상세조건 0원 필터링 후: " + list.size() + "개");
+				System.out.println("상세 조건 list! : " + tmino);
+				
+				if(tmp != null && !tmp.isEmpty()){
+					tmp = service.filterByCondi(tmino, tmp);
+					System.out.println("상세조건 필터링 후 [ 1 ]: " + tmp.size() + "개");
+				}else{
+					list = service.filterByCondi(tmino, list);
+					System.out.println("상세조건 필터링 후 [ 2 ]: " + list.size() + "개");
+				}
 			}
 
 			//숙박, 대여 
@@ -249,26 +258,32 @@
 			System.out.println("정렬 기준: " + sort);
 			//오늘과 내일이 아닌 다른 날짜를 매개변수로 전달 받았을 때
 			if (tmp != null && !tmp.isEmpty()) {
+				System.out.println("최종 모텔 개수 [ 1 ]: " +  tmp.size());
 				tmp = service.addMotelInfo(sort, tmp);
 				tmp = service.filterSPriceZero(tmp);
+				System.out.println("숙박 0원 필터링 후: " + tmp.size() + "개");
 
 				if (reserve != null && (d != null && s == null)) {
 					tmp = service.filterDPriceZero(tmp);
 					System.out.println("대실 0원 필터링 후: " + tmp.size() + "개");
 				}
-				if (minPrice != 0 && maxPrice != 0)
+				if (minPrice != 0 && maxPrice != 0){
 					tmp = service.filterByPrice(minPrice, maxPrice, tmp);
+					System.out.printf("%d만원 ~ %d만원 가격 필터링 후 [ 1 ]: %d개", minPrice, maxPrice, tmp.size());
+				}
 
-				if (sort == null || sort == "" || sort.equals("SCORE")) {
+				if (sort == null || sort == "" || sort.equals("null") || sort.equals("SCORE")) {
 					list = service.sortMotelScoreDesc(tmp);
 				} else if(sort.equals("LOWPRICE")) {
 					list = service.sortMotelAsc(tmp);
 				} else {
 					list = service.sortMotelDesc(tmp);
 				}
-			} else { 
+			} else if(list != null && !list.isEmpty()) { 
+				System.out.println("최종 모텔 개수 [ 2 ]: " +  list.size());
 				list = service.addMotelInfo(sort, list);
 				list = service.filterSPriceZero(list);
+				System.out.println("숙박 0원 필터링 후: " + list.size() + "개");
 
 				if (reserve != null && (d != null && s == null)) {
 					list = service.filterDPriceZero(list);
@@ -276,10 +291,10 @@
 				}
 				if (minPrice != 0 && maxPrice != 0){
 					list = service.filterByPrice(minPrice, maxPrice, list);
-					System.out.printf("%d만원 ~ %d만원 가격 필터링 후: %d개", minPrice, maxPrice, list.size());
+					System.out.printf("%d만원 ~ %d만원 가격 필터링 후 [ 2 ]: %d개", minPrice, maxPrice, list.size());
 				}
 
-				if (sort == null || sort == "" || sort.equals("SCORE")) {
+				if (sort == null || sort == "" || sort.equals("null") || sort.equals("SCORE")) {
 					list = service.sortMotelScoreDesc(list);
 				} else if(sort.equals("LOWPRICE")) {
 					list = service.sortMotelAsc(list);
@@ -1006,7 +1021,7 @@
 								</c:otherwise>
 							</c:choose>
 							</div>
-							<button type="button" class="btn_map" onclick="pop_map_pc_mine();">지도</button>
+							<button type="button" class="btn_map" onclick="pop_map_pc();">지도</button>
 						</div>
 					</div>
 
@@ -1131,7 +1146,7 @@
 			</div>
 			<div class="address">${'장소' }</div>
 			<div class="inner_map" id="map">
-				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ae17142425721dddddcb11cb4cd3474b&libraries=services"></script>
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=512a8a42d9c7729fc5822863ba18e896&libraries=services"></script>
 				<script src="${root }/js/service/kakao.map.api.js"></script>
 			</div>
 			<div class="btn_set">
@@ -1176,7 +1191,7 @@
 
 	<!-- Service -->
 	<script type="text/javascript"
-		src="https://www.goodchoice.kr/js/service/common.js?rand=1653988749"></script>
+		src="${root }js/service/common.js"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/geolocation.js?rand=1653988749"></script>
 
@@ -1198,14 +1213,13 @@
 	<script type="text/javascript" src="https://www.goodchoice.kr/js/library/vue.min.js"></script>
 	<!-- 내 코드 -->
 
-	<script charset="UTF-8"
-		src="https://t1.daumcdn.net/mapjsapi/js/main/4.4.3/kakao.js"></script>
-	<script type="text/javascript"
-		src="https://www.goodchoice.kr/js/service/product.js?rand=1653988749"></script>
-	<script type="text/javascript"
-		src="https://www.goodchoice.kr/js/service/product.search.js?rand=1653988749"></script>
-	<script type="text/javascript"
-		src="https://www.goodchoice.kr/js/service/product.list.js?rand=1653988749"></script>
+	<script charset="UTF-8" src="https://t1.daumcdn.net/mapjsapi/js/main/4.4.3/kakao.js"></script>
+	<script type="text/javascript" src="${root }js/service/product.js"></script>
+	<script type="text/javascript" src="${root }js/service/product.search.js"></script>
+	<script type="text/javascript" src="${root }js/service/product.list.js"></script>
+<!-- 	<script type="text/javascript" src="https://www.goodchoice.kr/js/service/product.js?rand=1653988749"></script> -->
+<!-- 	<script type="text/javascript" src="https://www.goodchoice.kr/js/service/product.search.js?rand=1653988749"></script> -->
+<!-- 	<script type="text/javascript" src="https://www.goodchoice.kr/js/service/product.list.js?rand=1653988749"></script> -->
 	<%-- <script type="text/javascript"
 		src="${root }/js/service/kakao.map.api.js"></script> --%>
 
