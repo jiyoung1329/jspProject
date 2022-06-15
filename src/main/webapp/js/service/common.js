@@ -465,7 +465,7 @@ function srch_open(){
 	var timerId = 0;
 	var win_w = $(window).width();
 	var mask_element = '<div class="srch_mask" onclick="srch_close();">&nbsp;</div>';
-	var root = "/test";
+	var root = "/jspProject";
 
 	$('.pc .recommend_srch').append(mask_element);
 	$('.pc .srch_mask').addClass('on');
