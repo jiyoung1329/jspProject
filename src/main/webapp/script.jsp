@@ -41,9 +41,9 @@
 <script type="text/javascript" src="${root }js/service/main.js"></script>
 <!-- Body Spinner -->
 
-<div class="spinner show" style="display: none;">
-	<span></span>
-</div>
+<!-- <div class="spinner show" style="display: none;"> -->
+<!-- 	<span></span> -->
+<!-- </div> -->
 
 <div style="display: none;">
 	<!-- 네이버 프리미엄 로그 분석(https://yeogirnd.atlassian.net/browse/SD-320)-->

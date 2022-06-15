@@ -394,15 +394,15 @@ function pop_twobtn(el,msg,name1,name2,function_1,function_2){ // 2버튼 팝업
 	$('.bg_dimm').fadeIn(150);
 	align_vertical();
 }
-
-function eventPopup(message,buttonName,url){ // 이벤트 팝업
-
-	var content = '<div class="alert_msg box_shadow"><div class="msg popup_cont"><div class="text">'+message+'</div><div class="btn_center"><a href="'+url+'" target="_blank">'+buttonName+'</a><a href="#none" class="button-close">닫기</a></div></div></div>'
-
-	$('body').append(content);
-	$('.alert_msg').fadeIn(200);
-	align_vertical();
-}
+//
+//function eventPopup(message,buttonName,url){ // 이벤트 팝업
+//
+//	var content = '<div class="alert_msg box_shadow"><div class="msg popup_cont"><div class="text">'+message+'</div><div class="btn_center"><a href="'+url+'" target="_blank">'+buttonName+'</a><a href="#none" class="button-close">닫기</a></div></div></div>'
+//
+//	$('body').append(content);
+//	$('.alert_msg').fadeIn(200);
+//	align_vertical();
+//}
 
 /* 모바일 메뉴 오픈 */
 var iscroll_03;
@@ -499,90 +499,90 @@ function srch_open(){
 	}
 
 	$('.recommend_srch .default').hide();
-	$.xResponse('/product/get_recommend_non').done(function (result) {
-		if (result.count > 0) {
-			var items = [];
-			$.each(result.data, function (k, recommend) {
-				items.push('<li><a href="/product/result?keyword='+ recommend +'">'+ recommend +'</a></li>');
-			});
-
-			$('.recommend_srch .default ul').html(items.join(''));
-			$('.recommend_srch .default').show();
-		}
-	});
+//	$.xResponse('/product/get_recommend_non').done(function (result) {
+//		if (result.count > 0) {
+//			var items = [];
+//			$.each(result.data, function (k, recommend) {
+//				items.push('<li><a href="/product/result?keyword='+ recommend +'">'+ recommend +'</a></li>');
+//			});
+//
+//			$('.recommend_srch .default ul').html(items.join(''));
+//			$('.recommend_srch .default').show();
+//		}
+//	});
 
 	$('#keyword').off('keyup');
-	$('#keyword').on('keyup', function () {
-		var keyword = XSSfilter($(this).val());
-
-		$('.recommend_srch .default').hide();
-		$('.recommend_srch .chain').show();
-
-		if (xReturnNumber(timerId) > 0)
-			window.clearTimeout(timerId);
-
-		timerId = window.setTimeout(function () {
-			if (keyword.length > 0) {
-				$.xResponse('/product/get_autocomplete_non', {keyword: keyword}, {async: true}).done(function (result) {
-					if (result.data.yeogi.length > 0) {
-						if (win_w > 1023){ // PC
-							$('.recommend_srch .scroll_srch').show();
-						} else {
-							$('.mobile .recommend_srch').show();
-						}
-
-						var items = [];
-						$.each(result.data.yeogi, function (k, autocomplete) {
-							var href = '';
-							if (autocomplete.type == 'AD') {
-								href = '/product/detail?ano='+ autocomplete.id;
-							} else if(autocomplete.atcType == 'product') {
-								href = '/product/detail?ano='+ autocomplete.id;
-							}
-							else {
-								var query_string = '?keyword='+ autocomplete.displayText;
-
-								if (autocomplete.type == 'CATEGORY' || autocomplete.type == 'AREA')
-									query_string += '&type='+ autocomplete.type;
-
-								href = '/product/result'+ query_string;
-							}
-
-
-							items.push(
-								'<li><a href="'+ href +'" >'+
-								autocomplete.displayText.replace(new RegExp(keyword, 'ig'), "<b>"+ keyword +"</b>") +
-								'</a></li>'
-							);
-						});
-
-						$('.recommend_srch .chain ul').html(items.join(''));
-
-						iscroll_04.refresh(); // iscroll refresh
-					} else {
-						if (win_w > 1023){ // PC
-							$('.recommend_srch .scroll_srch').hide();
-						} else {
-							$('.mobile .recommend_srch').hide();
-						}
-
-						$('.recommend_srch .chain').hide();
-					}
-				});
-			} else {
-				if (win_w > 1023){ // PC
-					$('.recommend_srch .scroll_srch').show();
-				} else {
-					$('.mobile .recommend_srch').show();
-				}
-
-				$('.recommend_srch .default').show();
-				$('.recommend_srch .chain ul').html('');
-			}
-
-			timerId = 0;
-		}, 200);
-	});
+//	$('#keyword').on('keyup', function () {
+//		var keyword = XSSfilter($(this).val());
+//
+//		$('.recommend_srch .default').hide();
+//		$('.recommend_srch .chain').show();
+//
+//		if (xReturnNumber(timerId) > 0)
+//			window.clearTimeout(timerId);
+//
+////		timerId = window.setTimeout(function () {
+//////			if (keyword.length > 0) {
+//////				$.xResponse('/product/get_autocomplete_non', {keyword: keyword}, {async: true}).done(function (result) {
+////////					if (result.data.yeogi.length > 0) {
+////////						if (win_w > 1023){ // PC
+////////							$('.recommend_srch .scroll_srch').show();
+////////						} else {
+////////							$('.mobile .recommend_srch').show();
+////////						}
+//////
+////////						var items = [];
+////////						$.each(result.data.yeogi, function (k, autocomplete) {
+////////							var href = '';
+////////							if (autocomplete.type == 'AD') {
+////////								href = '/product/detail?ano='+ autocomplete.id;
+////////							} else if(autocomplete.atcType == 'product') {
+////////								href = '/product/detail?ano='+ autocomplete.id;
+////////							}
+////////							else {
+////////								var query_string = '?keyword='+ autocomplete.displayText;
+////////
+////////								if (autocomplete.type == 'CATEGORY' || autocomplete.type == 'AREA')
+////////									query_string += '&type='+ autocomplete.type;
+////////
+////////								href = '/product/result'+ query_string;
+////////							}
+////////
+////////
+////////							items.push(
+////////								'<li><a href="'+ href +'" >'+
+////////								autocomplete.displayText.replace(new RegExp(keyword, 'ig'), "<b>"+ keyword +"</b>") +
+////////								'</a></li>'
+////////							);
+////////						});
+//////
+////////						$('.recommend_srch .chain ul').html(items.join(''));
+//////
+////////						iscroll_04.refresh(); // iscroll refresh
+//////					} else {
+////////						if (win_w > 1023){ // PC
+////////							$('.recommend_srch .scroll_srch').hide();
+////////						} else {
+////////							$('.mobile .recommend_srch').hide();
+////////						}
+////////
+////////						$('.recommend_srch .chain').hide();
+//////					}
+////				});
+//			} else {
+//				if (win_w > 1023){ // PC
+//					$('.recommend_srch .scroll_srch').show();
+//				} else {
+//					$('.mobile .recommend_srch').show();
+//				}
+//
+//				$('.recommend_srch .default').show();
+//				$('.recommend_srch .chain ul').html('');
+//			}
+//
+//			timerId = 0;
+//		}, 200);
+//	});
 
 	$('#keyword').off('keydown');
 	$('#keyword').keydown(function (key) {
@@ -604,82 +604,82 @@ function srch_result_open(){ // 검색결과 진입시 노출바
 		null;
 	}else{ // Mobile
 		$('.mobile .srch_bar').fadeIn(150);
-		$('.mobile .srch_bar input').val($('#keyword_input').val());
-
-		$('.srch_bar .wrap_inp button').on('click', function () {
-			if ($('#keyword').val().length > 0)
-				window.location.href = "/product/result?keyword="+ encodeURI($('#keyword').val());
-			else
-				alert_Msg('검색어가 없습니다. <br>검색어를 입력하세요.');
-		});
-
-		$('#keyword').off('keyup');
-		$('#keyword').on('keyup', function () {
-			var keyword = XSSfilter($(this).val());
-
-			$('.recommend_srch .default').hide();
-			$('.recommend_srch .chain').hide();
-			$('.mobile .recommend_srch').hide();
-
-			if (xReturnNumber(timerId) > 0)
-				window.clearTimeout(timerId);
-
-			timerId = window.setTimeout(function () {
-				if (keyword.length > 0) {
-					$.xResponse('/product/get_autocomplete_non', {keyword: keyword}, {async: true}).done(function (result) {
-						if (result.count > 0) {
-							$('.recommend_srch .chain').show();
-							$('.mobile .recommend_srch').show();
-
-							var items = [];
-							$.each(result.data.yeogi, function (k, autocomplete) {
-								var query_string = '?keyword='+ autocomplete.keyword;
-
-								if (autocomplete.type == 'CATEGORY' || autocomplete.type == 'AREA')
-									query_string += '&type='+ autocomplete.type;
-
-								items.push(
-									'<li><a href="/product/result'+ query_string +'" >'+
-									autocomplete.keyword.replace(new RegExp(keyword, 'ig'), "<b>"+ keyword +"</b>") +
-									'</a></li>'
-								);
-							});
-
-							$('.recommend_srch .chain ul').html(items.join(''));
-
-						}
-					});
-				}
-
-				timerId = 0;
-			}, 200);
-		});
-
-		$('#keyword').off('keydown');
-		$('#keyword').keydown(function (key) {
-			if(key.keyCode == 13){
-				if ($(this).val().length > 0)
-					window.location.href = root + "/product/result.jsp?keyword="+encodeURI($(this).val());
-				else
-					alert_Msg('검색어가 없습니다.  <br>검색어를 입력하세요.');
-			}
-		});
-
-		$('#keyword').off('focus');
-		$('#keyword').focus(function() {
-			setTimeout((function(el) {
-				var strLength = el.value.length;
-				if (strLength > 0)
-					$('#keyword').trigger('keyup');
-
-				return function() {
-					if(el.setSelectionRange !== undefined) {
-						el.setSelectionRange(strLength, strLength);
-					} else {
-						$(el).val(el.value);
-					}
-				}}(this)), 0);
-		});
+//		$('.mobile .srch_bar input').val($('#keyword_input').val());
+//
+//		$('.srch_bar .wrap_inp button').on('click', function () {
+//			if ($('#keyword').val().length > 0)
+//				window.location.href = "/product/result?keyword="+ encodeURI($('#keyword').val());
+//			else
+//				alert_Msg('검색어가 없습니다. <br>검색어를 입력하세요.');
+//		});
+//
+//		$('#keyword').off('keyup');
+//		$('#keyword').on('keyup', function () {
+//			var keyword = XSSfilter($(this).val());
+//
+//			$('.recommend_srch .default').hide();
+//			$('.recommend_srch .chain').hide();
+//			$('.mobile .recommend_srch').hide();
+//
+//			if (xReturnNumber(timerId) > 0)
+//				window.clearTimeout(timerId);
+//
+//			timerId = window.setTimeout(function () {
+//				if (keyword.length > 0) {
+//					$.xResponse('/product/get_autocomplete_non', {keyword: keyword}, {async: true}).done(function (result) {
+//						if (result.count > 0) {
+//							$('.recommend_srch .chain').show();
+//							$('.mobile .recommend_srch').show();
+//
+//							var items = [];
+//							$.each(result.data.yeogi, function (k, autocomplete) {
+//								var query_string = '?keyword='+ autocomplete.keyword;
+//
+//								if (autocomplete.type == 'CATEGORY' || autocomplete.type == 'AREA')
+//									query_string += '&type='+ autocomplete.type;
+//
+//								items.push(
+//									'<li><a href="/product/result'+ query_string +'" >'+
+//									autocomplete.keyword.replace(new RegExp(keyword, 'ig'), "<b>"+ keyword +"</b>") +
+//									'</a></li>'
+//								);
+//							});
+//
+//							$('.recommend_srch .chain ul').html(items.join(''));
+//
+//						}
+//					});
+//				}
+//
+//				timerId = 0;
+//			}, 200);
+//		});
+//
+//		$('#keyword').off('keydown');
+//		$('#keyword').keydown(function (key) {
+//			if(key.keyCode == 13){
+//				if ($(this).val().length > 0)
+//					window.location.href = root + "/product/result.jsp?keyword="+encodeURI($(this).val());
+//				else
+//					alert_Msg('검색어가 없습니다.  <br>검색어를 입력하세요.');
+//			}
+//		});
+//
+//		$('#keyword').off('focus');
+//		$('#keyword').focus(function() {
+//			setTimeout((function(el) {
+//				var strLength = el.value.length;
+//				if (strLength > 0)
+//					$('#keyword').trigger('keyup');
+//
+//				return function() {
+//					if(el.setSelectionRange !== undefined) {
+//						el.setSelectionRange(strLength, strLength);
+//					} else {
+//						$(el).val(el.value);
+//					}
+//				}}(this)), 0);
+//		});
 
 	}
 }
