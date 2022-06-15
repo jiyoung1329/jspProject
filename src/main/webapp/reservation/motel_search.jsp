@@ -205,6 +205,9 @@
 				System.out.println("전달 받은 날짜: " + sel_date + ", " + sel_date2);
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
 				System.out.println("날짜 필터링 후: " + tmp.size() + "개");
+			} else {
+				list = service.filterByDate(sel_date, sel_date2, list);
+				System.out.println("날짜 필터링 후: " + list.size() + "개");
 			}
 
 			//놀이시설 필터링
