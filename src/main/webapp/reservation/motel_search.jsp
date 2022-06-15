@@ -1,6 +1,3 @@
-<%@page import="reservation.AccommoService"%>
-<%@page import="reservation.AccommoDAO"%>
-<%@page import="reservation.AccommoDTO"%>
 <%@page import="java.net.URI"%>
 <%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="java.util.HashSet"%>
