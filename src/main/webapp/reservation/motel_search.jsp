@@ -1191,7 +1191,7 @@
 
 	<!-- Service -->
 	<script type="text/javascript"
-		src="${root }js/service/common.js"></script>
+		src="https://www.goodchoice.kr/js/service/common.js"></script>
 	<script type="text/javascript"
 		src="https://www.goodchoice.kr/js/service/geolocation.js?rand=1653988749"></script>
 

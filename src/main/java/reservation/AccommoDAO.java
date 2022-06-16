@@ -15,7 +15,7 @@ public class AccommoDAO {
 
 	public AccommoDAO() {
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user = "oracle";
+		String user = "admin";
 		String pw = "oracle";
 
 		try {
@@ -163,11 +163,12 @@ public class AccommoDAO {
 		return list;
 	}
 
-	public ArrayList<AccommoDTO> filterByDate(String whereQuery) {
+	public ArrayList<AccommoDTO> filterByDate(String whereQuery1, String whereQuery2) {
 		ArrayList<AccommoDTO> list = new ArrayList<>();
-		String query = "SELECT accomm_num FROM accommodation " + whereQuery;
+		String query = "SELECT B.accomm_num FROM (SELECT accomm_num as acc_num, count(*) as cnt FROM room " + whereQuery1 + 
+				"GROUP BY accomm_num)A LEFT JOIN (SELECT r.accomm_num, count(*) as r_cnt FROM reservation r " + whereQuery2 + "GROUP BY (r.accomm_num))B ON A.acc_num = B.accomm_num WHERE B.r_cnt < A.cnt";
 		System.out.println(query);
-
+		
 		try {
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();

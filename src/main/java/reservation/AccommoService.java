@@ -55,7 +55,6 @@ public class AccommoService {
 	}
 
 	public ArrayList<AccommoDTO> sortMotelAsc(ArrayList<AccommoDTO> list) {
-		System.out.println("sortMotelAsc 실행됨");
 		for (int i = 0; i < list.size(); i++) {
 			int min = i;
 			for (int j = i + 1; j < list.size(); j++) {
@@ -72,7 +71,6 @@ public class AccommoService {
 	}
 
 	public ArrayList<AccommoDTO> sortMotelDesc(ArrayList<AccommoDTO> list) {
-		System.out.println("sortMotelDesc 실행됨");
 		for (int i = 0; i < list.size(); i++) {
 			int max = i;
 			for (int j = i + 1; j < list.size(); j++) {
@@ -89,7 +87,6 @@ public class AccommoService {
 	}
 	
 	public ArrayList<AccommoDTO> sortMotelScoreDesc(ArrayList<AccommoDTO> list) {
-		System.out.println("sortMotelScoreDesc 실행됨");
 		for (int i = 0; i < list.size(); i++) {
 			int max = i;
 			for (int j = i + 1; j < list.size(); j++) {
@@ -106,7 +103,6 @@ public class AccommoService {
 	}
 	
 	public ArrayList<AccommoDTO> filterSPriceZero(ArrayList<AccommoDTO> list) {
-		System.out.println("filterSPriceZero 실행됨");
 		ArrayList<AccommoDTO> result = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			AccommoDTO dto = list.get(i);
@@ -131,20 +127,21 @@ public class AccommoService {
 	public ArrayList<AccommoDTO> filterByDate(String start, String end, ArrayList<AccommoDTO> list) {
 		ArrayList<AccommoDTO> result = new ArrayList<>();
 		
-		String whereQuery = "";
+		String whereQuery1 = "", whereQuery2 = "";
 		if(start != null && start != "" && end != null && end != "") {
-			whereQuery = "WHERE accomm_num IN (";
+			whereQuery1 = "WHERE accomm_num IN (";
 			
 			for(int i = 0; i < list.size(); i++) {
 				AccommoDTO dto = list.get(i);
-				whereQuery += dto.getNum();
+				whereQuery1 += dto.getNum();
 				if(i != list.size() - 1)
-					whereQuery += ", ";
+					whereQuery1 += ", ";
 			}
-			whereQuery += ") and accomm_num NOT IN ((select accomm_num from reservation "
-					+ "where to_date(check_in, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') or "
-					+ "to_date(check_out, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD')))";
-			result = dao.filterByDate(whereQuery);
+			whereQuery1 += ") ";
+			
+			whereQuery2 += whereQuery1 + "and to_date(check_in, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') or "
+					+ "to_date(check_out, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') ";
+			result = dao.filterByDate(whereQuery1, whereQuery2);
 			
 			System.out.print("번호: ");
 			for(AccommoDTO dto : result) {
