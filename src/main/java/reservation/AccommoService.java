@@ -137,8 +137,8 @@ public class AccommoService {
 					whereQuery += ", ";
 			}
 			whereQuery += ") and accomm_num NOT IN ((select accomm_num from reservation "
-					+ "where to_date(check_in, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD') or "
-					+ "to_date(check_out, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY.MM.DD') and to_date('" + end + "', 'YYYY.MM.DD')))";
+					+ "where is_reserve=0 and (to_date(check_in, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY-MM-DD') and to_date('" + end + "', 'YYYY-MM-DD') or "
+					+ "to_date(check_out, 'YYYY.MM.DD DY HH24:MI') between TO_DATE('" + start + "', 'YYYY-MM-DD') and to_date('" + end + "', 'YYYY-MM-DD'))))";
 			result = dao.filterByDate(whereQuery);
 		}
 			return result;

@@ -203,7 +203,7 @@ function getUserData() {
         
         
         window.location.replace("http://" + window.location.hostname + ( (location.port==""||location.port==undefined)?"":":" + location.port) 
-        		+ "/Project/member/facebookLoginService.jsp?facebookname="+encodeURI(facebookname)+"&facebooke_mail="+facebooke_mail);
+        		+ "/jspProject/member/facebookLoginService.jsp?facebookname="+encodeURI(facebookname)+"&facebooke_mail="+facebooke_mail);
  
     });
     
@@ -276,7 +276,7 @@ document.getElementById('loginBtn').addEventListener('click', function() {
 			        {
 			            //클라이언트 id와 콜백 url (결과페이지)
 			            clientId: "KmwKqMBFgMMFiMkfyFGj",
-			            callbackUrl: "http://localhost:8085/Project/member/navercallback.jsp",
+			            callbackUrl: "http://localhost:8888/jspProject/member/navercallback.jsp",
 			            isPopup: false, /* 팝업을 통한 연동처리 여부 */
 			            loginButton: {color: "green", type: 3, height: 56} /* 로그인 버튼의 타입을 지정 */
 			        }

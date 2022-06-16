@@ -152,7 +152,7 @@ $(document).ready(function(){
 						<p class="badge"></p>
 						<h2><%=detail.getName()%></h2>
 						<div class="score_cnt">
-							<span><%=avgReview%></span>
+							<span><%=String.format("%.1f", avgReview) %></span>
 							<%
 							if (avgReview > 9.5) {
 							%>
@@ -699,7 +699,7 @@ $(document).ready(function(){
 						star -= star % 5;
 						%>
 						<div class="score_star star_<%=String.format("%02d", star) %>"></div>
-						<div class="num"><%=avgReview%></div>
+						<div class="num"><%=String.format("%.1f", avgReview) %></div>
 					</div>
 					<p>
 						전체 리뷰 <b><%=detail.getReviews().size()%></b>

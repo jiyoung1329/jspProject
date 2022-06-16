@@ -206,6 +206,9 @@
 				tmp = service.filterByDate(sel_date, sel_date2, tmp);
 				System.out.println("날짜 필터링 후1: " + tmp.size() + "개");
 			}else {
+				System.out.println("날짜 필터링 전2: " + list.size() + "개");
+				System.out.println("sel_date: " + sel_date + ", sel_date2 : " + sel_date);
+				
 	            list = service.filterByDate(sel_date, sel_date2, list);
 	            System.out.println("날짜 필터링 후2: " + list.size() + "개");
 	         }

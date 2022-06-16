@@ -9,7 +9,7 @@
 <body>
 <script type="text/javascript">
   var clientId = "KmwKqMBFgMMFiMkfyFGj";
-  var callbackUrl = "http://localhost:8085/Project/member/navercallback.jsp";
+  var callbackUrl = "http://localhost:8888/jspProject/member/navercallback.jsp";
   var naver_id_login = new naver_id_login(clientId, callbackUrl);
   // 접근 토큰 값 출력
 //   alert(naver_id_login.oauthParams.access_token);
@@ -23,7 +23,7 @@
    const nickname = naver_id_login.getProfileData('nickname');
     
     window.location.replace("http://" + window.location.hostname + ( (location.port==""||location.port==undefined)?"":":" + location.port) 
-  		  + "/Project/member/naverLoginService.jsp?email="+email+"&name="+name+"&mobile="+mobile
+  		  + "/jspProject/member/naverLoginService.jsp?email="+email+"&name="+name+"&mobile="+mobile
   				  +"&nickname="+nickname);
     
   }

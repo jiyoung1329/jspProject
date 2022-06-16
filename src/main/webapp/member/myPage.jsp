@@ -185,7 +185,7 @@
 		<div class="bot_btn">
 			<p>여기어때를 이용하고 싶지 않으신가요?</p>
 			<button type="button" onclick="location.href='logout.jsp';">로그아웃</button>
-			<button type="button"><a href="delete.jsp">회원탈퇴</a></button>
+			<button type="button"><a href="deleteCheck.jsp">회원탈퇴</a></button>
 		</div>
 	</div>
 </div>

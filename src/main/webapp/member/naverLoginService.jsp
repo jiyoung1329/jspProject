@@ -7,7 +7,7 @@
     session.setAttribute("nickname", nickname);
     session.setAttribute("name", nickname);
     session.setAttribute("email", email);
-	response.sendRedirect("/Project/index.jsp");
+	response.sendRedirect("../index.jsp");
 	%>
 
 	
