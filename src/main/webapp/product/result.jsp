@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="test.AccommoService"%>
 <%@page import="java.util.List"%>
@@ -124,6 +125,7 @@
 		</header>
 
 		<%
+		DecimalFormat decFormat = new DecimalFormat("###,###");
 		request.setCharacterEncoding("utf-8");
 
 		String keyword = request.getParameter("keyword");
@@ -1000,7 +1002,7 @@
 						for(AccommoDTO dto : list) {
 						%>
 						<li class="list_4 adcno1">
-						<a href="detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
+						<a href="${root }reservation/detail.jsp?num=<%=dto.getNum() %>&sel_date=<%=sel_date %>&sel_date2=<%=sel_date2 %>"
 							data-ano="63624" data-adcno="1" data-alat="37.49722015035"
 							data-alng="127.02931626635" data-distance="7.635"
 							data-affiliate="1">
@@ -1029,7 +1031,7 @@
 											<p>
 												<%if(dto.getdPrice() != 0){ %>
 													대실&nbsp;
-													<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+													<b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
 												<%} else {%>
 													대실 <b>숙소에 문의</b>
 												<%} %>
@@ -1039,7 +1041,7 @@
 										<%if(reserve == null || s != null){ %>
 											<p>
 												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+												<b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
 											</p>
 										<%} %>
 										</div>
@@ -1048,7 +1050,7 @@
 											<p>
 											<%if(dto.getdPrice() != 0){ %>
 												대실&nbsp;
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getdPrice() %>원</b>
+												<b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
 											<%} else {%>
 												대실 <b>숙소에 문의</b>
 											<%} %>
@@ -1058,7 +1060,7 @@
 										<%if(reserve == null || s != null){ %>
 											<p>
 												숙박&nbsp; 
-												<b style="color: rgba(0, 0, 0, 1);"><%=dto.getsPrice()%>원</b>
+												<b style="color: rgba(0, 0, 0, 1);"><%=decFormat.format(dto.getdPrice()) %>원</b>
 											</p>
 										<%} %>
 									</div>

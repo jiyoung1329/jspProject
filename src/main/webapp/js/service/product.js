@@ -361,8 +361,9 @@ function pop_map_m(){
 }
 
     function displayAddress( _latlng ) {
+		console.log("displayAddress _latlng: " + _latlng);
     	var position = _latlng.getLat() + ',' + _latlng.getLng();
-
+		console.log("displayAddress position : " + position);
 		$.xResponse( '/product/srp_search', {action: 'location', location: position, page: 1, size: 1, distance: 1} ).done(function( _result ) {
 			if (_result.code != 200) {
 				console.log("search error :: " + _result.code);
@@ -413,8 +414,11 @@ function pop_map_pc(){
         '<div class="map_stage"><div class="name"><p></p><strong></strong></div>' +
         '<div class="price"></div></div>' +
         '</a></div>');
-
+        
+    console.log($('<div class="map_info"></div>'));
+	console.log(html);
     var locations = get_map_location(html);
+    console.log("location" + locations);
     var positionList = getGeoPosition();
     var udlat = '37.566623558063924';
     var udlng = '126.97840605405327';
@@ -436,8 +440,12 @@ function pop_map_pc(){
     var marker, i, on_maker;
     var bounds = new daum.maps.LatLngBounds();
     var infowindow = new daum.maps.InfoWindow();
-
+	
     for (i = 0; i < locations.length; i++) {
+//		console.log("locations[" + i + "]: " + locations[i]);
+//		console.log("locations[" + i + "][0]: " + locations[i][0]);
+//		console.log("locations[" + i + "][1]: " + locations[i][1]);
+//		console.log("locations[" + i + "][2]: " + locations[i][2]);
         marker = new daum.maps.Marker({
             position: new daum.maps.LatLng(locations[i][1], locations[i][2]),
 			clickable: true,
@@ -479,21 +487,22 @@ function pop_map_pc(){
 	map.relayout();
 
     function displayAddress( _latlng ) {
+		console.log("displayAddress _latlng: " + _latlng);
     	var position = _latlng.getLat() + ',' + _latlng.getLng();
-
-		$.xResponse( '/product/srp_search', {action: 'location', location: position, page: 1, size: 1, distance: 1} ).done(function( _result ) {
-			if (_result.code != 200) {
-				console.log("search error :: " + _result.code);
-				return;
-			}
-
-			if (_result.data == null || _result.data.total_count == 0 || _result.data.list.length == 0) {
-				$('.pop_map .address').html('주소 정보가 없습니다.');
-				return;
-			}
-
-			$('.pop_map .address').html(_result.data.list[0].jibunFullAddr);
-		});
+		console.log("displayAddress position : " + position);
+//		$.xResponse( '/product/srp_search', {action: 'location', location: position, page: 1, size: 1, distance: 1} ).done(function( _result ) {
+//			if (_result.code != 200) {
+//				console.log("search error :: " + _result.code);
+//				return;
+//			}
+//
+//			if (_result.data == null || _result.data.total_count == 0 || _result.data.list.length == 0) {
+//				$('.pop_map .address').html('주소 정보가 없습니다.');
+//				return;
+//			}
+//
+//			$('.pop_map .address').html(_result.data.list[0].jibunFullAddr);
+//		});
     };
 
     var hTimer = null;

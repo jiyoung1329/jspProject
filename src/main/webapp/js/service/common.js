@@ -170,37 +170,37 @@ function xZeros(n, digits) {
 	return zero + n;
 }
 
-$.extend({
-	xResponse: function(url, data, options) {
-		data = data === undefined ? '':data;
-
-		var defaults = {
-			type: 'post',
-			dataType: 'json',
-			loading: false,
-			async: false,
-			message: ''
-		};
-
-		options = $.extend({}, defaults, options);
-
-		var ajax = $.ajax({
-			url: url,
-			type: options.type,
-			data: data,
-			dataType: options.dataType,
-			async: options.async,
-			cache: false,
-			error:function(x,e){
-				// TODO: 삼성폰에서만 발생하는 에러팝업
-				if (navigator.userAgent.match('SAMSUNG') == null) alert_Msg(options.message);
-				console.log(options.message);
-			}
-		});
-
-		return ajax;
-	}
-});
+//$.extend({
+//	xResponse: function(url, data, options) {
+//		data = data === undefined ? '':data;
+//
+//		var defaults = {
+//			type: 'post',
+//			dataType: 'json',
+//			loading: false,
+//			async: false,
+//			message: ''
+//		};
+//
+//		options = $.extend({}, defaults, options);
+//
+//		var ajax = $.ajax({
+//			url: url,
+//			type: options.type,
+//			data: data,
+//			dataType: options.dataType,
+//			async: options.async,
+//			cache: false,
+//			error:function(x,e){
+//				// TODO: 삼성폰에서만 발생하는 에러팝업
+//				if (navigator.userAgent.match('SAMSUNG') == null) alert_Msg(options.message);
+//				console.log(options.message);
+//			}
+//		});
+//
+//		return ajax;
+//	}
+//});
 
 
 // 콤마삽입

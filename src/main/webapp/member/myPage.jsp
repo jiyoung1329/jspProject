@@ -29,6 +29,7 @@
 <body class="pc">
 <% 
 	String email = (String) session.getAttribute("email");
+	System.out.println("myPage email: " + email);
 	if (email == null){
 		out.print("<script>alert('로그인 후 이용가능합니다.'); location.href='login.jsp'</script>");
 	}

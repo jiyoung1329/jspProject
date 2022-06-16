@@ -9,7 +9,7 @@
 	String email = (String)session.getAttribute("email");
 	
 	
-	
+	System.out.println("email: " + email);
 	MemberDAO memberDao = new MemberDAO();
 	MemberDTO check = memberDao.selectEmail(email);
 	
